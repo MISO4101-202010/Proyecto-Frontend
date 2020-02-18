@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Asignar contenido interactivo</h2>
+<div mat-dialog-content>
+    <p>
+        Seleccione los cursos a los cuales desea asignar el contenido interactivo "{{data.nombreContenido}}":
+    </p>
+    <mat-form-field>
+        <mat-label>Seleccione un curso</mat-label>
+        <mat-select [formControl]="cursosForm" multiple>
+            <mat-option *ngFor="let curso of cursos" [value]="curso.id">{{curso.nombre}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <div mat-dialog-actions style="float:right;">
+        <button id="cancel" mat-button (click)="onNoClick()">
+            Cancelar
+        </button>
+        <button id="submit" mat-button (click)="asociarContenido()" cdkFocusInitial>
+            Asignar contenido
+        </button>
+    </div>
+
+</div>

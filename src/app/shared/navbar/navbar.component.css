@@ -1,0 +1,37 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 230px;
+  background-color: #43425d;
+}
+.mat-list-item{
+  color: #ffffff;
+}
+mat-icon {
+  margin-right: 5%;
+}
+mat-toolbar {
+  color: #ffffff;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.tree {
+  background: inherit;
+  color: #FFFFFF;
+  margin-right: 5%;
+  margin-left: 2%;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  /* font-size: 12px;  */
+  /* background-color: #43425d; */
+  /* font-weight: bold; */
+}

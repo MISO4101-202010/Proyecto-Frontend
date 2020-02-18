@@ -1,0 +1,56 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+    <mat-toolbar>Menú</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/cursos">
+        <mat-icon>library_books</mat-icon>Ver Cursos
+      </a>
+      <!-- <a mat-list-item routerLink="/contenido-interactivo"><mat-icon>apps</mat-icon>Manejar Contenido Interactivo</a> -->
+      <a *ngIf="student == false" mat-list-item routerLink="/contenido-interactivo"><mat-icon>apps</mat-icon>Contenido Interactivo</a>
+      <a *ngIf="student == false" style="height: 0px;width: 0px;overflow:hidden;" mat-list-item routerLink="/load-videos"><mat-icon>library_add</mat-icon>Crear contenido</a>
+      <a *ngIf="student == false" mat-list-item routerLink="/page/crearContenidoInt"><mat-icon>library_add</mat-icon>Videos / Audios</a>
+
+      <!--
+      <mat-tree class="tree" mat-list-item [dataSource]="dataSource" [treeControl]="treeControl">
+        This is the tree node template for leaf nodes
+        <mat-tree-node matTreeNodePaddingIndent="15" class="tree" *matTreeNodeDef="let node" matTreeNodePadding>
+          use a disabled button to provide padding for tree leaf
+          <button mat-icon-button disabled></button>
+          <span *ngIf="{{node.name}} === 'Subir Video'">
+
+          </span>
+          <a href="javascript:void(0);" (click)="navNodeLinks(node.name)">
+            <mat-icon *ngIf="node.name === 'Subir Video' ">video_library</mat-icon>
+            <mat-icon *ngIf="node.name === 'Ver Contenido Interactivo' ">dynamic_feed</mat-icon>
+            {{node.name}}
+          </a>
+        </mat-tree-node>
+
+
+        This is the tree node template for expandable nodes
+        <mat-tree-node class="tree" *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+          <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+          </button>
+          {{node.name}}
+        </mat-tree-node>
+      </mat-tree>
+      -->
+      <!--<a mat-list-item routerLink="/video"><mat-icon>apps</mat-icon>Crear marcas sobre video</a>-->
+      <!--<a mat-list-item routerLink="/video-alumno"><mat-icon>apps</mat-icon>ver contenido interactivo estudiante</a>-->
+
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" *ngIf="isHandset$ | async">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span></span>
+    </mat-toolbar>
+    <!-- Add Content Here -->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Crear Contenido Interactivo</h1>
+<div mat-dialog-content>
+  <label>Nombre:</label>
+  <mat-form-field>
+    <input matInput required #nom/>
+  </mat-form-field>
+  <div class="">
+    <h6 mat-dialog-subtitle> <b>Video Asociado:</b> {{data.video}} {{data.id}}</h6>
+
+  </div>
+</div>
+<div mat-dialog-actions >
+  <button mat-button (click)="onNoClick()" style="margin-left: 50px;" >No Asociar</button>
+  <button mat-button (click)="crearContenido(nom, data.id)" cdkFocusInitial>Ok</button>
+</div>

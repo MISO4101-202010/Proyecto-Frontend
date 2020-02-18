@@ -1,0 +1,61 @@
+<mat-card class="detail-card">
+    <div *ngIf=secondData>
+        <mat-card-header>
+            <mat-card-title>{{secondData.nombre}}</mat-card-title>
+            <mat-card-subtitle>{{secondData.contenido.fuente}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-grid-list class="details" cols="3" rowHeight="10:1">
+            <mat-grid-tile>
+                <p><b>Nombre Contenido: </b>{{secondData.contenido.nombre}}</p>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <p><b>Tiene retroalimentacion: </b>{{secondData.tieneRetroalimentacion ? 'Si' : 'No'}}</p>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <p><b>Total Cursos: </b>{{secondData.cursos.length}}</p>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <p><b>Nota máxima: </b>{{secondData.calificacion}}</p>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <p><b>Contenido fuente:
+                    </b><a href="{{secondData.contenido.url}}">Video Youtube</a></p>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <p><b>Total Marcas: </b>{{secondData.marcas.length}}</p>
+            </mat-grid-tile>
+        </mat-grid-list>
+        <mat-divider></mat-divider>
+
+        <mat-tab-group>
+            <mat-tab label="Cursos Asignados">
+                <mat-list>
+                    <h3 mat-subheader>Cursos asignados</h3>
+                    <mat-list-item *ngFor="let curso of secondData.cursos">
+                        <mat-icon mat-assignment_turned_in>check</mat-icon>
+                        <h4 mat-line>{{curso.nombre}}</h4>
+                        <p mat-line>{{curso.descripcion}}</p>
+                    </mat-list-item>
+                </mat-list>
+            </mat-tab>
+            <mat-tab label="Marcas">
+                <mat-list>
+                    <h3 mat-subheader>Marcas</h3>
+                    <mat-list-item *ngFor="let marca of secondData.marcas">
+                        <mat-icon mat-assignment_turned_in>check</mat-icon>
+                        <h4 mat-line>{{marca.nombre}}</h4>
+                        <p mat-line>Segundo: {{marca.punto}}s</p>
+                    </mat-list-item>
+                </mat-list>
+            </mat-tab>
+        </mat-tab-group>
+        <mat-divider></mat-divider>
+        <mat-card-actions>
+            <button mat-button [routerLink]="['/contenido-interactivo/reporte/' + this.id]"
+                routerLinkActive="router-link-active">Ver Reporte</button>
+            <button mat-button [routerLink]="['/contenido-interactivo/configurar/' + this.id]"
+                routerLinkActive="router-link-active">Configurar contenido</button>
+        </mat-card-actions>
+    </div>
+</mat-card>

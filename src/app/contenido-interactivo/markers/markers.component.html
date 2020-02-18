@@ -1,0 +1,48 @@
+<div class="container">
+    <h1>Añadir Marcadores:</h1>
+    <div class="row container-markers">
+        <div class="col-3 align-self-start gray-border padding-cero">
+            <div>
+                <div class="contain-title-option">
+                    <div class="font-25 font-gray margin-left-10">Añadir Marcador </div>
+                </div>
+                <div *ngFor="let option of optionsMarkers, let i=index">
+                    <button [ngClass]="option.active ? 'btnActive': ''" class="button-generic  button-options font-gray" (click)="redirectSpecificOption(option.id)">{{option.name}}</button>
+                </div>
+            </div>
+            <div>
+                <div class="contain-title-option">
+                    <div class="font-25 font-gray margin-left-10">Marcadores Añadidos</div>
+                </div>
+                <div *ngFor="let marker of markersAdded, let i=index">
+                    <button class="button-generic button-options font-gray">{{marker.name}}</button>
+                </div>
+            </div>
+        </div>
+        <!--control component to show for specific option marker-->
+        <div class="col-9 gray-border">
+            <div *ngIf="showBasicMarker">Basic</div>
+            <div *ngIf="showSpecificAnswer">Pregunta abierta</div>
+            <div *ngIf="shwowAnswerTrueFalse">Pregunta falso verdadero</div>
+            <app-many-answers *ngIf="showManyAnswers"></app-many-answers>
+            <div *ngIf="showComment">Comentario</div>
+            <div *ngIf="showForum">Foro</div>
+            <div *ngIf="showQuestionnaire">Cuestionario</div>
+            <div *ngIf="showLink">Enlace</div>
+        </div>
+    </div>
+    <!--
+    <div class="row container-markers">
+        <div class="col-6 padding-cero"></div>
+        <div class="col-2 align-self-center padding-right-cero">
+            <button class="button-generic button-blue" (click)="addMark()">Añadir Marca</button>
+        </div>
+        <div class="col-2 align-self-center padding-right-cero">
+            <button class="button-generic button-purple" (click)="preview()">Vista Previa</button>
+        </div>
+        <div class="col-2 align-self-center padding-right-cero">
+            <button class=" button-generic button-orange" (click)="deleteMark()">Borrar Marca</button>
+        </div>
+    </div>
+    -->
+</div>

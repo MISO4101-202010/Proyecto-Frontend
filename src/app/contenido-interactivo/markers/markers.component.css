@@ -1,0 +1,78 @@
+.container {
+    margin: 2%;
+}
+.container-markers{
+    width: 98%;
+    background-color: white;
+}
+
+.gray-border {
+    border: 0.5px solid #b7b4b4;
+}
+
+.font-gray {
+    color: #3e3d3d;
+}
+
+.font-25 {
+    font-size: 25px;
+}
+
+.contain-title-option {
+    border-bottom: 0.5px solid #b7b4b4;
+    height: 50px;
+    display: flex;
+    align-items: end;
+}
+.padding-cero {
+    padding: 0;
+}
+
+.padding-right-cero {
+    padding-right: 0;
+}
+
+.button-generic {
+    height: 35px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+}
+
+.button-options {
+    text-align: left;
+    background-color: transparent;
+}
+
+.button-options:hover {
+    background-color: rgb(189, 187, 187);
+}
+
+.margin-left-10 {
+    margin-left: 10px;
+}
+
+.button-blue {
+    text-align: center;
+    background-color: #157497;
+    color: white;
+}
+
+.button-purple {
+    text-align: center;
+    background-color: #413455;
+    color: white;
+}
+
+.button-orange {
+    text-align: center;
+    background-color: #9b5e3f;
+    color: white;
+}
+.text-center {
+    text-align: center;
+}
+
+.btnActive{
+    background-color: rgb(189, 187, 187);
+}

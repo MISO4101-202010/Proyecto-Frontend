@@ -1,0 +1,50 @@
+<div class="container">
+  <h1>Videos / Audios</h1>
+  <div class="justify-end">
+    <!-- <button mat-button justify-content-end type="button" name="button">Nuevo</button> -->
+    <button (click)="openAddVideoModal()" class="btn" style="margin-right:3%" mat-button [matMenuTriggerFor]="cargar">Nuevo</button>
+    <mat-menu #cargar="matMenu">
+      <button mat-menu-item>YouTube</button>
+      <button mat-menu-item disabled>Equipo Local</button>
+    </mat-menu>
+  </div>
+  <div class="" style="margin-right:3%">
+    <div class="my-2" *ngFor="let contInt of listContenido">
+
+      <div class="" *ngIf="contInt.nombre.length>1">
+        <mat-card>
+          <mat-card-content>
+            <div class="row">
+              <div class="col">
+                <mat-card-title>{{contInt.nombre}}</mat-card-title>
+              </div>
+              <!-- <div class="col">{{contInt.url}}</div> -->
+              <div class="col">YouTube</div>
+
+              <div class="col"></div>
+
+              <!-- Menu de ... -->
+              <button class="col-1" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="openModal(contInt)">
+                  <mat-icon >dialpad</mat-icon>
+                  <span>Crear contenido interactivo</span>
+                </button>
+              </mat-menu>
+
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</div>

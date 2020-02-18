@@ -1,0 +1,20 @@
+<div style="margin: 4%;"></div>
+<ng-container *ngIf="contentsLoaded | async">
+    <div style="margin-left: 13%;">
+        <youtube-player [videoId]="id" [height]="480" [width]="852" (ready)="savePlayer($event)"
+            (change)="onStateChange($event)" [playerVars]="playerVars"></youtube-player>
+    </div>
+
+    <div style="margin-left: 13%;" class="bar-container">
+        <button mat-flat-button color="primary" *ngIf="!playing" (click)="play()">
+            <mat-icon>play_circle_outline</mat-icon>
+        </button>
+        <button mat-flat-button color="primary" *ngIf="playing" (click)="pause()">
+            <mat-icon>pause_circle_outline
+            </mat-icon>
+        </button>
+        <!-- <input type="range" #progressBar id="progressBar" value="0"> -->
+        <mat-slider step="values" type="range" #progressBar id="progressBar" color="primary"
+            (ngModelChange)='handleTouchProgressBar($event)' [ngModel]="progressBarValue"></mat-slider>
+    </div>
+</ng-container>

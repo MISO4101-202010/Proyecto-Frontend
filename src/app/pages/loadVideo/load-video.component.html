@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>Subir Video</h1>
+<div mat-dialog-content style="margin-bottom: 1em;">
+  <!-- <h4 style="color:#b3b3cc">Para Subir un video solo debes copiar la url desde youtube y pegarlo abajo</h4> -->
+  <h4>Para Subir un video solo debes copiar la url desde youtube y pegarlo abajo</h4>
+
+  <!-- <input style="margin-bottom:2%;" type="text" name="urlVideo" value=""> -->
+
+  <div class="" width='60%'>
+    <mat-form-field class="anchoNombre" width='100%' [floatLabel]="options.value.floatLabel">
+      <mat-label>Nombre Video Youtube</mat-label>
+      <input #n matInput required minlength="4" placeholder="Nombre de tu video">
+    </mat-form-field>
+    <br>
+    <mat-form-field class="anchoUrl" [floatLabel]="options.value.floatLabel">
+      <mat-label>Url Video Youtube</mat-label>
+      <input matInput #v required minlength="10" placeholder="https://www.youtube.com/Ejemplo?v=rGI-kGC-OXg">
+    </mat-form-field>
+  </div>
+  <br>
+  <button (click)="guardarVideo(n,v)" class="btn btn-success" mat-raised-button color="primary">Subir Video</button>
+</div>

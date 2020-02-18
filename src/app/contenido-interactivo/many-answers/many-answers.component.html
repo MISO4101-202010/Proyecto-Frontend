@@ -1,0 +1,81 @@
+<div>
+    <ejs-richtexteditor class="margin-top-10" #toolsRTE id='alltoolRTE' [toolbarSettings]='tools' name="question"  [(value)]="question"></ejs-richtexteditor>
+    <div class="row margin-top-10">
+        <div class="col-6">
+            <input class="input-answer" placeholder="Ingrese la respuesta" name="answer" (keyup)="onKeyAnswer($event.target.value)"
+                value="{{answer}}">
+        </div>
+        <div class="col-2">
+            <mat-checkbox #checkbox (change)="checkStatusAnswer($event.checked)" [checked]="statusAnswer">Correcta ?</mat-checkbox>
+        </div>
+        <div class="col-4">
+            <button class="button-generic button-purple" (click)="addAnswer()">Añadir Respuesta</button>
+        </div>
+    </div>
+
+    <div class="row margin-top-10">
+        <div class="col-12 title-answers">Opciones de Respuesta</div>
+        <div class="col-3">Repuesta válida</div>
+        <div class="col-6">Enunciado </div>
+    </div>
+    <div class="row" *ngFor="let answer of listAnswers, let i=index">
+            <div class="col-3">
+                <mat-checkbox class="margin-left-25" [checked]="answer.status" [disabled]="true"></mat-checkbox>
+            </div>
+            <div class="col-6">
+                {{answer.name}}
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-6"> </div>
+        <div class="col-3">
+            <!--<button class="button-generic button-purple" (click)="addQuestion()">Añadir Pregunta</button>-->
+            <button class="button-generic button-purple" (click)="addQuestion(); openModal(template)">Añadir Pregunta</button>
+            <ng-template #template>
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">Seleccionar Marca</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body info-check">
+                    <form #activityCreate="ngForm" (ngSubmit)="onClickSubmit(activityCreate.value); modalRef.hide()">
+                        <div class="form-group">
+                            <label for="activityName">Nombre Actividad:</label>
+                            <input type="text" class="form-control" name="activityName" id="activityNameValue" placeholder="Nombre actividad" required ngModel>
+                            <label for="trysNumber">N&uacute;mero de intentos:</label>
+                            <input type="number" class="form-control" name="trysNumber" id="trysNumberValue" placeholder="Número de intentos" ngModel>
+                            <label for="trysNumber">¿Tiene retroalimentaci&oacute;n?</label>
+                            <select name="retro" class="browser-default custom-select" ngModel>
+                                <option selected>Seleccione un valor...</option>
+                                <option value="true">Si</option>
+                                <option value="false">No</option>
+                            </select>
+                            <label for="periodValue">Contenido:</label>
+                            <select name="content" (change)="selectContentId($event.target.value)" class="browser-default custom-select" ngModel>
+                                <option selected>Seleccione un valor...</option>
+                                <ng-container *ngFor="let content of existingContent">
+                                    <option [value]="content.id">{{ content.contenido.nombre }}</option>
+                                </ng-container>
+                            </select>
+                            <label *ngIf="makersLoaded == true" for="periodValue">Marca:</label>
+                            <select *ngIf="makersLoaded == true" name="marker" class="browser-default custom-select" ngModel>
+                                <option selected>Open this select menu</option>
+                                <ng-container *ngFor="let mark of existingMarkers">
+                                    <option [value]="mark.id">{{ mark.nombre }}</option>
+                                </ng-container>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">A&ntilde;adir pregunta</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" (click)="modalRef.hide()">Cancelar</button>
+                </div>
+            </ng-template>
+        </div>
+        <div class="col-3">
+            <button class="button-generic button-gray" (click)="restartData()">Cancelar</button>
+        </div>
+    </div>
+</div>

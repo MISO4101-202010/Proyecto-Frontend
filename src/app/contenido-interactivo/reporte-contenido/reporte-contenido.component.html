@@ -1,0 +1,53 @@
+<div class="container">
+    <h1>Reporte de distribución porcentual de respuestas</h1>
+    <ng-container *ngIf=dataSource>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <ng-container matColumnDef="pregunta">
+                <th mat-header-cell *matHeaderCellDef> Pregunta </th>
+                <td mat-cell *matCellDef="let enunciado">
+                    <p>{{enunciado.pregunta}} </p>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="posiblesRespuestas">
+                <th mat-header-cell *matHeaderCellDef> Opciones de Respuestas </th>
+                <td mat-cell *matCellDef="let enunciado">
+                    <ng-container *ngIf="enunciado.tipo === 'multiple'">
+                        <div *ngFor="let opcion of enunciado.opciones">
+                            <p [class.correcta]="opcion.esCorrecta"
+                            >{{opcion.respuesta}}</p>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="enunciado.tipo === 'verdadero/falso'">
+                        <p [class.correcta]="enunciado.respuestaCorrecta">Verdadero</p>
+                        <p [class.correcta]="!enunciado.respuestaCorrecta">Falso</p>
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="respuestasOpcion">
+                <th mat-header-cell *matHeaderCellDef> % Respuestas por opcion </th>
+                <td mat-cell *matCellDef="let enunciado">
+                    <ng-container *ngIf="enunciado.tipo === 'multiple'">
+                        <div *ngFor="let opcion of enunciado.opciones">
+                            <p>{{opcion.porcentajeRespuesta }}%</p>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="enunciado.tipo === 'verdadero/falso'">
+                        <p>{{enunciado.porcentajeVerdadero}}%</p>
+                        <p>{{enunciado.porcentajeFalso}}%</p>
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="porcentajeRespuesta">
+                <th mat-header-cell *matHeaderCellDef> Total Respuestas Correctas </th>
+                <td mat-cell *matCellDef="let enunciado"> {{enunciado.total_respuestas}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </ng-container>
+</div>

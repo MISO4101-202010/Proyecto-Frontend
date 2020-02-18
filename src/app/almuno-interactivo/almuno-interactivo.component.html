@@ -1,0 +1,8 @@
+<youtube-player [videoId]="id"
+                [height]="720"
+                [width]="1080"
+                (ready)="savePlayer($event)"
+                (change)="onStateChange($event)"></youtube-player>
+<div><button class="btn btn-lg btn-outline-primary">Agregar marca</button></div>
+
+

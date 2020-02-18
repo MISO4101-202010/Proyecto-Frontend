@@ -1,0 +1,50 @@
+<h1 mat-dialog-title>Crear pregunta selección múltiple en {{data.marca.nombre}}</h1>
+<div mat-dialog-content style="margin-bottom: 1em;">
+    <form [formGroup]="questionForm" (ngSubmit)="agregarMarca()">
+        <div class="row-container">
+            <mat-form-field appearance="outline" style="width:100%">
+                <mat-label>Nombre</mat-label>
+                <input type="text" matInput placeholder="Actividad 1" formControlName="nombre" />
+            </mat-form-field>
+        </div>
+        <div class="row-container">
+            <mat-form-field appearance="outline" style="width:100%">
+                <mat-label>Ingrese aquí la pregunta</mat-label>
+                <input type="text" matInput placeholder="Enunciado" formControlName="enunciado" />
+            </mat-form-field>
+        </div>
+        <div style="margin-bottom:1em; display: flex; justify-content: space-between;">
+            <div style="flex-direction: column; width: 30%;">
+                <mat-checkbox color="primary" formControlName="esMultipleResp">¿Tiene múltiples respuestas?</mat-checkbox>
+                <mat-checkbox color="primary" formControlName="tieneRetroalimentacion">¿Tiene retroalimentación?</mat-checkbox>
+            </div>
+            <mat-form-field appearance="outline" style="height:40px">
+                <mat-label>Número de intentos</mat-label>
+                <input type="number" min="1" matInput formControlName="numeroDeIntentos" />
+            </mat-form-field>
+            <div style="float:right">
+                <button class="mat-flat-button mat-primary" (click)="agregarOpcion()">Agregar opción</button>
+            </div>
+        </div>
+        <div class="row-container" formArrayName="opciones"
+            *ngFor="let opcion of questionForm.controls.opciones['controls']; let i = index">
+            <ng-container formGroupName="{{i}}">
+                <mat-form-field appearance="outline" style="width:70%">
+                    <mat-label>Opción</mat-label>
+                    <input type="text" matInput placeholder="Opción" formControlName="opcion" />
+                </mat-form-field>
+                <button class="removeQ" mat-stroked-button color="warn" (click)="quitarOpcion(i)">
+                    <mat-icon>delete_outline
+                    </mat-icon>
+                </button>
+                <mat-checkbox color="primary" formControlName="esCorrecta">¿Es correcta?</mat-checkbox>
+            </ng-container>
+        </div>
+        <div class="form-actions">
+            <button id="cancel-button" class="mat-stroked-button" type="button" (click)="cancel()">
+                Cancelar
+            </button>
+            <button class="mat-flat-button mat-primary" type="submit">Guardar</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,14 @@
+mat-form-field {
+  width: 100%;
+}
+
+.mat-dialog-content {
+  height: 185px;
+}
+
+#submit {
+  background-color: #225c32;
+  color: white;
+}
+#cancel {
+}

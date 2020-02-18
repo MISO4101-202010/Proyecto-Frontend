@@ -1,0 +1,10 @@
+.container {
+    margin: 2%;
+  }
+  .video-container {
+    width: 854px;
+    height: auto;
+  }
+  #progressBar {
+    width: 800px;
+  }

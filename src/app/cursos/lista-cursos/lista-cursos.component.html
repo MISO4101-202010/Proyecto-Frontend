@@ -1,0 +1,21 @@
+<div class="container">
+    <h1>Cursos</h1>
+    <div class="flex-grid">
+        <div class="col" *ngFor="let curso of cursos">
+          <mat-card class="example-card">
+            <mat-card-header>
+              <mat-card-title>{{curso.nombre}}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>
+                {{curso.descripcion}}
+              </p>
+            </mat-card-content>
+            <mat-card-actions class="actions">
+              <button mat-button>Ver Curso</button>
+              <button mat-button>Ver Reporte</button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+</div>

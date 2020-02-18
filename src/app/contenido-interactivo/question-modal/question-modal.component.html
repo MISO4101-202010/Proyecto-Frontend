@@ -1,0 +1,30 @@
+<div *ngIf="hasQuestionsToShow">
+    <div mat-dialog-title class="font-title">{{questionInformation.enunciado}}</div>
+    <div mat-dialog-content>
+        <div class="row" *ngFor="let optionAnswer of optionsArray, let i=index">
+            <div class="col-3">
+                <mat-checkbox class="margin-left-25" (change)="checkOptionAnswer($event.checked, optionAnswer.idOption)"
+                    [checked]="optionAnswer.answerOption" [disabled]="hasFeedBack"> {{optionAnswer.titleOption}}
+                </mat-checkbox>
+            </div>
+        </div>
+
+        <div *ngIf="hasFeedBack">
+            <div class="font-title">Las respuestas correctas son : </div>
+            <div class="row" *ngFor="let option of arrayCorrectAnswers, let i=index">
+                <div class="col-3 display-flex green-color">
+                    <i class="material-icons"> check_circle_outline</i>{{option.titleAnswer}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-3" *ngIf="!hasFeedBack" mat-dialog-actions>
+            <button mat-button (click)="saveAnswer()">Enviar respuestas</button>
+        </div>
+        <div class="col-3" mat-dialog-actions>
+            <button mat-button (click)="continue()">Continuar</button>
+        </div>
+    </div>
+</div>
