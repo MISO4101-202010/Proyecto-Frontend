@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {FormBuilder, FormGroup, Validators, FormArray} from '@angular/forms';
+
+export interface DialogData {
+  marca: any;
+}
 
 @Component({
   selector: 'app-crear-pregunta-verdadero-falso',
@@ -7,9 +13,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CrearPreguntaVerdaderoFalsoComponent implements OnInit {
 
-  constructor() { }
+  questionForm: FormGroup;
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData,
+              private formBuilder: FormBuilder,
+              public dialogRef: MatDialogRef<CrearPreguntaVerdaderoFalsoComponent>) {
+    this.initializeForm();
+  }
+
+  initializeForm() {
+    this.questionForm = this.formBuilder.group({
+      nombre: ['', [Validators.required]]
+    });
+  }
 
   ngOnInit() {
+  }
+
+  cancel() {
+    this.dialogRef.close();
+  }
+
+  crearMarca(){
   }
 
 }

@@ -1,1 +1,11 @@
-<p>crear-pregunta-verdadero-falso works!</p>
+<h1 mat-dialog-title>Crear Pregunta de Verdadero o Falso en {{data.marca.nombre}}</h1>
+<div mat-dialog-content class="container">
+  <form [formGroup]="questionForm" (ngSubmit)="crearMarca()">
+    <div>
+      <mat-form-field appearance="outline" style="width:100%">
+        <mat-label>Nombre de la pregunta</mat-label>
+        <input type="text" matInput placeholder="Actividad 1" formControlName="nombre" />
+      </mat-form-field>
+    </div>
+  </form>
+</div>
