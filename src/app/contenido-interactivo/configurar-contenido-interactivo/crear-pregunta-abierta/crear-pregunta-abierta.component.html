@@ -13,6 +13,10 @@
                 <input type="text" matInput placeholder="Enunciado" formControlName="enunciado" />
             </mat-form-field>
         </div>
+        <div style="flex-direction: column; width: 30%;">
+            <mat-checkbox color="primary" formControlName="puedeSaltar">¿El estudiante puede saltar entre marcas?
+            </mat-checkbox>
+        </div>
         <div class="form-actions">
             <button id="cancel-button" class="mat-stroked-button" type="button" (click)="cancel()">
                 Cancelar
