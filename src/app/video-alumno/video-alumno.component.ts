@@ -1,9 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { InteraccionAlumnoService } from '../interaccion-alumno.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { LoadVideoService } from '../services/contenidoInter/load-video.service';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { QuestionModalComponent } from 'src/app/contenido-interactivo/question-modal/question-modal.component';
 import { ContenidoService } from '../services/contenido.service';
 
@@ -12,11 +11,11 @@ import { ContenidoService } from '../services/contenido.service';
   templateUrl: './video-alumno.component.html',
   styleUrls: ['./video-alumno.component.css']
 })
-export class VideoAlumnoComponent implements OnInit {
+export class VideoAlumnoComponent {
 
+  player: YT.Player;
   idContent = '';
   retroalimentacion: string;
-  player: YT.Player;
   id = '';
   marcas: any[];
   dosperro = 999999;
@@ -32,7 +31,10 @@ export class VideoAlumnoComponent implements OnInit {
   waiting = false;
   counter = 0;
   contentsLoaded: Promise<boolean>;
+  marcasPorcentaje;
+  contenidoInt;
 
+  @ViewChild('progressBar', { static: false }) progressBar: ElementRef;
   constructor(
     private activatedRoute: ActivatedRoute,
     private retroalimentacionService: InteraccionAlumnoService,
@@ -40,61 +42,46 @@ export class VideoAlumnoComponent implements OnInit {
     private contentService: LoadVideoService,
     private contenidoService: ContenidoService
   ) {
-    this.activatedRoute.params.subscribe(params => {
-      console.log('params', params['id']);
-      this.idContent = params['id'] ? params['id'] : '';
-    });
+    this.loadData();
   }
 
-  ngOnInit() {
+  loadData() {
     console.log('POST call successful value returned in body on init');
     const idPregunta = 1;
-    var actualVid = "";
     this.retroalimentacionService.getRetroOpMultiple(idPregunta).subscribe((data: any[]) => {
       console.log(data);
-      this.retroalimentacion = data[0].respuesta;
+      //this.retroalimentacion = data[0].respuesta;
     });
-    this.getContentInteractive(this.idContent);
 
-    //this.contentService.getInteractiveContentById(17).subscribe(res => {
-    //  console.log(res);
-    //  actualVid = res.body.results[0].contenido.url;
-    //  console.log(actualVid);
-    //  this.id = actualVid.split('=')[1];
-    //})
-    //this.contenidoService.getDetalleContenidoInteractivo(17).subscribe(res => {
-    //  console.log(res)
-    //})
+    this.activatedRoute.params.subscribe(params => {
+      this.idContent = params['id'] ? params['id'] : '';
+      this.getContentInteractiveDetail(this.idContent);
+    });
   }
 
   async savePlayer(player) {
     this.player = player;
     console.log('player instance', player);
     this.getContentMark();
+    this.loadMarcas(this.contenidoInt.marcas);
 
     await console.log('player currenttime', this.player.getCurrentTime());
     //console.log('player nnn', this.marcas[i].punto);
     while (1 == 1) {
       this.dosperro = 999999;
       await this.delay(1000);
-       console.log('player currenttime', Math.round(this.player.getCurrentTime()));
+      console.log('player currenttime', Math.round(this.player.getCurrentTime()));
       for (let i = 0; i < this.marcas.length; i++) {
         if (Math.round(this.player.getCurrentTime()) === this.marcas[i].punto) {
           this.player.pauseVideo();
-          
+
           await this.open(this.marcas[i]);
           while (this.dosperro  == 999999) {
-
-          await this.delay(1000);
+            await this.delay(1000);
           }
-          
         }
-        // await this.open(this.marcas[0]);
-        //await console.log('player marca', this.marcas[0].punto);
       }
     }
-
-    //await console.log('player state', event.data);
   }
 
   delay(ms: number) {
@@ -102,7 +89,6 @@ export class VideoAlumnoComponent implements OnInit {
   }
 
   open(marca: any) {
-    
     const dialogRef = this.dialog.open(QuestionModalComponent, {
       width: '70%',
       data: {
@@ -115,9 +101,7 @@ export class VideoAlumnoComponent implements OnInit {
       this.player.playVideo();
       this.dosperro = 1;
     });
-    
   }
-
 
   getContentMark() {
     this.retroalimentacionService.getMarcasXacontenido(parseInt(this.idContent, 10)).subscribe(
@@ -134,9 +118,10 @@ export class VideoAlumnoComponent implements OnInit {
       });
   }
 
-  getContentInteractive(idContent) {
+  getContentInteractiveDetail(idContent) {
     if (idContent !== undefined) {
       this.contenidoService.getDetalleContenidoInteractivo(idContent).subscribe(contenido => {
+        this.contenidoInt = contenido;
         this.id = contenido.contenido.url.split('watch?v=')[1];
         this.contentsLoaded = Promise.resolve(true);
         console.log('contenido alumno', contenido);
@@ -146,6 +131,7 @@ export class VideoAlumnoComponent implements OnInit {
       });
     }
   }
+
   onStateChange(event) {
     if (event.data === YT.PlayerState.PLAYING) {
       this.playing = true;
@@ -190,4 +176,54 @@ export class VideoAlumnoComponent implements OnInit {
     }
   }
 
+  loadMarcas(marcas) {
+    this.marcasPorcentaje = [];
+    for (const marca of marcas) {
+      const marcaP = this.calcPercentage(+marca.punto);
+      this.marcasPorcentaje.push(marcaP);
+    }
+  }
+
+  calcPercentage(segundo: number) {
+    let percentage = 0;
+    if (this.player) {
+      percentage = (segundo * 100) / this.player.getDuration();
+    }
+    return percentage;
+  }
+
+  getCurrentTime(): string {
+    if (this.player) {
+      return this.toMin(this.player.getCurrentTime());
+    } else {
+      return '0:00';
+    }
+  }
+
+  getTotalTime(): string {
+    if (this.player) {
+      return this.toMin(this.player.getDuration());
+    } else {
+      return '0:00';
+    }
+  }
+
+  toMin(sec: number): string {
+    const result = Math.round(sec);
+    let resultStr = '0:00' +  result;
+    let newSec = (result % 60).toString();
+    if (+newSec < 10) {
+      newSec = '0' + newSec;
+    }
+    if (sec > 59) {
+      let min = Math.floor(result / 60).toString();
+      if (+min < 10) {
+        min = '0' + min;
+      }
+      resultStr = min + ':' + newSec;
+    } else {
+      resultStr = '0:' + newSec;
+    }
+    return resultStr;
+  }
 }
