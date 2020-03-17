@@ -6,15 +6,26 @@
     </div>
 
     <div style="margin-left: 13%;" class="bar-container">
-        <button mat-flat-button color="primary" *ngIf="!playing" (click)="play()">
-            <mat-icon>play_circle_outline</mat-icon>
-        </button>
-        <button mat-flat-button color="primary" *ngIf="playing" (click)="pause()">
-            <mat-icon>pause_circle_outline
-            </mat-icon>
-        </button>
-        <!-- <input type="range" #progressBar id="progressBar" value="0"> -->
-        <mat-slider step="values" type="range" #progressBar id="progressBar" color="primary"
-            (ngModelChange)='handleTouchProgressBar($event)' [ngModel]="progressBarValue"></mat-slider>
+      <div id="outer-marks">
+        <div id="inner-marks">
+          <div id="inner-inner-mark" *ngFor="let punto of marcasPorcentaje"
+               [ngStyle]="{'left': ((punto * 854 / 100)) + 'px'}"
+               (click)="handleTouchProgressBar(punto)"
+          ></div>
+        </div>
+      </div>
+
+      <input type="range" style="width: 854px;" #progressBar id="progressBar"
+             (ngModelChange)='handleTouchProgressBar($event)' [ngModel]="progressBarValue">
+
+      <br />
+      <button mat-flat-button color="primary" *ngIf="!playing" (click)="play()">
+        <mat-icon>play_circle_outline</mat-icon>
+      </button>
+      <button mat-flat-button color="primary" *ngIf="playing" (click)="pause()">
+        <mat-icon>pause_circle_outline
+        </mat-icon>
+      </button>
+      {{ getCurrentTime()}}/{{getTotalTime()}}
     </div>
 </ng-container>
