@@ -6,6 +6,7 @@ import { LoadVideoService } from '../services/contenidoInter/load-video.service'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { QuestionModalComponent } from 'src/app/contenido-interactivo/question-modal/question-modal.component';
 import { ContenidoService } from '../services/contenido.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-video-alumno',
@@ -14,6 +15,7 @@ import { ContenidoService } from '../services/contenido.service';
 })
 export class VideoAlumnoComponent implements OnInit {
 
+  sePuedeSaltar = true;
   idContent = '';
   retroalimentacion: string;
   player: YT.Player;
@@ -81,13 +83,13 @@ export class VideoAlumnoComponent implements OnInit {
       for (let i = 0; i < this.marcas.length; i++) {
         if (Math.round(this.player.getCurrentTime()) === this.marcas[i].punto) {
           this.player.pauseVideo();
-          
+
           await this.open(this.marcas[i]);
           while (this.dosperro  == 999999) {
 
           await this.delay(1000);
           }
-          
+
         }
         // await this.open(this.marcas[0]);
         //await console.log('player marca', this.marcas[0].punto);
@@ -102,7 +104,7 @@ export class VideoAlumnoComponent implements OnInit {
   }
 
   open(marca: any) {
-    
+
     const dialogRef = this.dialog.open(QuestionModalComponent, {
       width: '70%',
       data: {
@@ -115,7 +117,7 @@ export class VideoAlumnoComponent implements OnInit {
       this.player.playVideo();
       this.dosperro = 1;
     });
-    
+
   }
 
 
@@ -168,12 +170,17 @@ export class VideoAlumnoComponent implements OnInit {
   }
 
   handleTouchProgressBar(e: any): void {
-    // Calculate the new time for the video.
-    // new time in seconds = total duration in seconds * ( value of range input / 100 )
-    const newTime = this.player.getDuration() * (e / 100);
 
-    // Skip video to new time
-    this.player.seekTo(newTime, true);
+    if(this.sePuedeSaltar){
+      // Calculate the new time for the video.
+      // new time in seconds = total duration in seconds * ( value of range input / 100 )
+      const newTime = this.player.getDuration() * (e / 100);
+      // Skip video to new time
+      this.player.seekTo(newTime, true);
+    }else{
+      Swal.fire('Oops...', 'No se le permite saltar en el video', 'warning');
+      this.progressBarValue = (this.player.getCurrentTime() / this.player.getDuration()) * 100;
+    }
   }
 
   play(): void {
