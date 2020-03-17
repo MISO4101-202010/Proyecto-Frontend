@@ -5,6 +5,7 @@ import { PreguntaOpcionMultiple } from 'src/app/models/mark/questionMultiple.mod
 import { OpcionesPreguntaMultiple } from 'src/app/models/mark/optionsQuestionMultiple.model';
 import { LoadVideoService } from 'src/app/services/contenidoInter/load-video.service';
 import { AnswerQuestion } from 'src/app/models/mark/answerQuestion.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-question-modal',
@@ -43,7 +44,6 @@ export class QuestionModalComponent implements OnInit {
     }
   }
 
-
   continue() {
     this.hasFeedBack = false;
     this.indexToShow++;
@@ -54,14 +54,11 @@ export class QuestionModalComponent implements OnInit {
     }
   }
 
-
-
   getQuestion() {
     if (this.data.idMarca !== undefined) {
       console.log('ID MARCA A CONSULTAR ', this.data.idMarca);
       this.activityService.getActivityById(this.data.idMarca).subscribe(
         data => {
-          console.log(data);
           this.arrayQuestionsForMark = data.body.results;
           this.getQuestionToShow();
         }, error => {
@@ -137,7 +134,5 @@ export class QuestionModalComponent implements OnInit {
         console.log('Error getting question information -> ', error);
       }
     );
-
   }
-
 }
