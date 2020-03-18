@@ -5,7 +5,6 @@ import { PreguntaOpcionMultiple } from 'src/app/models/mark/questionMultiple.mod
 import { OpcionesPreguntaMultiple } from 'src/app/models/mark/optionsQuestionMultiple.model';
 import { LoadVideoService } from 'src/app/services/contenidoInter/load-video.service';
 import { AnswerQuestion } from 'src/app/models/mark/answerQuestion.model';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-question-modal',

@@ -14,7 +14,9 @@ import Swal from 'sweetalert2';
 })
 export class VideoAlumnoComponent {
 
-  sePuedeSaltar = true;
+  //Variable que indica la configuración del instructor para que el estudiante pueda o no saltar por la linea de tiempo del video.
+  // TODO : asignar el valor proveniente del contenido interactivo
+  canJump = true;
   player: YT.Player;
   idContent = '';
   retroalimentacion: string;
@@ -158,7 +160,8 @@ export class VideoAlumnoComponent {
 
   handleTouchProgressBar(e: any): void {
 
-    if(this.sePuedeSaltar){
+    if(this.canJump){
+
       // Calculate the new time for the video.
       // new time in seconds = total duration in seconds * ( value of range input / 100 )
       const newTime = this.player.getDuration() * (e / 100);
