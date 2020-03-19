@@ -13,6 +13,10 @@ import { AnswerQuestion } from 'src/app/models/mark/answerQuestion.model';
 })
 export class QuestionModalComponent implements OnInit {
 
+  //Variable que indica la configuración del instructor para que el estudiante pueda o no saltar una pregunta
+  // En este caso esta variable restringe la visualización del botón continuar
+  // TODO : asignar el valor proveniente del contenido interactivo
+  canJump = false;
   showRetroAlimentation = false;
   arrayQuestionsForMark: Array<PreguntaOpcionMultiple> = new Array();
   questionInformation: PreguntaOpcionMultiple;
