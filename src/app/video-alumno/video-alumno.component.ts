@@ -5,6 +5,7 @@ import { LoadVideoService } from '../services/contenidoInter/load-video.service'
 import { MatDialog } from '@angular/material/dialog';
 import { QuestionModalComponent } from 'src/app/contenido-interactivo/question-modal/question-modal.component';
 import { ContenidoService } from '../services/contenido.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-video-alumno',
@@ -13,6 +14,9 @@ import { ContenidoService } from '../services/contenido.service';
 })
 export class VideoAlumnoComponent {
 
+  //Variable que indica la configuración del instructor para que el estudiante pueda o no saltar por la linea de tiempo del video.
+  // TODO : asignar el valor proveniente del contenido interactivo
+  canJump = true;
   player: YT.Player;
   idContent = '';
   retroalimentacion: string;
@@ -79,6 +83,7 @@ export class VideoAlumnoComponent {
           while (this.dosperro  == 999999) {
             await this.delay(1000);
           }
+
         }
       }
     }
@@ -154,12 +159,18 @@ export class VideoAlumnoComponent {
   }
 
   handleTouchProgressBar(e: any): void {
-    // Calculate the new time for the video.
-    // new time in seconds = total duration in seconds * ( value of range input / 100 )
-    const newTime = this.player.getDuration() * (e / 100);
 
-    // Skip video to new time
-    this.player.seekTo(newTime, true);
+    if(this.canJump){
+
+      // Calculate the new time for the video.
+      // new time in seconds = total duration in seconds * ( value of range input / 100 )
+      const newTime = this.player.getDuration() * (e / 100);
+      // Skip video to new time
+      this.player.seekTo(newTime, true);
+    }else{
+      Swal.fire('Oops...', 'No se le permite saltar en el video', 'warning');
+      this.progressBarValue = (this.player.getCurrentTime() / this.player.getDuration()) * 100;
+    }
   }
 
   play(): void {
