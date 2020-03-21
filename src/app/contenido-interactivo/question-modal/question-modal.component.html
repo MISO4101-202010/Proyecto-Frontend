@@ -23,7 +23,7 @@
         <div class="col-3" *ngIf="!hasFeedBack" mat-dialog-actions>
             <button mat-button (click)="saveAnswer()">Enviar respuestas</button>
         </div>
-        <div class="col-3" mat-dialog-actions>
+        <div class="col-3" *ngIf="canJump" mat-dialog-actions>
             <button mat-button (click)="continue()">Continuar</button>
         </div>
     </div>
