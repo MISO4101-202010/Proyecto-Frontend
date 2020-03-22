@@ -37,10 +37,10 @@ input[type="range"] {
 }
 
 #inner-inner-mark {
-  background: #d6c900;
+  background: #413455;
   position: absolute;
   height: 20px;
-  width: 10px;
+  width: 5px;
   border-width: 1px;
   border-style: solid;
   cursor: pointer;
