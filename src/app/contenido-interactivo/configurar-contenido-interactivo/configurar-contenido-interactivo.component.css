@@ -36,7 +36,7 @@ input[type="range"] {
   position: absolute;
 }
 
-#inner-inner-mark {
+#inner-inner-mark { 
   background: #413455;
   position: absolute;
   height: 20px; 
