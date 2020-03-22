@@ -5,6 +5,7 @@ import { PreguntaOpcionMultiple } from 'src/app/models/mark/questionMultiple.mod
 import { OpcionesPreguntaMultiple } from 'src/app/models/mark/optionsQuestionMultiple.model';
 import { LoadVideoService } from 'src/app/services/contenidoInter/load-video.service';
 import { AnswerQuestion } from 'src/app/models/mark/answerQuestion.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-question-modal',
@@ -13,6 +14,10 @@ import { AnswerQuestion } from 'src/app/models/mark/answerQuestion.model';
 })
 export class QuestionModalComponent implements OnInit {
 
+  //Variable que indica la configuración del instructor para que el estudiante pueda o no saltar una pregunta
+  // En este caso esta variable restringe la visualización del botón continuar
+  // TODO : asignar el valor proveniente del contenido interactivo, tal vez de la variable PreguntaOpcionMultiple
+  canJump = true;
   showRetroAlimentation = false;
   arrayQuestionsForMark: Array<PreguntaOpcionMultiple> = new Array();
   questionInformation: PreguntaOpcionMultiple;
@@ -37,12 +42,19 @@ export class QuestionModalComponent implements OnInit {
 
   saveAnswer() {
     this.hasFeedBack = this.arrayQuestionsForMark[this.indexToShow].tieneRetroalimentacion;
-    this.callServiceSaveAnswer();
-    if (!this.hasFeedBack) {
-      this.continue();
+    if(this.optionsArray.some(this.hasAnswer)){
+      this.callServiceSaveAnswer();
+      if (!this.hasFeedBack) {
+        this.continue();
+      }
+    }else{
+      Swal.fire('Cuidado', 'No ha respondido la pregunta', 'warning');
     }
   }
 
+  hasAnswer(element, index, array) {
+    return element.answerOption;
+  }
 
   continue() {
     this.hasFeedBack = false;
@@ -54,14 +66,11 @@ export class QuestionModalComponent implements OnInit {
     }
   }
 
-
-
   getQuestion() {
     if (this.data.idMarca !== undefined) {
       console.log('ID MARCA A CONSULTAR ', this.data.idMarca);
       this.activityService.getActivityById(this.data.idMarca).subscribe(
         data => {
-          console.log(data);
           this.arrayQuestionsForMark = data.body.results;
           this.getQuestionToShow();
         }, error => {
@@ -137,7 +146,5 @@ export class QuestionModalComponent implements OnInit {
         console.log('Error getting question information -> ', error);
       }
     );
-
   }
-
 }

@@ -1,10 +1,33 @@
-.container {
-    margin: 2%;
-  }
-  .video-container {
-    width: 854px;
-    height: auto;
-  }
-  #progressBar {
-    width: 800px;
-  }
+.bar-container {
+  padding-top: 10px;
+  margin: 2%;
+}
+
+.video-container {
+  width: 854px;
+  height: auto;
+}
+
+#progressBar {
+  width: 800px;
+}
+
+#outer-marks {
+  width: 100%;
+  position: relative
+}
+
+#inner-marks {
+  top: -30px;
+  position: absolute;
+}
+
+#inner-inner-mark {
+  background: #43425d;
+  position: absolute;
+  height: 20px;
+  width: 8px;
+  border-width: 1px;
+  border-style: solid;
+  cursor: pointer;
+}
