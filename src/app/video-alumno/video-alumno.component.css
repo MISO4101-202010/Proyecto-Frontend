@@ -31,3 +31,14 @@
   border-style: solid;
   cursor: pointer;
 }
+
+.blocking-div {
+  width: 854px;
+  height: 518px;
+  background-color: transparent;
+  position: fixed;
+  left: 442px;
+  top: 66px;
+  /* Para aparecer encima del video y de las marcas */
+  z-index: 2;
+}
