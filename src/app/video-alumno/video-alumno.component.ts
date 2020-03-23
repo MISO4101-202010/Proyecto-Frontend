@@ -103,7 +103,8 @@ export class VideoAlumnoComponent {
       width: "70%",
       data: {
         idActivity: "1",
-        idMarca: marca.id
+        idMarca: marca.id,
+        contenidoInteractivo: this.contenidoInt
       }
     });
 
