@@ -184,6 +184,7 @@ export class VideoAlumnoComponent {
       // Skip video to new time
       this.player.seekTo(newTime, true);
     }
+
     if (this.canJump) {
       // Calculate the new time for the video.
       // new time in seconds = total duration in seconds * ( value of range input / 100 )
