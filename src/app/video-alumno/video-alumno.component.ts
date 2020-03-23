@@ -37,7 +37,7 @@ export class VideoAlumnoComponent {
   contentsLoaded: Promise<boolean>;
   marcasPorcentaje;
   contenidoInt;
-  isVideoLinear: boolean;
+  isVideoLineal: boolean;
 
   @ViewChild("progressBar", { static: false }) progressBar: ElementRef;
   constructor(
@@ -135,14 +135,14 @@ export class VideoAlumnoComponent {
       this.contenidoService.getDetalleContenidoInteractivo(idContent).subscribe(
         contenido => {
           //True si el video es solo lineal y no se puede saltar entre marcas, false de lo contrario
-          contenido.linear = true;
-          this.isVideoLinear = contenido.linear;
+          contenido.lineal = true;
+          this.isVideoLineal = contenido.lineal;
           this.contenidoInt = contenido;
           this.id = contenido.contenido.url.split("watch?v=")[1];
           this.contentsLoaded = Promise.resolve(true);
           console.log("contenido alumno", contenido);
           console.log("idd", this.id);
-          if (this.isVideoLinear) {
+          if (this.isVideoLineal) {
             this.progressBar.nativeElement.disabled = true;
           }
         },
@@ -175,7 +175,7 @@ export class VideoAlumnoComponent {
   }
 
   handleTouchProgressBar(e: any): void {
-    if (!this.isVideoLinear) {
+    if (!this.isVideoLineal) {
       // Calculate the new time for the video.
       // new time in seconds = total duration in seconds * ( value of range input / 100 )
       const newTime = this.player.getDuration() * (e / 100);
