@@ -1,14 +1,14 @@
 <div style="margin: 4%;"></div>
 <ng-container *ngIf="contentsLoaded | async">
     <div style="margin-left: 13%;">
-        <youtube-player [videoId]="id" [height]="480" [width]="852" (ready)="savePlayer($event)"
+        <youtube-player style="pointer-events: none;" [videoId]="id" [height]="480" [width]="852" (ready)="savePlayer($event)"
             (change)="onStateChange($event)" [playerVars]="playerVars"></youtube-player>
     </div>
 
     <div style="margin-left: 13%;" class="bar-container">
       <div id="outer-marks">
         <div id="inner-marks">
-          <div id="inner-inner-mark" *ngFor="let punto of marcasPorcentaje"
+          <div title="{{(player ? player.getDuration() : 0) * (punto / 100) * 1000 | date:'mm:ss'}}" id="inner-inner-mark" *ngFor="let punto of marcasPorcentaje"
                [ngStyle]="{'left': ((punto * 854 / 100)) + 'px'}"
                (click)="handleTouchProgressBar(punto)"
           ></div>
