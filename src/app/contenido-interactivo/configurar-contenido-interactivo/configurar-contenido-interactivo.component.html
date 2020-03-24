@@ -2,7 +2,7 @@
     <h2>Añadir marcas</h2>
     <div *ngIf="contentsLoaded | async" class="video-container">
         <div style="width: 100%;">
-            <youtube-player id="ytplayer" [videoId]="id" height="480" width="854" (ready)="savePlayer($event)"
+            <youtube-player style="pointer-events: none;" id="ytplayer" [videoId]="id" height="480" width="854" (ready)="savePlayer($event)"
                 (change)="onStateChange($event)" [playerVars]="playerVars">
             </youtube-player>
         </div>
@@ -10,7 +10,7 @@
         <div class="bar-container">
             <div id="outer-marks">
               <div id="inner-marks">
-                <div id="inner-inner-mark" *ngFor="let punto of marcasPorcentaje"
+                <div title="{{((player ? player.getDuration() : 0) * (punto / 100)) * 1000 | date:'mm:ss'}}" id="inner-inner-mark" *ngFor="let punto of marcasPorcentaje"
                      [ngStyle]="{'left': ((punto * 854 / 100)) + 'px'}"
                      (click)="handleTouchProgressBar(punto)"
                 ></div>
