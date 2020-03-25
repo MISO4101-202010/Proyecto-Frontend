@@ -35,7 +35,6 @@ export class CrearSeleccionMultipleComponent implements OnInit {
       esMultipleResp: [false, [Validators.required]],
       nombre: ['', [Validators.required]],
       tieneRetroalimentacion: [false, [Validators.required]],
-      puedeSaltar: [false, [Validators.required]],
       numeroDeIntentos: [1, [Validators.required, Validators.min(1)]],
       opciones: this.formBuilder.array([])
     });

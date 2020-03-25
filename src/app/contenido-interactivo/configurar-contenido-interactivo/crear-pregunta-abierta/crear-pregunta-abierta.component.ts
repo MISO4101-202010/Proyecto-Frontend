@@ -33,8 +33,7 @@ export class CrearPreguntaAbiertaComponent implements OnInit {
   initializeForm() {
     this.questionForm = this.formBuilder.group({
       enunciado: ['', [Validators.required]],
-      nombre: ['', [Validators.required]],
-      puedeSaltar: [false, [Validators.required]]
+      nombre: ['', [Validators.required]]
     });
   }
 
