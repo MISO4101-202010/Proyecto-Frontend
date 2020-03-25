@@ -22,10 +22,11 @@ export class ContenidoService {
     return this.httpClient.get<any>(this.contenidoUrl);
   }
 
-  postContenidoInteractivo(nombre: string, contenidoId: number) {
+  postContenidoInteractivo(nombre: string, contenidoId: number, puedeSaltar: boolean) {
     const body = {
       nombre: nombre,
-      contenido: contenidoId
+      contenido: contenidoId,
+      puedeSaltar: puedeSaltar
     };
     console.log('body:', body);
     return this.httpClient.post(this.crearContenidoInteractivo, body);
@@ -44,15 +45,15 @@ export class ContenidoService {
     return this.httpClient.get<any>(this.detalleUrl + contentId);
   }
 
-  getReporteContenido(contentId: number): Observable<any>  {
+  getReporteContenido(contentId: number): Observable<any> {
     return this.httpClient.get<any>(this.reportesUrl + contentId);
   }
 
-  agregarMarcaPreguntaSeleccionMultiple(marca:any) : Observable<any> {
+  agregarMarcaPreguntaSeleccionMultiple(marca: any): Observable<any> {
     return this.httpClient.post(this.addPreguntaSelecconMultipleUrl, marca);
   }
 
-  agregarMarcaPreguntaAbierta(marca:any) : Observable<any> {
+  agregarMarcaPreguntaAbierta(marca: any): Observable<any> {
     return this.httpClient.post(this.addPreguntaAbiertaUrl, marca);
   }
 }
