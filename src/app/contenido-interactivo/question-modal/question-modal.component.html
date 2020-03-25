@@ -1,5 +1,5 @@
 <div *ngIf="hasQuestionsToShow">
-  <div mat-dialog-title class="font-title">{{questionInformation.enunciado}}</div>
+  <div mat-dialog-title class="font-title">{{typeQuestion==='pausa'?'Pausa':questionInformation.enunciado}}</div>
 
   <div mat-dialog-content *ngIf="typeQuestion==='preguntaOpcionMultiple'">
     <div class="row" *ngFor="let optionAnswer of optionsArray, let i=index">
@@ -32,7 +32,15 @@
     </div>
   </div>
 
-  <div class="row">
+  <div mat-dialog-content *ngIf="typeQuestion==='pausa'">
+    <div class="row">
+      <div class="col-12">
+        {{questionInformation.enunciado}}
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="typeQuestion!=='pausa'">
     <div class="col-3" *ngIf="!hasFeedBack" mat-dialog-actions>
       <button mat-button (click)="saveAnswer()">Enviar respuestas</button>
     </div>

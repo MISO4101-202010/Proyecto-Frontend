@@ -37,7 +37,18 @@ export class ActivitiesService {
       }
     );
 
-    return forkJoin([preguntaOpcionMultiple, preguntaAbierta]);
+    let pausa = this.httpService.getRequestWithoutParams(this.activitiesUrl + 'pausas/' + id + '/').map(
+      response => {
+        response.body.results.forEach(o => {
+          o.type = 'pausa'
+        });
+        return response;
+      }, error => {
+        return error;
+      }
+    );
+
+    return forkJoin([preguntaOpcionMultiple, preguntaAbierta, pausa]);
   }
 
   getMarcaById(id): Observable<any> {

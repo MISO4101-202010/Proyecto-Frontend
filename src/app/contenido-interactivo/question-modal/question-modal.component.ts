@@ -62,6 +62,8 @@ export class QuestionModalComponent implements OnInit {
       }
     } else if (this.typeQuestion === 'preguntaAbierta') {
       this.dialogRef.close();
+    } else if (this.typeQuestion === 'pausa') {
+      this.dialogRef.close();
     }
   }
 
@@ -130,6 +132,12 @@ export class QuestionModalComponent implements OnInit {
           this.questionInformation = element;
           this.questionInformation.respuesta = '';
           this.hasFeedBack = false;
+        }else if (this.typeQuestion === 'pausa') {
+          this.idQuestion = element.id;
+          this.questionInformation = element;
+          this.questionInformation.respuesta = '';
+          this.hasFeedBack = false;
+          this.sleep(element.tiempo * 1000).then(() => { this.continue(); });
         }
       }
     });
@@ -142,6 +150,10 @@ export class QuestionModalComponent implements OnInit {
     // }
   }
 
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+   
   callServiceSaveAnswer() {
     this.activityService.getLastTryByQuestion(this.idQuestion, this.studentId).subscribe(
       answerTries => {
