@@ -46,7 +46,7 @@ export class QuestionModalComponent implements OnInit {
     this.getQuestion();
     this.activatedRoute.params.subscribe(params => {
       this.idContent = params["id"] ? params["id"] : "";
-      this.canJump = !this.data.contenidoInteractivo.lineal;
+      this.canJump = this.data.contenidoInteractivo.puedeSaltar;
     });
   }
 

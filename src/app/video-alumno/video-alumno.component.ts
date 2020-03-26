@@ -129,10 +129,7 @@ export class VideoAlumnoComponent {
     if (idContent !== undefined) {
       this.contenidoService.getDetalleContenidoInteractivo(idContent).subscribe(
         contenido => {
-          // TODO: Completar con el desarrollo de MISO-64
-          // true si el video es solo lineal y NO se puede saltar entre marcas, de lo contrario false
-          contenido.lineal = false;
-          this.isVideoLineal = contenido.lineal;
+          this.isVideoLineal = !contenido.puedeSaltar;
           this.contenidoInt = contenido;
           this.id = contenido.contenido.url.split("watch?v=")[1];
           this.contentsLoaded = Promise.resolve(true);
@@ -165,9 +162,7 @@ export class VideoAlumnoComponent {
 
   // Actualiza el estado de la barra de reproducción cuando se navega
   public updateProgressBar(): void {
-    this.progressBarValue =
-      (this.player.getCurrentTime() / this.player.getDuration()) * 100;
-    // this.progressBar.nativeElement.value = (this.player.getCurrentTime() / this.player.getDuration()) * 100;
+    this.progressBarValue = (this.player.getCurrentTime() / this.player.getDuration()) * 100;
   }
 
   handleTouchProgressBar(e: any): void {
