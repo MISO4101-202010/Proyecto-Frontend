@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from "@angular/core";
+import { Component, ElementRef, ViewChild } from "@angular/core";
 import { InteraccionAlumnoService } from "../interaccion-alumno.service";
 import { ActivatedRoute } from "@angular/router";
 import { LoadVideoService } from "../services/contenidoInter/load-video.service";
@@ -13,11 +13,8 @@ import Swal from "sweetalert2";
   styleUrls: ["./video-alumno.component.css"]
 })
 export class VideoAlumnoComponent {
-  //Variable que indica la configuración del instructor para que el estudiante pueda o no saltar por la linea de tiempo del video.
-  // TODO : asignar el valor proveniente del contenido interactivo
   player: YT.Player;
   idContent = "";
-  retroalimentacion: string;
   id = "";
   marcas: any[];
   dosperro = 999999;
@@ -32,8 +29,6 @@ export class VideoAlumnoComponent {
     disablekb: 1,
     showinfo: 0
   };
-  waiting = false;
-  counter = 0;
   contentsLoaded: Promise<boolean>;
   marcasPorcentaje;
   contenidoInt;
@@ -73,7 +68,6 @@ export class VideoAlumnoComponent {
     this.loadMarcas(this.contenidoInt.marcas);
 
     await console.log("player currenttime", this.player.getCurrentTime());
-    //console.log('player nnn', this.marcas[i].punto);
     while (1 == 1) {
       this.dosperro = 999999;
       await this.delay(1000);
@@ -135,9 +129,7 @@ export class VideoAlumnoComponent {
     if (idContent !== undefined) {
       this.contenidoService.getDetalleContenidoInteractivo(idContent).subscribe(
         contenido => {
-          //True si el video es solo lineal y no se puede saltar entre marcas, false de lo contrario
-          contenido.lineal = true;
-          this.isVideoLineal = contenido.lineal;
+          this.isVideoLineal = !contenido.puedeSaltar;
           this.contenidoInt = contenido;
           this.id = contenido.contenido.url.split("watch?v=")[1];
           this.contentsLoaded = Promise.resolve(true);
@@ -170,9 +162,7 @@ export class VideoAlumnoComponent {
 
   // Actualiza el estado de la barra de reproducción cuando se navega
   public updateProgressBar(): void {
-    this.progressBarValue =
-      (this.player.getCurrentTime() / this.player.getDuration()) * 100;
-    // this.progressBar.nativeElement.value = (this.player.getCurrentTime() / this.player.getDuration()) * 100;
+    this.progressBarValue = (this.player.getCurrentTime() / this.player.getDuration()) * 100;
   }
 
   handleTouchProgressBar(e: any): void {
@@ -183,8 +173,7 @@ export class VideoAlumnoComponent {
 
       // Skip video to new time
       this.player.seekTo(newTime, true);
-    }
-    else{
+    } else {
       Swal.fire("Oops...", "No se le permite saltar en el video", "warning");
     }
   }
@@ -252,5 +241,15 @@ export class VideoAlumnoComponent {
       resultStr = "0:" + newSec;
     }
     return resultStr;
+  }
+
+  getDuration(punto): number {
+    return (this.player ? this.player.getDuration() : 0) * (punto / 100) * 1000;
+  }
+
+  getPosition(punto): number {
+    // Cantidad de puntos a restar para ubicar la marca, los "10" son el tamaño de la marca
+    const pixelsToRest = (punto * 10 / 100);
+    return (punto * 854 / 100) - pixelsToRest;
   }
 }

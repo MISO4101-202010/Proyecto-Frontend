@@ -22,12 +22,10 @@
   position: absolute;
 }
 
-#inner-inner-mark { 
+#inner-inner-mark {
   background: #413455;
   position: absolute;
-  height: 20px; 
-  width: 5px;
-  border-width: 1px;
-  border-style: solid;
+  height: 20px;
+  width: 10px;
   cursor: pointer;
 }

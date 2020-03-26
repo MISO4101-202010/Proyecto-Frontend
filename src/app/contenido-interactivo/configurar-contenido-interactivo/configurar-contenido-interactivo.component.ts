@@ -28,7 +28,6 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
   };
   playing = false;
   progressBarValue = 0;
-  values = [1, 3, 5, 10, 20, 50, 100];    // values to step to
   contenidoInt;
   contId;
   contentsLoaded: Promise<boolean>;
@@ -91,10 +90,6 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
   handleTouchProgressBar(e: any): void {
     // Calculate the new time for the video.
     // new time in seconds = total duration in seconds * ( value of range input / 100 )
-    if (!Number.isInteger(e)) {
-      // Get the integer part and adds 1
-      e = Math.trunc(e) + 1;
-    }
     const newTime = this.player.getDuration() * (e / 100);
 
     // Skip video to new time
@@ -168,7 +163,7 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
 
   toMin(sec: number): string {
     const result = Math.round(sec);
-    let resultStr = '0:00' +  result;
+    let resultStr = '0:00' + result;
     let newSec = (result % 60).toString();
     if (+newSec < 10) {
       newSec = '0' + newSec;
@@ -211,5 +206,15 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
     dialogRef.afterClosed().subscribe(_ => {
       this.getContentInteractiveDetail();
      });
+  }
+
+  getDuration(punto): number {
+    return (this.player ? this.player.getDuration() : 0) * (punto / 100) * 1000;
+  }
+
+  getPosition(punto): number {
+    // Cantidad de puntos a restar para ubicar la marca, los "10" son el tamaño de la marca
+    const pixelsToRest = (punto * 10 / 100);
+    return (punto * 854 / 100) - pixelsToRest;
   }
 }
