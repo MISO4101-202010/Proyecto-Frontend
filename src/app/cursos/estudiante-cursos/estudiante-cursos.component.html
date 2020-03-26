@@ -1,24 +1,16 @@
 <div class="container">
   <h1>Mis Cursos</h1>
-  <div class="flex-grid" *ngFor="let curso of cursos">
-    <p>
-      {{curso.nombre}}
-    </p>
-    <ngb-carousel>
-      <ng-template ngbSlide *ngFor="let content of curso.contenido_interactivo" >
-        <table>
-          <tr>
-            <td>
-              <div align="center">
-                <img src="{{getURLImageYoutube(content.contenido.url)}}" alt="{{content.nombre}}" width="30%" height="30%">
-              </div>
-            </td>
-          </tr>
-        </table>
-        <div class="carousel-caption">
-          <h3 style="color: black;font-size: medium">{{content.nombre}}</h3>
-        </div>
-      </ng-template>
-    </ngb-carousel>
-  </div>
+      <div class="flex-grid" *ngFor="let curso of cursos">
+            <p>
+              {{curso.nombre}}
+            </p>
+              <ngb-carousel style="width: 20%">
+                <ng-template  ngbSlide *ngFor="let content of curso.contenido_interactivo;let i=index" >
+                  <img src="{{getURLImageYoutube(content.contenido.url)}}" alt="{{content.nombre}}" width="100%" height="100%">
+                  <div class="carousel-caption">
+                    <h3 style="background: #eceff1;color: black;font-size: medium">{{content.nombre}}</h3>
+                  </div>
+                </ng-template>
+              </ngb-carousel>
+      </div>
 </div>
