@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpService } from 'src/app/services/http-service/http.service';
-import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AnswerQuestion } from 'src/app/models/mark/answerQuestion.model';
+import {Injectable} from '@angular/core';
+import {HttpService} from 'src/app/services/http-service/http.service';
+import {environment} from 'src/environments/environment';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {AnswerQuestion} from 'src/app/models/mark/answerQuestion.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +12,22 @@ export class ActivitiesService {
 
   private activitiesUrl = `${environment.apiUrl}/activities/`;
 
-  constructor(private httpService: HttpService) { }
+  constructor(private httpService: HttpService) {
+  }
 
   getActivityById(id): Observable<any> {
     const url = this.activitiesUrl + 'preguntaOpcionMultiple/' + id + '/';
+    return this.httpService.getRequestWithoutParams(url).map(
+      response => {
+        return response;
+      }, error => {
+        return error;
+      }
+    );
+  }
+
+  getActivityFVById(id): Observable<any> {
+    const url = this.activitiesUrl + 'pregunta_f_v/' + id;
     return this.httpService.getRequestWithoutParams(url).map(
       response => {
         return response;

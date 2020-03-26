@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ActivitiesService } from 'src/app/services/activities-service/activities.service';
-import { PreguntaOpcionMultiple } from 'src/app/models/mark/questionMultiple.model';
-import { OpcionesPreguntaMultiple } from 'src/app/models/mark/optionsQuestionMultiple.model';
-import { LoadVideoService } from 'src/app/services/contenidoInter/load-video.service';
-import { AnswerQuestion } from 'src/app/models/mark/answerQuestion.model';
+import {Component, OnInit, Inject} from '@angular/core';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {ActivitiesService} from 'src/app/services/activities-service/activities.service';
+import {PreguntaOpcionMultiple} from 'src/app/models/mark/questionMultiple.model';
+import {OpcionesPreguntaMultiple} from 'src/app/models/mark/optionsQuestionMultiple.model';
+import {LoadVideoService} from 'src/app/services/contenidoInter/load-video.service';
+import {AnswerQuestion} from 'src/app/models/mark/answerQuestion.model';
 
 @Component({
   selector: 'app-question-modal',
@@ -27,7 +27,7 @@ export class QuestionModalComponent implements OnInit {
   numberTry: number;
 
   constructor(public dialogRef: MatDialogRef<QuestionModalComponent>, @Inject(MAT_DIALOG_DATA) public data: { idActivity, idMarca },
-    private activityService: ActivitiesService) {
+              private activityService: ActivitiesService) {
     dialogRef.disableClose = true;
   }
 
@@ -53,7 +53,6 @@ export class QuestionModalComponent implements OnInit {
       this.dialogRef.close();
     }
   }
-
 
 
   getQuestion() {
@@ -85,7 +84,7 @@ export class QuestionModalComponent implements OnInit {
     this.optionsArray = new Array();
     arrayOptions.forEach(option => {
       this.optionsArray.push(
-        { idOption: option.id, idQuestion: idQ, answerOption: false, titleOption: option.opcion });
+        {idOption: option.id, idQuestion: idQ, answerOption: false, titleOption: option.opcion});
     });
   }
 
@@ -94,7 +93,7 @@ export class QuestionModalComponent implements OnInit {
     arrayOptions.forEach(option => {
       if (option.esCorrecta) {
         this.arrayCorrectAnswers.push(
-          { titleAnswer: option.opcion });
+          {titleAnswer: option.opcion});
       }
     });
   }
@@ -103,7 +102,7 @@ export class QuestionModalComponent implements OnInit {
     this.arrayQuestionsForMark.forEach((element, index) => {
       if (this.indexToShow === index) {
         this.questionInformation = new PreguntaOpcionMultiple
-          (null, element.enunciado, element.esMultipleResp, element.opciones, element.tieneRetroalimentacion);
+        (null, element.enunciado, element.esMultipleResp, element.opciones, element.tieneRetroalimentacion);
         this.hasManyOptions = element.esMultipleResp;
         this.generateArrayOptions(this.questionInformation.opciones, element.id);
         this.generateArrayCorrectAnswers(this.questionInformation.opciones);

@@ -1,0 +1,33 @@
+<div *ngIf="hayPregunta">
+  <h1 class="subrayar">{{infoPregunta.nombre}}</h1>
+  <h3>{{infoPregunta.pregunta}}</h3>
+  <div mat-dialog-content class="container">
+    <div class="fila-flex">
+      <div id="pregunta" class="columna-flex">
+        <label>Selecciona tu respuesta:</label>
+        <mat-radio-group [formControl]="respuestaControl">
+          <mat-radio-button value="verdadero">Verdadero</mat-radio-button>
+          <mat-radio-button class="falso" value="falso">Falso</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div *ngIf="yaRespondio" id="respuesta" class="columna-flex">
+        <h4 class="negrilla">Respuesta Correcta</h4>
+        <p>{{respuesta}}</p>
+      </div>
+    </div>
+    <div *ngIf="yaRespondio && infoPregunta.tieneRetroalimentacion" class="columna-flex">
+      <h3 class="subrayar">Retroalimentación:</h3>
+      <label>{{infoPregunta.retroalimentacion}}</label>
+    </div>
+    <div class="form-actions">
+      <button *ngIf="infoPregunta.puedeSaltar" class="mat-flat-button mat-primary" type="button"
+              (click)="saltar()">
+        Continuar
+      </button>
+      <button *ngIf="!yaRespondio" class="mat-flat-button mat-primary" type="button" (click)="responderPregunta()">
+        Enviar
+        respuesta
+      </button>
+    </div>
+  </div>
+</div>

@@ -53,7 +53,7 @@ export class CrearPreguntaVerdaderoFalsoComponent implements OnInit {
       this.questionForm.value.esVerdadero = respuestaCorrecta;
       this.questionForm.value.puedeSaltar = saltar;
       this.questionForm.value.tieneRetroalimentacion = tieneRetro;
-      this.questionForm.value.tipoActividad = 3;
+      this.questionForm.value.tipoActividad = 2;
       this.contenidoService.agregarMarca(infoMarca).subscribe(result1 => {
         this.questionForm.value.marca = result1.id;
         this.contenidoService.agregarMarcaVerdaderoFalso(this.questionForm.value).subscribe(result2 => {
