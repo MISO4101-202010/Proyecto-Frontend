@@ -1,9 +1,8 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { Component, Inject, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { ActivitiesService } from "src/app/services/activities-service/activities.service";
 import { PreguntaOpcionMultiple } from "src/app/models/mark/questionMultiple.model";
 import { OpcionesPreguntaMultiple } from "src/app/models/mark/optionsQuestionMultiple.model";
-import { LoadVideoService } from "src/app/services/contenidoInter/load-video.service";
 import { AnswerQuestion } from "src/app/models/mark/answerQuestion.model";
 import Swal from "sweetalert2";
 import { ActivatedRoute } from "@angular/router";
@@ -14,11 +13,7 @@ import { ActivatedRoute } from "@angular/router";
   styleUrls: ["./question-modal.component.css"]
 })
 export class QuestionModalComponent implements OnInit {
-  //Variable que indica la configuración del instructor para que el estudiante pueda o no saltar una pregunta
-  // En este caso esta variable restringe la visualización del botón continuar
-  // TODO : asignar el valor proveniente del contenido interactivo, tal vez de la variable PreguntaOpcionMultiple
-  canJump = true;
-  showRetroAlimentation = false;
+  canJump: boolean;
   arrayQuestionsForMark: Array<PreguntaOpcionMultiple> = new Array();
   questionInformation: PreguntaOpcionMultiple;
   hasQuestionsToShow = false;
@@ -51,7 +46,7 @@ export class QuestionModalComponent implements OnInit {
     this.getQuestion();
     this.activatedRoute.params.subscribe(params => {
       this.idContent = params["id"] ? params["id"] : "";
-      this.canJump = this.data.contenidoInteractivo.lineal;
+      this.canJump = !this.data.contenidoInteractivo.lineal;
     });
   }
 
