@@ -53,6 +53,13 @@ export class ContenidoService {
     return this.httpClient.get<any>(this.reportesUrl + contentId);
   }
 
+  getCursosList(): Observable<any>  {
+    return this.httpClient.get<any>(this.cursosUrl);
+  }
+  getCursosIdList(id:string): Observable<any>  {
+    return this.httpClient.get<any>(this.contenidoInteractivoUrl+id);
+  }
+
   agregarMarcaPreguntaSeleccionMultiple(marca: any): Observable<any> {
     return this.httpClient.post(this.addPreguntaSelecconMultipleUrl, marca);
   }
