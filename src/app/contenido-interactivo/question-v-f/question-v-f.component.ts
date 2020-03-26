@@ -51,6 +51,7 @@ export class QuestionVFComponent implements OnInit {
     if (this.respuestaControl.value !== null) {
       this.respuestaControl.disable();
       const idEstudiante = JSON.parse(sessionStorage.userConectaTe).dataProfesor.id;
+      // Acá debe ir la petición al servicio REST para guardar la respuesta del alumno y si sale bien se cambian las dos variables
       this.yaRespondio = true;
       this.infoPregunta.puedeSaltar = true;
     } else {
