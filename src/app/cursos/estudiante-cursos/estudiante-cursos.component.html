@@ -1,24 +1,24 @@
 <div class="container">
-  <h1>Mis Cursos</h1>
-  <div class="flex-grid" *ngFor="let curso of cursos">
-    <p>
-      {{curso.nombre}}
-    </p>
-    <ngb-carousel>
-      <ng-template ngbSlide *ngFor="let content of curso.contenido_interactivo" >
-        <table>
-          <tr>
-            <td>
-              <div align="center">
-                <img src="{{getURLImageYoutube(content.contenido.url)}}" alt="{{content.nombre}}" width="30%" height="30%">
-              </div>
-            </td>
-          </tr>
-        </table>
-        <div class="carousel-caption">
-          <h3 style="color: black;font-size: medium">{{content.nombre}}</h3>
+  <h1 class="titulo">Mis Cursos</h1>
+  <div *ngFor="let curso of cursos">
+    <div class="myCard example-card mat-card">
+      <h4 class="nombreCurso" #nombre>{{curso.nombre}}</h4>
+      <div class="contenedor">
+        <button class="boton" (click)="anterior(nombre)">
+          <img src="https://res.cloudinary.com/drfggfn8f/image/upload/v1585253592/cs6jgqlod6vvidig51b9.svg" alt="">
+        </button>
+        <div class="imagenes">
+          <div class="cuadrado" *ngFor="let contenido of curso.mostrar">
+            <a href="./#/contenido-interactivo">
+              <img src="{{getURLImageYoutube(contenido.contenido.url)}}" alt="" class="imagen" />
+            </a>
+            <p>{{contenido.nombre}}</p>
+          </div>
         </div>
-      </ng-template>
-    </ngb-carousel>
+        <button class="boton2" (click)="siguiente(nombre)">
+          <img src="https://res.cloudinary.com/drfggfn8f/image/upload/v1585253592/whqml0lhrf6uzm4ymcct.svg" alt="">
+        </button>
+      </div>
+    </div>
   </div>
 </div>
