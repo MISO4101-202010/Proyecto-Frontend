@@ -4,6 +4,7 @@ export class AnswerVoF {
     public preguntaVoF: number,
     public esVerdadero: boolean,
     public estudiante: number,
+    public grupo: number
   ) {
   }
 
