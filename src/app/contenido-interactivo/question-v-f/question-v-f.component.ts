@@ -51,7 +51,7 @@ export class QuestionVFComponent implements OnInit {
   responderPregunta() {
     if (this.respuestaControl.value !== null) {
       const idEstudiante = JSON.parse(sessionStorage.userConectaTe).dataProfesor.id;
-      this.answer = new AnswerVoF(this.infoPregunta.id, this.respuestaControl.value, idEstudiante,0);
+      this.answer = new AnswerVoF(this.infoPregunta.id, this.respuestaControl.value, idEstudiante, 0);
       this.activityService.postFVAnswer(this.answer).subscribe(
         data => {
           this.respuestaControl.disable();
