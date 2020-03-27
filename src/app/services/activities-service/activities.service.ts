@@ -4,6 +4,7 @@ import {environment} from 'src/environments/environment';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AnswerQuestion} from 'src/app/models/mark/answerQuestion.model';
+import { AnswerVoF } from 'src/app/models/mark/answerVoF';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,17 @@ export class ActivitiesService {
 
   postSaveAnswerQuestion(answer: AnswerQuestion): Observable<any> {
     const url = this.activitiesUrl + 'respuestaOpcionMultiple/';
+    return this.httpService.postJSON(url, answer).map(
+      response => {
+        return response;
+      }, error => {
+        return error;
+      }
+    );
+  }
+
+  postFVAnswer(answer: AnswerVoF): Observable<any> {
+    const url = this.activitiesUrl + 'pregunta_f_v/';
     return this.httpService.postJSON(url, answer).map(
       response => {
         return response;
