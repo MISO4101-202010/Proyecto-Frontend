@@ -64,7 +64,7 @@ export class ActivitiesService {
   }
 
   postFVAnswer(answer: AnswerVoF): Observable<any> {
-    const url = this.activitiesUrl + 'pregunta_f_v/';
+    const url = this.activitiesUrl + 'respuestafov';
     return this.httpService.postJSON(url, answer).map(
       response => {
         return response;

@@ -4,7 +4,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormControl} from '@angular/forms';
 import {ActivitiesService} from '../../services/activities-service/activities.service';
 import Swal from 'sweetalert2';
-import { AnswerVoF } from 'src/app/models/mark/answerVoF';
+import {AnswerVoF} from 'src/app/models/mark/answerVoF';
 
 export interface DialogData {
   marca: any;
@@ -50,21 +50,16 @@ export class QuestionVFComponent implements OnInit {
 
   responderPregunta() {
     if (this.respuestaControl.value !== null) {
-      this.respuestaControl.disable();
       const idEstudiante = JSON.parse(sessionStorage.userConectaTe).dataProfesor.id;
-      // Acá debe ir la petición al servicio REST para guardar la respuesta del alumno y si sale bien se cambian las dos variables
+      this.answer = new AnswerVoF(this.infoPregunta.id, this.respuestaControl.value, idEstudiante);
       this.activityService.postFVAnswer(this.answer).subscribe(
-        data =>
-        {
-          this.answer.esVerdadero = this.respuestaControl.value;
-          this.answer.estudiante = idEstudiante;
-          this.answer.preguntaVoF = this.infoPregunta.id;
-          data.body = this.answer;
+        data => {
+          this.respuestaControl.disable();
+          this.answer = data.body;
           this.yaRespondio = true;
           this.infoPregunta.puedeSaltar = true;
         },
-        error =>
-        {
+        error => {
           Swal.fire('Error!!', 'Error por aqui', error);
         }
       );
