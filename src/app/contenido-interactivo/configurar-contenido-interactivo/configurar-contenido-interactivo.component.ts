@@ -4,10 +4,12 @@ import { CrearPreguntaAbiertaComponent } from './crear-pregunta-abierta/crear-pr
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { ContenidoService } from 'src/app/services/contenido.service';
+import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
 
 const activityTypesComponents = {
   'Pregunta de opción múltiple': CrearSeleccionMultipleComponent,
-  'Pregunta abierta': CrearPreguntaAbiertaComponent
+  'Pregunta abierta': CrearPreguntaAbiertaComponent,
+  'Pregunta tipo pausa': CrearPreguntaPausaComponent
 };
 
 @Component({
@@ -50,6 +52,7 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
   // }
 
   opcionesMarca = [
+    'Pregunta tipo pausa',
     'Pregunta de opción múltiple',
     'Pregunta Falso o Verdadero',
     'Pregunta abierta',
