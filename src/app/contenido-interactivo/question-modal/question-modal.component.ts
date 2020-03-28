@@ -53,18 +53,19 @@ export class QuestionModalComponent implements OnInit {
   }
 
   saveAnswer() {
+    this.callServiceSaveAnswer();
     if (this.typeQuestion === 'preguntaOpcionMultiple') {
-      this.callServiceSaveAnswer();
-      if (this.optionsArray.some(this.hasAnswer) || this.canJump) {
+      if (this.optionsArray.some(this.hasAnswer)) {
         this.hasFeedBack = this.arrayQuestionsForMark[this.indexToShow].tieneRetroalimentacion;
-        if (!this.hasFeedBack) {
-          this.continue();
-        }
+      } else {
+        Swal.fire("Cuidado", "No ha respondido la pregunta", "warning");
       }
     } else if (this.typeQuestion === 'preguntaAbierta') {
       this.hasFeedBack = this.questionInformation.tieneRetroalimentacion;
-    } else {
-      Swal.fire("Cuidado", "No ha respondido la pregunta", "warning");
+    }
+
+    if (!this.hasFeedBack) {
+      this.continue();
     }
   }
 

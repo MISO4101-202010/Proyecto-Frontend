@@ -94,7 +94,8 @@ export class VideoAlumnoComponent {
       dialogRef = this.dialog.open(QuestionVFComponent, {
         width: '70%',
         data: {
-          marca
+          marca,
+          contenidoInteractivo: this.contenidoInt
         }
       });
     } else {
@@ -102,7 +103,8 @@ export class VideoAlumnoComponent {
         width: '70%',
         data: {
           idActivity: '1',
-          idMarca: marca.marca_id
+          idMarca: marca.marca_id,
+          contenidoInteractivo: this.contenidoInt
         }
       });
     }
