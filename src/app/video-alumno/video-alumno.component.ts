@@ -1,11 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { InteraccionAlumnoService } from '../interaccion-alumno.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { LoadVideoService } from '../services/contenidoInter/load-video.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {InteraccionAlumnoService} from '../interaccion-alumno.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {LoadVideoService} from '../services/contenidoInter/load-video.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { QuestionModalComponent } from 'src/app/contenido-interactivo/question-modal/question-modal.component';
-import { ContenidoService } from '../services/contenido.service';
+import {QuestionModalComponent} from 'src/app/contenido-interactivo/question-modal/question-modal.component';
+import {ContenidoService} from '../services/contenido.service';
+import {QuestionVFComponent} from '../contenido-interactivo/question-v-f/question-v-f.component';
 
 @Component({
   selector: 'app-video-alumno',
@@ -49,7 +50,7 @@ export class VideoAlumnoComponent implements OnInit {
   ngOnInit() {
     console.log('POST call successful value returned in body on init');
     const idPregunta = 1;
-    var actualVid = "";
+    var actualVid = '';
     this.retroalimentacionService.getRetroOpMultiple(idPregunta).subscribe((data: any[]) => {
       console.log(data);
       this.retroalimentacion = data[0].respuesta;
@@ -70,24 +71,24 @@ export class VideoAlumnoComponent implements OnInit {
   async savePlayer(player) {
     this.player = player;
     console.log('player instance', player);
-    this.getContentMark();
+    await this.getContentMark();
 
     await console.log('player currenttime', this.player.getCurrentTime());
     //console.log('player nnn', this.marcas[i].punto);
     while (1 == 1) {
       this.dosperro = 999999;
       await this.delay(1000);
-       console.log('player currenttime', Math.round(this.player.getCurrentTime()));
+      console.log('player currenttime', Math.round(this.player.getCurrentTime()));
       for (let i = 0; i < this.marcas.length; i++) {
         if (Math.round(this.player.getCurrentTime()) === this.marcas[i].punto) {
           this.player.pauseVideo();
-          
-          await this.open(this.marcas[i]);
-          while (this.dosperro  == 999999) {
 
-          await this.delay(1000);
+          await this.open(this.marcas[i]);
+          while (this.dosperro == 999999) {
+
+            await this.delay(1000);
           }
-          
+
         }
         // await this.open(this.marcas[0]);
         //await console.log('player marca', this.marcas[0].punto);
@@ -102,20 +103,30 @@ export class VideoAlumnoComponent implements OnInit {
   }
 
   open(marca: any) {
-    
-    const dialogRef = this.dialog.open(QuestionModalComponent, {
-      width: '70%',
-      data: {
-        idActivity: '1',
-        idMarca: marca.id
-      }
-    });
+    // Acá debería ir un switch que tire un dialogo distinto dependiendo del tipo de pregunta
+    let dialogRef;
+    if (marca.tipoActividad === 2) {
+      dialogRef = this.dialog.open(QuestionVFComponent, {
+        width: '70%',
+        data: {
+          marca
+        }
+      });
+    } else {
+      dialogRef = this.dialog.open(QuestionModalComponent, {
+        width: '70%',
+        data: {
+          idActivity: '1',
+          idMarca: marca.marca_id
+        }
+      });
+    }
 
     dialogRef.afterClosed().subscribe(result => {
       this.player.playVideo();
       this.dosperro = 1;
     });
-    
+
   }
 
 
@@ -146,6 +157,7 @@ export class VideoAlumnoComponent implements OnInit {
       });
     }
   }
+
   onStateChange(event) {
     if (event.data === YT.PlayerState.PLAYING) {
       this.playing = true;

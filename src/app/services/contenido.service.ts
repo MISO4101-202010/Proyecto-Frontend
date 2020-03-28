@@ -17,10 +17,14 @@ export class ContenidoService {
   
   private addPreguntaSelecconMultipleUrl = `${environment.apiUrl}/activities/generate-question-multiple-choice`;
   private addPreguntaAbiertaUrl = `${environment.apiUrl}/activities/generate-open-question`;
+  private addPreguntaFalsoVerdaderoUrl = `${environment.apiUrl}/activities/pregunta_f_v`;
   private detalleUrl = `${environment.apiUrl}/content/interactivecontent/`;
   private crearContenidoInteractivo = `${environment.apiUrl}/content/cont_interactivo`;
+  private crearMarca = `${environment.apiUrl}/activities/marca`;
+  private createPauseMark = `${environment.apiUrl}/activities/create-pausa/`;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+  }
 
   getContenidos(): Observable<any> {
     return this.httpClient.get<any>(this.contenidoUrl);
@@ -66,5 +70,21 @@ export class ContenidoService {
 
   agregarMarcaPreguntaAbierta(marca: any): Observable<any> {
     return this.httpClient.post(this.addPreguntaAbiertaUrl, marca);
+  }
+
+
+  agregarMarcaVerdaderoFalso(pregunta: any): Observable<any> {
+    return this.httpClient.post(this.addPreguntaFalsoVerdaderoUrl, pregunta);
+}
+
+  agregarMarca(marca: any): Observable<any> {
+    return this.httpClient.post(this.crearMarca, marca);
+  }
+
+  agregarMarcaPreguntaPausa(marca:any) : Observable<any> {
+
+    console.log('Añadiendo tipo pausa', marca);
+
+    return this.httpClient.post(this.createPauseMark, marca);
   }
 }
