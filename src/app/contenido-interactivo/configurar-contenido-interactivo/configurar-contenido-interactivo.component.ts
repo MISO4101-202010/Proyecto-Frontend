@@ -5,11 +5,13 @@ import { CrearPreguntaVerdaderoFalsoComponent } from './crear-pregunta-verdadero
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { ContenidoService } from 'src/app/services/contenido.service';
+import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
 
 const activityTypesComponents = {
   'Pregunta de opción múltiple': CrearSeleccionMultipleComponent,
   'Pregunta abierta': CrearPreguntaAbiertaComponent,
-  'Pregunta Falso o Verdadero': CrearPreguntaVerdaderoFalsoComponent
+  'Pregunta Falso o Verdadero': CrearPreguntaVerdaderoFalsoComponent,
+  'Pregunta tipo pausa': CrearPreguntaPausaComponent
 };
 
 @Component({
@@ -52,6 +54,7 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
   // }
 
   opcionesMarca = [
+    'Pregunta tipo pausa',
     'Pregunta de opción múltiple',
     'Pregunta Falso o Verdadero',
     'Pregunta abierta',

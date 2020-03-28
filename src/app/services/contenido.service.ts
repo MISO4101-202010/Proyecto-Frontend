@@ -17,6 +17,7 @@ export class ContenidoService {
   private detalleUrl = `${environment.apiUrl}/content/interactivecontent/`;
   private crearContenidoInteractivo = `${environment.apiUrl}/content/cont_interactivo`;
   private crearMarca = `${environment.apiUrl}/activities/marca`;
+  private createPauseMark = `${environment.apiUrl}/activities/create-pausa/`;
 
   constructor(private httpClient: HttpClient) {
   }
@@ -59,11 +60,19 @@ export class ContenidoService {
     return this.httpClient.post(this.addPreguntaAbiertaUrl, marca);
   }
 
+
   agregarMarcaVerdaderoFalso(pregunta: any): Observable<any> {
     return this.httpClient.post(this.addPreguntaFalsoVerdaderoUrl, pregunta);
   }
 
   agregarMarca(marca: any): Observable<any> {
     return this.httpClient.post(this.crearMarca, marca);
+  }
+
+  agregarMarcaPreguntaPausa(marca:any) : Observable<any> {
+
+    console.log('Añadiendo tipo pausa', marca);
+
+    return this.httpClient.post(this.createPauseMark, marca);
   }
 }
