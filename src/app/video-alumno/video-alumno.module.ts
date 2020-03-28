@@ -7,9 +7,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { QuestionModalComponent } from 'src/app/contenido-interactivo/question-modal/question-modal.component';
+import {QuestionVFComponent} from '../contenido-interactivo/question-v-f/question-v-f.component';
 import { MaterialModule } from 'src/material.module';
-import { FormsModule } from '@angular/forms';
-
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 const routes: Routes = [
   { path: ':id', component: VideoAlumnoComponent },
@@ -18,18 +18,21 @@ const routes: Routes = [
 @NgModule({
     declarations: [
       QuestionModalComponent,
+      QuestionVFComponent,
       VideoAlumnoComponent],
-    imports: [
-      MaterialModule,
-      NgbModule,
-      YoutubePlayerModule,
-      CommonModule,
-      MatCheckboxModule,
-      RouterModule.forChild(routes),
-      FormsModule
-    ],
+  imports: [
+    MaterialModule,
+    NgbModule,
+    YoutubePlayerModule,
+    CommonModule,
+    MatCheckboxModule,
+    RouterModule.forChild(routes),
+    FormsModule,
+    ReactiveFormsModule
+  ],
     entryComponents: [
-      QuestionModalComponent
+      QuestionModalComponent,
+      QuestionVFComponent
     ],
     providers: [
       { provide: MatDialogRef, useValue: {} },
