@@ -39,6 +39,9 @@
         {{questionInformation.enunciado}}
       </div>
     </div>
+    <div class="col-3" *ngIf="canJump" mat-dialog-actions>
+      <button mat-button (click)="continue()">Continuar</button>
+    </div>
   </div>
 
   <div class="row" *ngIf="typeQuestion!=='pausa'">
