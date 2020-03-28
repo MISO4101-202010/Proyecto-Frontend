@@ -83,13 +83,6 @@ export class ActivitiesService {
 
   getLastTryByQuestion(idQuestion, idStudent): Observable<any> {
 
-    // let url = ''
-    // if (answer.typeQuestion === 'preguntaOpcionMultiple') {
-    //   url = this.activitiesUrl + 'respuestaOpcionMultiple/';
-    // } else if (answer.typeQuestion === 'preguntaAbierta') {
-    //   url = this.activitiesUrl + 'respuestaAbierta/';
-    // }
-
     const url = this.activitiesUrl + 'ultimo_intento';
     const data = {
       id_pregunta: idQuestion,

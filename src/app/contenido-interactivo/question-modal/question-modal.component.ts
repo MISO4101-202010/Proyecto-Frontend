@@ -143,17 +143,12 @@ export class QuestionModalComponent implements OnInit {
     });
     this.hasQuestionsToShow = true;
 
-    // if (this.questionInformation !== undefined) {
-    //   this.hasQuestionsToShow = true;
-    // } else {
-    //   this.dialogRef.close();
-    // }
   }
 
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-   
+
   callServiceSaveAnswer() {
     this.activityService.getLastTryByQuestion(this.idQuestion, this.studentId).subscribe(
       answerTries => {

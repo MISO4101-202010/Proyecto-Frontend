@@ -58,10 +58,9 @@ export class ContenidoService {
   }
 
   agregarMarcaPreguntaPausa(marca:any) : Observable<any> {
-    
+
     console.log('Añadiendo tipo pausa', marca);
 
-    //return;
     return this.httpClient.post(this.createPauseMark, marca);
   }
 }
