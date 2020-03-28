@@ -44,6 +44,7 @@ export class CrearPreguntaVerdaderoFalsoComponent implements OnInit {
 
   crearMarca() {
     if (this.questionForm.valid) {
+      this.data.marca.punto = Math.round(this.data.marca.punto);
       const infoMarca = this.data.marca;
       infoMarca.contenido = infoMarca.contenido_id;
       const respuestaCorrecta = (this.respuestaControl.value === 'verdadero');
