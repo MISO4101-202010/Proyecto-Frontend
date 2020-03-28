@@ -18,6 +18,7 @@ import { ConfigurarContenidoInteractivoComponent } from './configurar-contenido-
 import { YoutubePlayerModule } from 'ng2-youtube-player';
 import { CrearSeleccionMultipleComponent } from './configurar-contenido-interactivo/crear-seleccion-multiple/crear-seleccion-multiple.component';
 import { CrearPreguntaAbiertaComponent } from './configurar-contenido-interactivo/crear-pregunta-abierta/crear-pregunta-abierta.component';
+import { CrearPreguntaVerdaderoFalsoComponent } from './configurar-contenido-interactivo/crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
 import { DetalleContenidoInteractivoComponent } from './detalle-contenido-interactivo/detalle-contenido-interactivo.component';
 import { CrearPreguntaPausaComponent } from './configurar-contenido-interactivo/crear-pregunta-pausa/crear-pregunta-pausa.component';
 
@@ -32,7 +33,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [ListaContenidoComponent, AddContenidoACursoComponent, ReporteContenidoComponent,
     MarkersComponent, ManyAnswersComponent, DetalleContenidoInteractivoComponent, ConfigurarContenidoInteractivoComponent,
-    CrearSeleccionMultipleComponent, CrearPreguntaAbiertaComponent, CrearPreguntaPausaComponent
+    CrearSeleccionMultipleComponent, CrearPreguntaAbiertaComponent, CrearPreguntaVerdaderoFalsoComponent, CrearPreguntaPausaComponent
+
   ],
   imports: [
     CommonModule,
@@ -49,6 +51,7 @@ const routes: Routes = [
     AddContenidoACursoComponent,
     CrearSeleccionMultipleComponent,
     CrearPreguntaAbiertaComponent,
+    CrearPreguntaVerdaderoFalsoComponent,
     CrearPreguntaPausaComponent
   ],
   providers: [

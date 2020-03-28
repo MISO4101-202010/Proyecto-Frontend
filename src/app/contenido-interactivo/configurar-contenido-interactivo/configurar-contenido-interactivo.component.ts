@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener } from '@angular/core';
 import { CrearSeleccionMultipleComponent } from './crear-seleccion-multiple/crear-seleccion-multiple.component';
 import { CrearPreguntaAbiertaComponent } from './crear-pregunta-abierta/crear-pregunta-abierta.component';
+import { CrearPreguntaVerdaderoFalsoComponent } from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { ContenidoService } from 'src/app/services/contenido.service';
@@ -9,6 +10,7 @@ import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregun
 const activityTypesComponents = {
   'Pregunta de opción múltiple': CrearSeleccionMultipleComponent,
   'Pregunta abierta': CrearPreguntaAbiertaComponent,
+  'Pregunta Falso o Verdadero': CrearPreguntaVerdaderoFalsoComponent,
   'Pregunta tipo pausa': CrearPreguntaPausaComponent
 };
 

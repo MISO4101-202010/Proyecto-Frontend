@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AnswerQuestion } from 'src/app/models/mark/answerQuestion.model';
+import { AnswerVoF } from 'src/app/models/mark/answerVoF';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class ActivitiesService {
 
   private activitiesUrl = `${environment.apiUrl}/activities/`;
 
-  constructor(private httpService: HttpService) { }
+  constructor(private httpService: HttpService) {
+  }
 
   getActivityById(id): Observable<any> {
     let preguntaOpcionMultiple = this.httpService.getRequestWithoutParams(this.activitiesUrl + 'preguntaOpcionMultiple/' + id + '/').map(
@@ -51,6 +53,17 @@ export class ActivitiesService {
     return forkJoin([preguntaOpcionMultiple, preguntaAbierta, pausa]);
   }
 
+  getActivityFVById(id): Observable<any> {
+    const url = this.activitiesUrl + 'pregunta_f_v/' + id;
+    return this.httpService.getRequestWithoutParams(url).map(
+      response => {
+        return response;
+      }, error => {
+        return error;
+      }
+    );
+  }
+
   getMarcaById(id): Observable<any> {
     const url = this.activitiesUrl + 'marca';
     const data = {
@@ -72,6 +85,17 @@ export class ActivitiesService {
     } else if (answer.typeQuestion === 'preguntaAbierta') {
       url = this.activitiesUrl + 'respuestaAbierta/';
     }
+    return this.httpService.postJSON(url, answer).map(
+      response => {
+        return response;
+      }, error => {
+        return error;
+      }
+    );
+  }
+
+  postFVAnswer(answer: AnswerVoF): Observable<any> {
+    const url = this.activitiesUrl + 'respuestafov/';
     return this.httpService.postJSON(url, answer).map(
       response => {
         return response;

@@ -1,0 +1,52 @@
+<h1 mat-dialog-title>Crear Pregunta de Verdadero o Falso en {{data.marca.nombre}}</h1>
+<div mat-dialog-content class="container">
+  <form [formGroup]="questionForm" (ngSubmit)="crearMarca()">
+    <div>
+      <mat-form-field appearance="outline" style="width:100%">
+        <mat-label>Nombre de la pregunta</mat-label>
+        <input type="text" matInput placeholder="Nombre" formControlName="nombre"/>
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width:100%">
+        <mat-label>Pregunta para responder</mat-label>
+        <input type="text" matInput placeholder="Pregunta" formControlName="pregunta"/>
+      </mat-form-field>
+      <div class="fila-flex">
+        <div class="columna-flex">
+          <label>Respuesta Correcta:</label>
+          <mat-radio-group [formControl]="respuestaControl">
+            <mat-radio-button value="verdadero">Verdadero</mat-radio-button>
+            <mat-radio-button class="falso" value="falso">Falso</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="columna-flex">
+          <label>Tiene Retroalimentación:</label>
+          <mat-radio-group [formControl]="retroalimentacionControl">
+            <mat-radio-button value="si">Si</mat-radio-button>
+            <mat-radio-button class="falso" value="no">No</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="columna-flex">
+          <label>Se puede saltar la pregunta:</label>
+          <mat-radio-group [formControl]="saltarControl">
+            <mat-radio-button value="si">Si</mat-radio-button>
+            <mat-radio-button class="falso" value="no">No</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <mat-form-field *ngIf="this.retroalimentacionControl.value === 'si'" appearance="outline" style="width:100%">
+        <mat-label>Escribe la retroalimentación para el estudiante</mat-label>
+        <input type="text" matInput placeholder="Retroalimentación" formControlName="retroalimentacion"/>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Número de intentos</mat-label>
+        <input type="number" min="1" matInput formControlName="numeroDeIntentos" />
+      </mat-form-field>
+      <div class="form-actions">
+        <button id="cancel-button" class="mat-stroked-button" type="button" (click)="cancel()">
+          Cancelar
+        </button>
+        <button class="mat-flat-button mat-primary" type="submit">Guardar</button>
+      </div>
+    </div>
+  </form>
+</div>
