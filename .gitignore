@@ -6,3 +6,4 @@
 .vs/
 
 *.iml
+/dist

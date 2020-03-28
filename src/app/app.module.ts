@@ -26,6 +26,7 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import {ToastrModule} from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GestureConfig } from '@angular/material';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { GestureConfig } from '@angular/material';
     VideoAlumnoModule,
     ModalModule.forRoot(),
     MDBBootstrapModule.forRoot(),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    NgbModule
   ],
   providers: [
     { provide: MatDialogRef, useValue: {} },

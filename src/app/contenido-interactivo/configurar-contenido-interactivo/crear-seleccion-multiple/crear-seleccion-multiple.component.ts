@@ -21,7 +21,7 @@ export class CrearSeleccionMultipleComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<CrearSeleccionMultipleComponent>,
-    private contenidoService: ContenidoService ) {
+    private contenidoService: ContenidoService) {
 
     this.initializeForm();
   }
@@ -35,7 +35,7 @@ export class CrearSeleccionMultipleComponent implements OnInit {
       esMultipleResp: [false, [Validators.required]],
       nombre: ['', [Validators.required]],
       tieneRetroalimentacion: [false, [Validators.required]],
-      numeroDeIntentos: [1, [Validators.required,  Validators.min(1)]],
+      numeroDeIntentos: [1, [Validators.required, Validators.min(1)]],
       opciones: this.formBuilder.array([])
     });
   }

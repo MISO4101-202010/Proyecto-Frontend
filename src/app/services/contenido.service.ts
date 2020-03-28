@@ -11,21 +11,30 @@ export class ContenidoService {
 
   private contenidoUrl = `${environment.apiUrl}/content/interactive_content/`;
   private reportesUrl = `${environment.apiUrl}/activities/reports/`;
+  private reporteListUrl = `${environment.apiUrl}/activities/reportList/`;
+  private cursosUrl = `${environment.apiUrl}/content/courses/`;
+  private contenidoInteractivoUrl = `${environment.apiUrl}/content/interactiveContentByCourse/`;
+  
   private addPreguntaSelecconMultipleUrl = `${environment.apiUrl}/activities/generate-question-multiple-choice`;
   private addPreguntaAbiertaUrl = `${environment.apiUrl}/activities/generate-open-question`;
+  private addPreguntaFalsoVerdaderoUrl = `${environment.apiUrl}/activities/pregunta_f_v`;
   private detalleUrl = `${environment.apiUrl}/content/interactivecontent/`;
   private crearContenidoInteractivo = `${environment.apiUrl}/content/cont_interactivo`;
+  private crearMarca = `${environment.apiUrl}/activities/marca`;
+  private createPauseMark = `${environment.apiUrl}/activities/create-pausa/`;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+  }
 
   getContenidos(): Observable<any> {
     return this.httpClient.get<any>(this.contenidoUrl);
   }
 
-  postContenidoInteractivo(nombre: string, contenidoId: number) {
+  postContenidoInteractivo(nombre: string, contenidoId: number, puedeSaltar: boolean) {
     const body = {
       nombre: nombre,
-      contenido: contenidoId
+      contenido: contenidoId,
+      puedeSaltar: puedeSaltar
     };
     console.log('body:', body);
     return this.httpClient.post(this.crearContenidoInteractivo, body);
@@ -44,15 +53,38 @@ export class ContenidoService {
     return this.httpClient.get<any>(this.detalleUrl + contentId);
   }
 
-  getReporteContenido(contentId: number): Observable<any>  {
+  getReporteContenido(contentId: number): Observable<any> {
     return this.httpClient.get<any>(this.reportesUrl + contentId);
   }
 
-  agregarMarcaPreguntaSeleccionMultiple(marca:any) : Observable<any> {
+  getCursosList(): Observable<any>  {
+    return this.httpClient.get<any>(this.cursosUrl);
+  }
+  getCursosIdList(id:string): Observable<any>  {
+    return this.httpClient.get<any>(this.contenidoInteractivoUrl+id);
+  }
+
+  agregarMarcaPreguntaSeleccionMultiple(marca: any): Observable<any> {
     return this.httpClient.post(this.addPreguntaSelecconMultipleUrl, marca);
   }
 
-  agregarMarcaPreguntaAbierta(marca:any) : Observable<any> {
+  agregarMarcaPreguntaAbierta(marca: any): Observable<any> {
     return this.httpClient.post(this.addPreguntaAbiertaUrl, marca);
+  }
+
+
+  agregarMarcaVerdaderoFalso(pregunta: any): Observable<any> {
+    return this.httpClient.post(this.addPreguntaFalsoVerdaderoUrl, pregunta);
+}
+
+  agregarMarca(marca: any): Observable<any> {
+    return this.httpClient.post(this.crearMarca, marca);
+  }
+
+  agregarMarcaPreguntaPausa(marca:any) : Observable<any> {
+
+    console.log('Añadiendo tipo pausa', marca);
+
+    return this.httpClient.post(this.createPauseMark, marca);
   }
 }

@@ -6,6 +6,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { QuestionModalComponent } from "src/app/contenido-interactivo/question-modal/question-modal.component";
 import { ContenidoService } from "../services/contenido.service";
 import Swal from "sweetalert2";
+import { QuestionVFComponent } from '../contenido-interactivo/question-v-f/question-v-f.component';
 
 @Component({
   selector: "app-video-alumno",
@@ -48,13 +49,9 @@ export class VideoAlumnoComponent {
   loadData() {
     console.log("POST call successful value returned in body on init");
     const idPregunta = 1;
-    this.retroalimentacionService
-      .getRetroOpMultiple(idPregunta)
-      .subscribe((data: any[]) => {
-        console.log(data);
-        //this.retroalimentacion = data[0].respuesta;
-      });
-
+    this.retroalimentacionService.getRetroOpMultiple(idPregunta).subscribe((data: any[]) => {
+      console.log(data);
+    });
     this.activatedRoute.params.subscribe(params => {
       this.idContent = params["id"] ? params["id"] : "";
       this.getContentInteractiveDetail(this.idContent);
@@ -71,9 +68,7 @@ export class VideoAlumnoComponent {
     while (1 == 1) {
       this.dosperro = 999999;
       await this.delay(1000);
-      console.log(
-        "player currenttime",
-        Math.round(this.player.getCurrentTime())
+      console.log("player currenttime", Math.round(this.player.getCurrentTime())
       );
       for (let i = 0; i < this.marcas.length; i++) {
         if (Math.round(this.player.getCurrentTime()) === this.marcas[i].punto) {
@@ -93,14 +88,24 @@ export class VideoAlumnoComponent {
   }
 
   open(marca: any) {
-    const dialogRef = this.dialog.open(QuestionModalComponent, {
-      width: "70%",
-      data: {
-        idActivity: "1",
-        idMarca: marca.id,
-        contenidoInteractivo: this.contenidoInt
-      }
-    });
+    // Acá debería ir un switch que tire un dialogo distinto dependiendo del tipo de pregunta
+    let dialogRef;
+    if (marca.tipoActividad === 2) {
+      dialogRef = this.dialog.open(QuestionVFComponent, {
+        width: '70%',
+        data: {
+          marca
+        }
+      });
+    } else {
+      dialogRef = this.dialog.open(QuestionModalComponent, {
+        width: '70%',
+        data: {
+          idActivity: '1',
+          idMarca: marca.marca_id
+        }
+      });
+    }
 
     dialogRef.afterClosed().subscribe(result => {
       this.player.playVideo();
