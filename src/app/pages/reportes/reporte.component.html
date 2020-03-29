@@ -1,0 +1,47 @@
+
+
+  <div class="container">
+    <h1>Reporte de distribución porcentual de respuestas</h1>
+    <ng-container *ngIf=dataSource >
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
+            <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
+                <th mat-header-cell *matHeaderCellDef> {{capitalize(column)}} </th>
+                <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+            </ng-container>
+
+              <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+            <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+                    <div class="example-element-detail"
+                        [@detailExpand]="element?.id == expandedElement?.id ? 'expanded' : 'collapsed'">
+                        <table mat-table [dataSource]="dataSourceChild" class="mat-elevation-z8">
+                            <!--<ng-container matColumnDef="{{columnChild}}" *ngFor="let columnChild of displayedColumnsChild">
+                                <td mat-cell *matCellDef="let elementChild"> {{elementChild[columnChild]}} </td>
+                            </ng-container>    -->
+                            <ng-container matColumnDef="nombre">
+                                <td mat-cell *matCellDef="let elementChild"> {{elementChild.nombre}} </td>
+                            </ng-container>    
+                            <ng-container matColumnDef="id">
+                                <td mat-cell *matCellDef="let elementChild"  > 
+                                    <a [routerLink]="['/contenido-interactivo/reporte/' + elementChild.id]">Reportes</a>
+                                </td>
+                            </ng-container>                       
+                            <tr mat-row *matRowDef="let elementChild; columns: displayedColumnsChild;"
+                                class="example-element-row">
+                            </tr>
+                        </table> 
+                     </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+                class="example-element-row"
+                [class.example-expanded-row]="expandedElement === element"
+                (click)="ClickDetail(element)" >
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+        </table>
+        <mat-paginator #scheduledOrdersPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons ></mat-paginator>
+    </ng-container>
+</div>

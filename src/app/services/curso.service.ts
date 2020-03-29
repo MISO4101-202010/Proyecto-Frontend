@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 export class CursoService {
 
   private cursoUrl = `${environment.apiUrl}/content/courses/`;
+  private cursosEstudianteUrl = `${environment.apiUrl}/content/mycourses/`;
 
   constructor(private httpClient: HttpClient) { }
 
@@ -18,5 +19,9 @@ export class CursoService {
 
   getCursosDisponibles(contenidoId): Observable<any> {
     return this.httpClient.get<any>(`${this.cursoUrl}${contenidoId}`);
+  }
+
+  getCursosEstudiante(): Observable<any> {
+    return this.httpClient.get<any>(this.cursosEstudianteUrl);
   }
 }

@@ -1,14 +1,18 @@
 .container {
   margin: 2%;
 }
+
 .video-container {
   width: 854px;
   height: auto;
 }
+
 #progressBar {
   width: 854px;
 }
+
 .bar-container {
+  padding-top: 30px;
   margin-bottom: 2em;
 }
 
@@ -21,10 +25,21 @@ input[type="range"] {
   margin: 0;
   box-sizing: border-box;
 }
-datalist {
-  display: flex;
+
+#outer-marks {
   width: 100%;
-  justify-content: space-between;
-  margin-top: -23px;
-  padding-top: 0px;
+  position: relative
+}
+
+#inner-marks {
+  top: -30px;
+  position: absolute;
+}
+
+#inner-inner-mark {
+  background: #413455;
+  position: absolute;
+  height: 20px;
+  width: 10px;
+  cursor: pointer;
 }

@@ -4,9 +4,11 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormControl} from '@angular/forms';
 import {ActivitiesService} from '../../services/activities-service/activities.service';
 import Swal from 'sweetalert2';
+import {AnswerVoF} from 'src/app/models/mark/answerVoF';
 
 export interface DialogData {
   marca: any;
+  contenidoInteractivo: any;
 }
 
 @Component({
@@ -15,7 +17,8 @@ export interface DialogData {
   styleUrls: ['./question-v-f.component.css']
 })
 export class QuestionVFComponent implements OnInit {
-
+  canJump: boolean;
+  answer: AnswerVoF;
   hayPregunta = false;
   yaRespondio = false;
   respuesta = '';
@@ -41,6 +44,7 @@ export class QuestionVFComponent implements OnInit {
         const correcta = (this.infoPregunta.esVerdadero) ? 'Verdadero' : 'Falso';
         this.respuesta = correcta;
         this.hayPregunta = true;
+        this.canJump = this.data.contenidoInteractivo.puedeSaltar;
       }, error => {
         console.log('Error getting question information -> ', error);
       }
@@ -49,11 +53,21 @@ export class QuestionVFComponent implements OnInit {
 
   responderPregunta() {
     if (this.respuestaControl.value !== null) {
-      this.respuestaControl.disable();
       const idEstudiante = JSON.parse(sessionStorage.userConectaTe).dataProfesor.id;
-      // Acá debe ir la petición al servicio REST para guardar la respuesta del alumno y si sale bien se cambian las dos variables
-      this.yaRespondio = true;
-      this.infoPregunta.puedeSaltar = true;
+      const respuestaCorrecta = (this.respuestaControl.value === 'verdadero');
+      this.answer = new AnswerVoF(String(this.infoPregunta.id), respuestaCorrecta, String(idEstudiante), 0);
+      console.log('Respuesta: ', this.answer);
+      this.activityService.postFVAnswer(this.answer).subscribe(
+        data => {
+          this.respuestaControl.disable();
+          this.answer = data.body;
+          this.yaRespondio = true;
+          this.infoPregunta.puedeSaltar = true;
+        },
+        error => {
+            Swal.fire('Error!!', error.error[0]);
+        }
+      );
     } else {
       Swal.fire('Responde!!', 'Parece que aún no has seleccionado una respuesta, inténtalo de nuevo', 'error');
     }
@@ -62,5 +76,4 @@ export class QuestionVFComponent implements OnInit {
   saltar() {
     this.dialogRef.close();
   }
-
 }

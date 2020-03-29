@@ -20,13 +20,16 @@
       <label>{{infoPregunta.retroalimentacion}}</label>
     </div>
     <div class="form-actions">
-      <button *ngIf="infoPregunta.puedeSaltar" class="mat-flat-button mat-primary" type="button"
+      <button *ngIf="canJump && !yaRespondio" class="mat-flat-button mat-primary" type="button"
               (click)="saltar()">
-        Continuar
+        Saltar
       </button>
       <button *ngIf="!yaRespondio" class="mat-flat-button mat-primary" type="button" (click)="responderPregunta()">
         Enviar
         respuesta
+      </button>
+      <button *ngIf="yaRespondio" class="mat-flat-button mat-primary" type="button" (click)="saltar()">
+        Continuar
       </button>
     </div>
   </div>
