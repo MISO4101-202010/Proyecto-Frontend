@@ -37,9 +37,12 @@ input[type="range"] {
 }
 
 #inner-inner-mark {
-  background: #413455;
+  background: #9C75D7;
   position: absolute;
   height: 20px;
   width: 10px;
   cursor: pointer;
+  border-width: 1px;
+  border-color: #413455;
+  border-style: solid;
 }

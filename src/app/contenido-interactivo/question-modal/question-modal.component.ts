@@ -4,7 +4,6 @@ import { ActivitiesService } from "src/app/services/activities-service/activitie
 import { PreguntaOpcionMultiple } from "src/app/models/mark/questionMultiple.model";
 import { OpcionesPreguntaMultiple } from "src/app/models/mark/optionsQuestionMultiple.model";
 import { AnswerQuestion } from "src/app/models/mark/answerQuestion.model";
-import Swal from "sweetalert2";
 import { ActivatedRoute } from "@angular/router";
 
 @Component({
@@ -57,8 +56,6 @@ export class QuestionModalComponent implements OnInit {
     if (this.typeQuestion === 'preguntaOpcionMultiple') {
       if (this.optionsArray.some(this.hasAnswer)) {
         this.hasFeedBack = this.arrayQuestionsForMark[this.indexToShow].tieneRetroalimentacion;
-      } else {
-        Swal.fire("Cuidado", "No ha respondido la pregunta", "warning");
       }
     } else if (this.typeQuestion === 'preguntaAbierta') {
       this.hasFeedBack = this.questionInformation.tieneRetroalimentacion;

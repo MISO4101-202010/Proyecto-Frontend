@@ -30,4 +30,8 @@ export class DetalleContenidoInteractivoComponent implements OnInit {
     });
   }
 
+  goToConfiguration(id) {
+    window.location.href = '#/contenido-interactivo/configurar/' + id;
+  }
+
 }

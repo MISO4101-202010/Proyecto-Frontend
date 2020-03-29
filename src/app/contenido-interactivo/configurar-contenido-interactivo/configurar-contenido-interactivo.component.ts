@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { CrearSeleccionMultipleComponent } from './crear-seleccion-multiple/crear-seleccion-multiple.component';
 import { CrearPreguntaAbiertaComponent } from './crear-pregunta-abierta/crear-pregunta-abierta.component';
 import { CrearPreguntaVerdaderoFalsoComponent } from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
@@ -19,8 +19,7 @@ const activityTypesComponents = {
   templateUrl: './configurar-contenido-interactivo.component.html',
   styleUrls: ['./configurar-contenido-interactivo.component.css']
 })
-export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
-
+export class ConfigurarContenidoInteractivoComponent {
   player: YT.Player;
   id: string;
   playerVars = {
@@ -37,8 +36,6 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
   contentsLoaded: Promise<boolean>;
   marcasPorcentaje;
 
-  // Elementos del DOM a manipular
-  @ViewChild('progressBar', { static: false }) progressBar: ElementRef;
   constructor(public dialog: MatDialog, private activatedRoute: ActivatedRoute,
     private contenidoService: ContenidoService) {
     this.loadData();
@@ -62,15 +59,6 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
     // Update the controls on load
     this.updateProgressBar();
     this.loadMarcas(this.contenidoInt.marcas);
-
-    // Start interval to update elapsed time display and
-    // the elapsed part of the progress bar every second.
-    const timeUpdateInterval = setInterval(() => {
-      this.updateProgressBar();
-    }, 1000);
-
-    // Clear any old interval.
-    clearInterval(timeUpdateInterval);
   }
 
   onStateChange(event) {
@@ -84,7 +72,7 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
     // the elapsed part of the progress bar every second.
     const timeUpdateInterval = setInterval(() => {
       this.updateProgressBar();
-    }, 500);
+    }, 1000);
   }
 
   // Actualiza el estado de la barra de reproducción cuando se navega
@@ -139,7 +127,6 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
       const marcaP = this.calcPercentage(+marca.punto);
       this.marcasPorcentaje.push(marcaP);
     }
-    console.log(this.marcasPorcentaje, 'marcasPorcentaje');
   }
 
   calcPercentage(segundo: number) {
@@ -213,8 +200,12 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
      });
   }
 
-  getDuration(punto): number {
-    return (this.player ? this.player.getDuration() : 0) * (punto / 100) * 1000;
+  getDuration(punto): string {
+    if (this.player) {
+      const seconds = this.player.getDuration() * punto / 100;
+      return this.toMin(seconds);
+    }
+    return '0';
   }
 
   getPosition(punto): number {
