@@ -9,7 +9,7 @@
         </button>
         <div class="imagenes">
           <div class="cuadrado" *ngFor="let contenido of curso.mostrar">
-            <a href="./#/contenido-interactivo">
+            <a href="./#/video-alumno/{{contenido.id}}">
               <img src="{{getURLImageYoutube(contenido.contenido.url)}}" alt="" class="imagen" />
             </a>
             <p>{{contenido.nombre}}</p>
