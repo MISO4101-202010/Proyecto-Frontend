@@ -3,8 +3,8 @@
     <form [formGroup]="questionForm" (ngSubmit)="agregarMarca()">
         <div class="row-container">
             <mat-form-field appearance="outline" style="width:100%">
-                <mat-label>Duración</mat-label>
-                <input type="text" matInput placeholder="Nombre Contenido" formControlName="tiempo" />
+                <mat-label>Duración (Segundos)</mat-label>
+                <input type="number" min="1" matInput placeholder="Duracion" formControlName="tiempo" />
             </mat-form-field>
         </div>
         <div class="row-container">
