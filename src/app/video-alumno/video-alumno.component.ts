@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { InteraccionAlumnoService } from "../interaccion-alumno.service";
 import { ActivatedRoute } from "@angular/router";
 import { LoadVideoService } from "../services/contenidoInter/load-video.service";
@@ -18,8 +18,8 @@ export class VideoAlumnoComponent {
   idContent = "";
   id = "";
   marcas: any[];
-  dosperro = 999999;
-  progressBarValue = 0;
+  mustWait: boolean = true;
+  public progressBarValue: number = 0;
   playing = false;
   playerVars = {
     // Oculta la barra de reproducción (0)
@@ -35,7 +35,6 @@ export class VideoAlumnoComponent {
   contenidoInt;
   isVideoLineal: boolean;
 
-  @ViewChild("progressBar", { static: false }) progressBar: ElementRef;
   constructor(
     private activatedRoute: ActivatedRoute,
     private retroalimentacionService: InteraccionAlumnoService,
@@ -64,18 +63,17 @@ export class VideoAlumnoComponent {
     this.getContentMark();
     this.loadMarcas(this.contenidoInt.marcas);
 
-    await console.log("player currenttime", this.player.getCurrentTime());
-    while (1 == 1) {
-      this.dosperro = 999999;
+    await console.log("Player current time", this.player.getCurrentTime());
+    while (true) {
+      this.mustWait = true;
       await this.delay(1000);
-      console.log("player currenttime", Math.round(this.player.getCurrentTime())
-      );
+      console.log("Player current time", Math.round(this.player.getCurrentTime()));
       for (let i = 0; i < this.marcas.length; i++) {
         if (Math.round(this.player.getCurrentTime()) === this.marcas[i].punto) {
           this.player.pauseVideo();
 
           await this.open(this.marcas[i]);
-          while (this.dosperro == 999999) {
+          while (this.mustWait) {
             await this.delay(1000);
           }
         }
@@ -111,7 +109,7 @@ export class VideoAlumnoComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       this.player.playVideo();
-      this.dosperro = 1;
+      this.mustWait = false;
     });
   }
 
@@ -142,9 +140,6 @@ export class VideoAlumnoComponent {
           this.contentsLoaded = Promise.resolve(true);
           console.log("contenido alumno", contenido);
           console.log("idd", this.id);
-          if (this.isVideoLineal) {
-            this.progressBar.nativeElement.disabled = true;
-          }
         },
         error => {
           console.log("Error getting question information -> ", error);
@@ -162,13 +157,13 @@ export class VideoAlumnoComponent {
     this.updateProgressBar();
     // Start interval to update elapsed time display and
     // the elapsed part of the progress bar every second.
-    const timeUpdateInterval = setInterval(() => {
+    setInterval(() => {
       this.updateProgressBar();
-    }, 500);
+    }, 1000);
   }
 
   // Actualiza el estado de la barra de reproducción cuando se navega
-  public updateProgressBar(): void {
+  updateProgressBar(): void {
     this.progressBarValue = (this.player.getCurrentTime() / this.player.getDuration()) * 100;
   }
 
@@ -176,7 +171,7 @@ export class VideoAlumnoComponent {
     if (!this.isVideoLineal) {
       // Calculate the new time for the video.
       // new time in seconds = total duration in seconds * ( value of range input / 100 )
-      const newTime = this.player.getDuration() * (e / 100);
+      const newTime = this.player.getDuration() * (e / 100) - 0.1;
 
       // Skip video to new time
       this.player.seekTo(newTime, true);
@@ -250,8 +245,12 @@ export class VideoAlumnoComponent {
     return resultStr;
   }
 
-  getDuration(punto): number {
-    return (this.player ? this.player.getDuration() : 0) * (punto / 100) * 1000;
+  getDuration(punto): string {
+    if (this.player) {
+      const seconds = this.player.getDuration() * punto / 100;
+      return this.toMin(seconds);
+    }
+    return '0';
   }
 
   getPosition(punto): number {
