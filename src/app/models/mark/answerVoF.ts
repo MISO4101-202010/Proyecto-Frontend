@@ -1,9 +1,9 @@
 export class AnswerVoF {
 
   constructor(
-    public preguntaVoF: number,
+    public preguntaVoF: string,
     public esVerdadero: boolean,
-    public estudiante: number,
+    public estudiante: string,
     public grupo: number
   ) {
   }

@@ -56,7 +56,7 @@ export class CrearPreguntaVerdaderoFalsoComponent implements OnInit {
         this.questionForm.value.marca = result1.id;
         this.contenidoService.agregarMarcaVerdaderoFalso(this.questionForm.value).subscribe(result2 => {
           console.error(result2);
-          Swal.fire('Agregar Pregunta', 'Pregunta agregada correctamente', 'success');
+          Swal.fire('Pregunta Agregada', 'Pregunta agregada correctamente', 'success');
           this.dialogRef.close();
         }, error => {
           console.error(error);
