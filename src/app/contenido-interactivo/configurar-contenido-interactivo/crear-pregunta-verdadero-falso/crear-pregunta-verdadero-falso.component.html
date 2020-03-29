@@ -25,13 +25,6 @@
             <mat-radio-button class="falso" value="no">No</mat-radio-button>
           </mat-radio-group>
         </div>
-        <div class="columna-flex">
-          <label>Se puede saltar la pregunta:</label>
-          <mat-radio-group [formControl]="saltarControl">
-            <mat-radio-button value="si">Si</mat-radio-button>
-            <mat-radio-button class="falso" value="no">No</mat-radio-button>
-          </mat-radio-group>
-        </div>
       </div>
       <mat-form-field *ngIf="this.retroalimentacionControl.value === 'si'" appearance="outline" style="width:100%">
         <mat-label>Escribe la retroalimentación para el estudiante</mat-label>

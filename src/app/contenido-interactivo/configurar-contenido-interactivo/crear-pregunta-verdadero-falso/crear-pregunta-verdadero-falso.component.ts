@@ -18,7 +18,6 @@ export class CrearPreguntaVerdaderoFalsoComponent implements OnInit {
   questionForm: FormGroup;
   respuestaControl = new FormControl('verdadero');
   retroalimentacionControl = new FormControl('no');
-  saltarControl = new FormControl('si');
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData,
               private formBuilder: FormBuilder,
@@ -45,13 +44,12 @@ export class CrearPreguntaVerdaderoFalsoComponent implements OnInit {
 
   crearMarca() {
     if (this.questionForm.valid) {
+      this.data.marca.punto = Math.round(this.data.marca.punto);
       const infoMarca = this.data.marca;
       infoMarca.contenido = infoMarca.contenido_id;
       const respuestaCorrecta = (this.respuestaControl.value === 'verdadero');
       const tieneRetro = (this.retroalimentacionControl.value === 'si');
-      const saltar = (this.saltarControl.value === 'si');
       this.questionForm.value.esVerdadero = respuestaCorrecta;
-      this.questionForm.value.puedeSaltar = saltar;
       this.questionForm.value.tieneRetroalimentacion = tieneRetro;
       this.questionForm.value.tipoActividad = 2;
       this.contenidoService.agregarMarca(infoMarca).subscribe(result1 => {

@@ -20,7 +20,7 @@
       <label>{{infoPregunta.retroalimentacion}}</label>
     </div>
     <div class="form-actions">
-      <button *ngIf="infoPregunta.puedeSaltar" class="mat-flat-button mat-primary" type="button"
+      <button *ngIf="canJump" class="mat-flat-button mat-primary" type="button"
               (click)="saltar()">
         Saltar
       </button>

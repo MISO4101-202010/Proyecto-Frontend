@@ -1,0 +1,24 @@
+<div class="container">
+  <h1 class="titulo">Mis Cursos</h1>
+  <div *ngFor="let curso of cursos">
+    <div class="myCard example-card mat-card">
+      <h4 class="nombreCurso" #nombre>{{curso.nombre}}</h4>
+      <div class="contenedor">
+        <button class="boton" (click)="anterior(nombre)">
+          <img src="https://res.cloudinary.com/drfggfn8f/image/upload/v1585253592/cs6jgqlod6vvidig51b9.svg" alt="">
+        </button>
+        <div class="imagenes">
+          <div class="cuadrado" *ngFor="let contenido of curso.mostrar">
+            <a href="./#/contenido-interactivo">
+              <img src="{{getURLImageYoutube(contenido.contenido.url)}}" alt="" class="imagen" />
+            </a>
+            <p>{{contenido.nombre}}</p>
+          </div>
+        </div>
+        <button class="boton2" (click)="siguiente(nombre)">
+          <img src="https://res.cloudinary.com/drfggfn8f/image/upload/v1585253592/whqml0lhrf6uzm4ymcct.svg" alt="">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

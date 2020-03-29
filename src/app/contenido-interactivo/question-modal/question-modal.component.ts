@@ -1,55 +1,77 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {ActivitiesService} from 'src/app/services/activities-service/activities.service';
-import {PreguntaOpcionMultiple} from 'src/app/models/mark/questionMultiple.model';
-import {OpcionesPreguntaMultiple} from 'src/app/models/mark/optionsQuestionMultiple.model';
-import {LoadVideoService} from 'src/app/services/contenidoInter/load-video.service';
-import {AnswerQuestion} from 'src/app/models/mark/answerQuestion.model';
+import { Component, Inject, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { ActivitiesService } from "src/app/services/activities-service/activities.service";
+import { PreguntaOpcionMultiple } from "src/app/models/mark/questionMultiple.model";
+import { OpcionesPreguntaMultiple } from "src/app/models/mark/optionsQuestionMultiple.model";
+import { AnswerQuestion } from "src/app/models/mark/answerQuestion.model";
+import Swal from "sweetalert2";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
-  selector: 'app-question-modal',
-  templateUrl: './question-modal.component.html',
-  styleUrls: ['./question-modal.component.css']
+  selector: "app-question-modal",
+  templateUrl: "./question-modal.component.html",
+  styleUrls: ["./question-modal.component.css"]
 })
 export class QuestionModalComponent implements OnInit {
-
-  showRetroAlimentation = false;
+  canJump: boolean;
   arrayQuestionsForMark: Array<any> = new Array();
   questionInformation: any;
   hasQuestionsToShow = false;
   hasManyOptions = false;
-  optionsArray: Array<{ idOption: number, idQuestion: string, answerOption: boolean, titleOption: string }> = new Array();
+  optionsArray: Array<{
+    idOption: number;
+    idQuestion: string;
+    answerOption: boolean;
+    titleOption: string;
+  }> = new Array();
   hasFeedBack = false;
   arrayCorrectAnswers: Array<{ titleAnswer: string }> = new Array();
   indexToShow = 0;
   studentId = 3;
   idGroup = 1;
   numberTry: number;
+  idContent = "";
   typeQuestion = '';
   idQuestion: string;
 
-  constructor(public dialogRef: MatDialogRef<QuestionModalComponent>, @Inject(MAT_DIALOG_DATA) public data: { idActivity, idMarca },
-              private activityService: ActivitiesService) {
+  constructor(
+    public dialogRef: MatDialogRef<QuestionModalComponent>,
+    @Inject(MAT_DIALOG_DATA)
+    public data: { idActivity; idMarca; contenidoInteractivo },
+    private activityService: ActivitiesService,
+    private activatedRoute: ActivatedRoute
+  ) {
     dialogRef.disableClose = true;
   }
 
   ngOnInit() {
     this.getQuestion();
+    this.activatedRoute.params.subscribe(params => {
+      this.idContent = params["id"] ? params["id"] : "";
+      this.canJump = this.data.contenidoInteractivo.puedeSaltar;
+    });
   }
 
   saveAnswer() {
     this.callServiceSaveAnswer();
     if (this.typeQuestion === 'preguntaOpcionMultiple') {
-      this.hasFeedBack = this.arrayQuestionsForMark[this.indexToShow].tieneRetroalimentacion;
+      if (this.optionsArray.some(this.hasAnswer)) {
+        this.hasFeedBack = this.arrayQuestionsForMark[this.indexToShow].tieneRetroalimentacion;
+      } else {
+        Swal.fire("Cuidado", "No ha respondido la pregunta", "warning");
+      }
     } else if (this.typeQuestion === 'preguntaAbierta') {
       this.hasFeedBack = this.questionInformation.tieneRetroalimentacion;
     }
+
     if (!this.hasFeedBack) {
       this.continue();
     }
-
   }
 
+  hasAnswer(element, index, array) {
+    return element.answerOption;
+  }
 
   continue() {
     this.hasFeedBack = false;
@@ -67,10 +89,9 @@ export class QuestionModalComponent implements OnInit {
     }
   }
 
-
   getQuestion() {
     if (this.data.idMarca !== undefined) {
-      console.log('ID MARCA A CONSULTAR ', this.data.idMarca);
+      console.log("ID MARCA A CONSULTAR ", this.data.idMarca);
       this.activityService.getActivityById(this.data.idMarca).subscribe(
         data => {
           let results = []
@@ -80,8 +101,9 @@ export class QuestionModalComponent implements OnInit {
           this.arrayQuestionsForMark = results;
           console.log(results)
           this.getQuestionToShow();
-        }, error => {
-          console.log('Error getting question information -> ', error);
+        },
+        error => {
+          console.log("Error getting question information -> ", error);
         }
       );
     }
@@ -110,8 +132,7 @@ export class QuestionModalComponent implements OnInit {
     this.arrayCorrectAnswers = new Array();
     arrayOptions.forEach(option => {
       if (option.esCorrecta) {
-        this.arrayCorrectAnswers.push(
-          {titleAnswer: option.opcion});
+        this.arrayCorrectAnswers.push({ titleAnswer: option.opcion });
       }
     });
   }
@@ -131,7 +152,7 @@ export class QuestionModalComponent implements OnInit {
           this.questionInformation = element;
           this.questionInformation.respuesta = '';
           this.hasFeedBack = false;
-        }else if (this.typeQuestion === 'pausa') {
+        } else if (this.typeQuestion === 'pausa') {
           this.idQuestion = element.id;
           this.questionInformation = element;
           this.questionInformation.respuesta = '';
@@ -141,7 +162,6 @@ export class QuestionModalComponent implements OnInit {
       }
     });
     this.hasQuestionsToShow = true;
-
   }
 
   sleep(ms) {

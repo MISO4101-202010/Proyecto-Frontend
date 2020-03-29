@@ -4,7 +4,8 @@
   <div mat-dialog-content *ngIf="typeQuestion==='preguntaOpcionMultiple'">
     <div class="row" *ngFor="let optionAnswer of optionsArray, let i=index">
       <div class="col-3">
-        <mat-checkbox class="margin-left-25" (change)="checkOptionAnswer($event.checked, optionAnswer.idOption)" [checked]="optionAnswer.answerOption" [disabled]="hasFeedBack"> {{optionAnswer.titleOption}}
+        <mat-checkbox class="margin-left-25" (change)="checkOptionAnswer($event.checked, optionAnswer.idOption)"
+                      [checked]="optionAnswer.answerOption" [disabled]="hasFeedBack"> {{optionAnswer.titleOption}}
         </mat-checkbox>
       </div>
     </div>
@@ -38,13 +39,16 @@
         {{questionInformation.enunciado}}
       </div>
     </div>
+    <div class="col-3" *ngIf="canJump" mat-dialog-actions>
+      <button mat-button (click)="continue()">Continuar</button>
+    </div>
   </div>
 
   <div class="row" *ngIf="typeQuestion!=='pausa'">
     <div class="col-3" *ngIf="!hasFeedBack" mat-dialog-actions>
       <button mat-button (click)="saveAnswer()">Enviar respuestas</button>
     </div>
-    <div class="col-3" mat-dialog-actions>
+    <div class="col-3" *ngIf="canJump" mat-dialog-actions>
       <button mat-button (click)="continue()">Continuar</button>
     </div>
   </div>

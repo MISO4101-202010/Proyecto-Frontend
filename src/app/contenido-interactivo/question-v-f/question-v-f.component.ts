@@ -1,13 +1,14 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {PreguntaFalsoVerdadero} from '../../models/mark/questionTrueFalse';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {FormControl} from '@angular/forms';
-import {ActivitiesService} from '../../services/activities-service/activities.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { PreguntaFalsoVerdadero } from '../../models/mark/questionTrueFalse';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { FormControl } from '@angular/forms';
+import { ActivitiesService } from '../../services/activities-service/activities.service';
 import Swal from 'sweetalert2';
-import {AnswerVoF} from 'src/app/models/mark/answerVoF';
+import { AnswerVoF } from 'src/app/models/mark/answerVoF';
 
 export interface DialogData {
   marca: any;
+  contenidoInteractivo: any;
 }
 
 @Component({
@@ -16,6 +17,7 @@ export interface DialogData {
   styleUrls: ['./question-v-f.component.css']
 })
 export class QuestionVFComponent implements OnInit {
+  canJump: boolean;
   answer: AnswerVoF;
   hayPregunta = false;
   yaRespondio = false;
@@ -42,6 +44,7 @@ export class QuestionVFComponent implements OnInit {
         const correcta = (this.infoPregunta.esVerdadero) ? 'Verdadero' : 'Falso';
         this.respuesta = correcta;
         this.hayPregunta = true;
+        this.canJump = this.data.contenidoInteractivo.puedeSaltar;
       }, error => {
         console.log('Error getting question information -> ', error);
       }
@@ -73,5 +76,4 @@ export class QuestionVFComponent implements OnInit {
   saltar() {
     this.dialogRef.close();
   }
-
 }
