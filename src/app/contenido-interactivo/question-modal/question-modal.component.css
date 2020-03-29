@@ -28,3 +28,11 @@ button {
     border-bottom: solid 1px gray;
     color:#4d4949;
 }
+
+textarea {
+    min-width: 90%;
+}
+
+mat-form-field{
+    min-width: 90%;
+}
