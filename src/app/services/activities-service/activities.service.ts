@@ -120,5 +120,4 @@ export class ActivitiesService {
       }
     );
   }
-
 }

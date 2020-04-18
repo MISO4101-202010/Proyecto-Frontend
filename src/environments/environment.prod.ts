@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://project-backend-hmi.herokuapp.com'
+  apiUrl: 'https://miso4101-202010-backend.herokuapp.com'
 };

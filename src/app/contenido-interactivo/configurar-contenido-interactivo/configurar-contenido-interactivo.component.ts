@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
 import { CrearSeleccionMultipleComponent } from './crear-seleccion-multiple/crear-seleccion-multiple.component';
 import { CrearPreguntaAbiertaComponent } from './crear-pregunta-abierta/crear-pregunta-abierta.component';
 import { CrearPreguntaVerdaderoFalsoComponent } from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
@@ -19,8 +19,7 @@ const activityTypesComponents = {
   templateUrl: './configurar-contenido-interactivo.component.html',
   styleUrls: ['./configurar-contenido-interactivo.component.css']
 })
-export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
-
+export class ConfigurarContenidoInteractivoComponent {
   player: YT.Player;
   id: string;
   playerVars = {
@@ -32,26 +31,15 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
   };
   playing = false;
   progressBarValue = 0;
-  values = [1, 3, 5, 10, 20, 50, 100];    // values to step to
   contenidoInt;
   contId;
   contentsLoaded: Promise<boolean>;
   marcasPorcentaje;
 
-  // Elementos del DOM a manipular
-  @ViewChild('progressBar', { static: false }) progressBar: ElementRef;
-  constructor(public dialog: MatDialog, private activeRoute: ActivatedRoute,
+  constructor(public dialog: MatDialog, private activatedRoute: ActivatedRoute,
     private contenidoService: ContenidoService) {
     this.loadData();
   }
-
-  // // Escuchar evento cuando se mueve la barra
-  // @HostListener('window:mouseup', ['$event'])
-  // onMouseUp(event) {
-  //   if (event.target.id === 'progressBar') {
-  //     this.handleTouchProgressBar(event);
-  //   }
-  // }
 
   opcionesMarca = [
     'Pregunta tipo pausa',
@@ -71,16 +59,8 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
     // Update the controls on load
     this.updateProgressBar();
     this.loadMarcas(this.contenidoInt.marcas);
-
-    // Start interval to update elapsed time display and
-    // the elapsed part of the progress bar every second.
-    const timeUpdateInterval = setInterval(() => {
-      this.updateProgressBar();
-    }, 1000);
-
-    // Clear any old interval.
-    clearInterval(timeUpdateInterval);
   }
+
   onStateChange(event) {
     if (event.data === YT.PlayerState.PLAYING) {
       this.playing = true;
@@ -92,14 +72,12 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
     // the elapsed part of the progress bar every second.
     const timeUpdateInterval = setInterval(() => {
       this.updateProgressBar();
-    }, 500);
-
+    }, 1000);
   }
 
   // Actualiza el estado de la barra de reproducción cuando se navega
   public updateProgressBar(): void {
     this.progressBarValue = (this.player.getCurrentTime() / this.player.getDuration()) * 100;
-    // this.progressBar.nativeElement.value = (this.player.getCurrentTime() / this.player.getDuration()) * 100;
   }
 
   handleTouchProgressBar(e: any): void {
@@ -126,15 +104,15 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
   }
 
   loadData() {
-    this.activeRoute.params.subscribe(params => {
+    this.activatedRoute.params.subscribe(params => {
       if (params.id) {
         this.contId = params.id;
-        this.getContIntDetail();
+        this.getContentInteractiveDetail();
       }
     });
   }
 
-  getContIntDetail() {
+  getContentInteractiveDetail() {
     this.contenidoService.getDetalleContenidoInteractivo(this.contId).subscribe(contenido => {
       this.contenidoInt = contenido;
       this.contentsLoaded = Promise.resolve(true);
@@ -146,18 +124,15 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
   loadMarcas(marcas) {
     this.marcasPorcentaje = [];
     for (const marca of marcas) {
-      console.log(marca);
-      const marcaP = Math.round(this.calcPercentage(+marca.punto));
-      console.log(marcaP, 'marcaP');
+      const marcaP = this.calcPercentage(+marca.punto);
       this.marcasPorcentaje.push(marcaP);
     }
-    console.log(this.marcasPorcentaje, 'marcasPorcentaje');
   }
 
   calcPercentage(segundo: number) {
     let percentage = 0;
     if (this.player) {
-      percentage = (Math.round(segundo) * 100) / Math.round(this.player.getDuration());
+      percentage = (segundo * 100) / this.player.getDuration();
     }
     return percentage;
   }
@@ -180,7 +155,7 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
 
   toMin(sec: number): string {
     const result = Math.round(sec);
-    let resultStr = '0:00' +  result;
+    let resultStr = '0:00' + result;
     let newSec = (result % 60).toString();
     if (+newSec < 10) {
       newSec = '0' + newSec;
@@ -197,14 +172,12 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
     return resultStr;
   }
 
-
-
   addMarker() {
     this.pause();
-    // Por ahora solo se  podría selección multiple
+    // Por ahora solo se podría selección multiple
     console.log('Añadir marca en', this.player.getCurrentTime());
     if (this.contId) {
-      const punto = Math.round(this.player.getCurrentTime());
+      const punto = this.player.getCurrentTime();
       const marca = {
         nombre: 'marca ' + this.getCurrentTime(),
         punto,
@@ -213,6 +186,7 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
       this.openDialog(marca);
     }
   }
+
   openDialog(marca): void {
     const dialogRef = this.dialog.open(activityTypesComponents[this.marcaSeleccionada], {
       width: '70%',
@@ -222,7 +196,21 @@ export class ConfigurarContenidoInteractivoComponent implements AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe(_ => {
-      this.getContIntDetail();
+      this.getContentInteractiveDetail();
      });
+  }
+
+  getDuration(punto): string {
+    if (this.player) {
+      const seconds = this.player.getDuration() * punto / 100;
+      return this.toMin(seconds);
+    }
+    return '0';
+  }
+
+  getPosition(punto): number {
+    // Cantidad de puntos a restar para ubicar la marca, los "10" son el tamaño de la marca
+    const pixelsToRest = (punto * 10 / 100);
+    return (punto * 854 / 100) - pixelsToRest;
   }
 }

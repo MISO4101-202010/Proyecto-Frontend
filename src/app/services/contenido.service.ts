@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {environment} from 'src/environments/environment';
-import {Observable, of} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
+import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 
 @Injectable({
@@ -11,6 +11,10 @@ export class ContenidoService {
 
   private contenidoUrl = `${environment.apiUrl}/content/interactive_content/`;
   private reportesUrl = `${environment.apiUrl}/activities/reports/`;
+  private reporteListUrl = `${environment.apiUrl}/activities/reportList/`;
+  private cursosUrl = `${environment.apiUrl}/content/courses/`;
+  private contenidoInteractivoUrl = `${environment.apiUrl}/content/interactiveContentByCourse/`;
+  
   private addPreguntaSelecconMultipleUrl = `${environment.apiUrl}/activities/generate-question-multiple-choice`;
   private addPreguntaAbiertaUrl = `${environment.apiUrl}/activities/generate-open-question`;
   private addPreguntaFalsoVerdaderoUrl = `${environment.apiUrl}/activities/pregunta_f_v`;
@@ -26,10 +30,11 @@ export class ContenidoService {
     return this.httpClient.get<any>(this.contenidoUrl);
   }
 
-  postContenidoInteractivo(nombre: string, contenidoId: number) {
+  postContenidoInteractivo(nombre: string, contenidoId: number, puedeSaltar: boolean) {
     const body = {
       nombre: nombre,
-      contenido: contenidoId
+      contenido: contenidoId,
+      puedeSaltar: puedeSaltar
     };
     console.log('body:', body);
     return this.httpClient.post(this.crearContenidoInteractivo, body);
@@ -52,6 +57,13 @@ export class ContenidoService {
     return this.httpClient.get<any>(this.reportesUrl + contentId);
   }
 
+  getCursosList(): Observable<any>  {
+    return this.httpClient.get<any>(this.cursosUrl);
+  }
+  getCursosIdList(id:string): Observable<any>  {
+    return this.httpClient.get<any>(this.contenidoInteractivoUrl+id);
+  }
+
   agregarMarcaPreguntaSeleccionMultiple(marca: any): Observable<any> {
     return this.httpClient.post(this.addPreguntaSelecconMultipleUrl, marca);
   }
@@ -63,7 +75,7 @@ export class ContenidoService {
 
   agregarMarcaVerdaderoFalso(pregunta: any): Observable<any> {
     return this.httpClient.post(this.addPreguntaFalsoVerdaderoUrl, pregunta);
-  }
+}
 
   agregarMarca(marca: any): Observable<any> {
     return this.httpClient.post(this.crearMarca, marca);

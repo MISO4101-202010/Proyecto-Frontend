@@ -29,7 +29,7 @@ export class CrearPreguntaPausaComponent implements OnInit {
 
   initializeForm() {
     this.questionForm = this.formBuilder.group({
-      tiempo: ["", [Validators.required, Validators.pattern("^[0-9]*$")]],
+      tiempo: ["", [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1)]],
       enunciado: ["", [Validators.required]]
     });
   }

@@ -2,21 +2,23 @@
     <h2>Añadir marcas</h2>
     <div *ngIf="contentsLoaded | async" class="video-container">
         <div style="width: 100%;">
-            <youtube-player id="ytplayer" [videoId]="id" height="480" width="854" (ready)="savePlayer($event)"
+            <youtube-player style="pointer-events: none;" id="ytplayer" [videoId]="id" height="480" width="854" (ready)="savePlayer($event)"
                 (change)="onStateChange($event)" [playerVars]="playerVars">
             </youtube-player>
         </div>
 
         <div class="bar-container">
-            <!-- <input type="range" #progressBar id="progressBar" value="0"> -->
-            <!-- <mat-slider step="values" type="range" #progressBar id="progressBar" color="primary"
-                (ngModelChange)='handleTouchProgressBar($event)' [ngModel]="progressBarValue">
-            </mat-slider> -->
-            <input type="range" list="tickmarks" style="width: 854px;" #progressBar id="progressBar"
-                (ngModelChange)='handleTouchProgressBar($event)' [ngModel]="progressBarValue">
-            <datalist id="tickmarks">
-                <option *ngFor="let punto of marcasPorcentaje" value="{{punto}}">
-            </datalist>
+            <div id="outer-marks">
+              <div id="inner-marks">
+                <div title="{{ getDuration(punto) }}" id="inner-inner-mark" *ngFor="let punto of marcasPorcentaje"
+                     [ngStyle]="{'left': getPosition(punto) + 'px'}"
+                     (click)="handleTouchProgressBar(punto)"
+                ></div>
+              </div>
+            </div>
+
+          <input type="range" id="progressBar" step="0.1" (ngModelChange)='handleTouchProgressBar($event)'
+                 [ngModel]="progressBarValue">
 
             <button mat-flat-button color="primary" *ngIf="!playing" (click)="play()">
                 <mat-icon>play_circle_outline</mat-icon>

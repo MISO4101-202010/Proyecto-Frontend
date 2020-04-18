@@ -8,6 +8,7 @@ import {AnswerVoF} from 'src/app/models/mark/answerVoF';
 
 export interface DialogData {
   marca: any;
+  contenidoInteractivo: any;
 }
 
 @Component({
@@ -16,6 +17,7 @@ export interface DialogData {
   styleUrls: ['./question-v-f.component.css']
 })
 export class QuestionVFComponent implements OnInit {
+  canJump: boolean;
   answer: AnswerVoF;
   hayPregunta = false;
   yaRespondio = false;
@@ -42,6 +44,7 @@ export class QuestionVFComponent implements OnInit {
         const correcta = (this.infoPregunta.esVerdadero) ? 'Verdadero' : 'Falso';
         this.respuesta = correcta;
         this.hayPregunta = true;
+        this.canJump = this.data.contenidoInteractivo.puedeSaltar;
       }, error => {
         console.log('Error getting question information -> ', error);
       }
@@ -51,7 +54,9 @@ export class QuestionVFComponent implements OnInit {
   responderPregunta() {
     if (this.respuestaControl.value !== null) {
       const idEstudiante = JSON.parse(sessionStorage.userConectaTe).dataProfesor.id;
-      this.answer = new AnswerVoF(this.infoPregunta.id, this.respuestaControl.value, idEstudiante, 0);
+      const respuestaCorrecta = (this.respuestaControl.value === 'verdadero');
+      this.answer = new AnswerVoF(String(this.infoPregunta.id), respuestaCorrecta, String(idEstudiante), 0);
+      console.log('Respuesta: ', this.answer);
       this.activityService.postFVAnswer(this.answer).subscribe(
         data => {
           this.respuestaControl.disable();
@@ -60,7 +65,7 @@ export class QuestionVFComponent implements OnInit {
           this.infoPregunta.puedeSaltar = true;
         },
         error => {
-          Swal.fire('Error!!', 'Error por aqui', error);
+            Swal.fire('Error!!', error.error[0]);
         }
       );
     } else {
@@ -71,5 +76,4 @@ export class QuestionVFComponent implements OnInit {
   saltar() {
     this.dialogRef.close();
   }
-
 }

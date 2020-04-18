@@ -6,10 +6,11 @@
         <mat-icon>library_books</mat-icon>Ver Cursos
       </a>
       <!-- <a mat-list-item routerLink="/contenido-interactivo"><mat-icon>apps</mat-icon>Manejar Contenido Interactivo</a> -->
+      <a *ngIf="student == true" mat-list-item routerLink="/cursos/misCursos"><mat-icon>apps</mat-icon>Mis Cursos</a>
       <a *ngIf="student == false" mat-list-item routerLink="/contenido-interactivo"><mat-icon>apps</mat-icon>Contenido Interactivo</a>
       <a *ngIf="student == false" style="height: 0px;width: 0px;overflow:hidden;" mat-list-item routerLink="/load-videos"><mat-icon>library_add</mat-icon>Crear contenido</a>
       <a *ngIf="student == false" mat-list-item routerLink="/page/crearContenidoInt"><mat-icon>library_add</mat-icon>Videos / Audios</a>
-
+      <a *ngIf="student == false" mat-list-item routerLink="/page/reportes"><mat-icon>archive</mat-icon>Reportes</a>
       <!--
       <mat-tree class="tree" mat-list-item [dataSource]="dataSource" [treeControl]="treeControl">
         This is the tree node template for leaf nodes

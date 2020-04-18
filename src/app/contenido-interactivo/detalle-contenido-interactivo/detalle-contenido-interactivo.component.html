@@ -54,8 +54,7 @@
         <mat-card-actions>
             <button mat-button [routerLink]="['/contenido-interactivo/reporte/' + this.id]"
                 routerLinkActive="router-link-active">Ver Reporte</button>
-            <button mat-button [routerLink]="['/contenido-interactivo/configurar/' + this.id]"
-                routerLinkActive="router-link-active">Configurar contenido</button>
+            <button mat-button (click)="goToConfiguration(this.id)">Configurar contenido</button>
         </mat-card-actions>
     </div>
 </mat-card>
