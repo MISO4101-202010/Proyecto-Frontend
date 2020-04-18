@@ -30,11 +30,12 @@ export class ContenidoService {
     return this.httpClient.get<any>(this.contenidoUrl);
   }
 
-  postContenidoInteractivo(nombre: string, contenidoId: number, puedeSaltar: boolean) {
+  postContenidoInteractivo(nombre: string, contenidoId: number, puedeSaltar: boolean, tieneRetroalimentacion: boolean) {
     const body = {
       nombre: nombre,
       contenido: contenidoId,
-      puedeSaltar: puedeSaltar
+      puedeSaltar: puedeSaltar,
+      tieneRetroalimentacion: tieneRetroalimentacion
     };
     console.log('body:', body);
     return this.httpClient.post(this.crearContenidoInteractivo, body);
