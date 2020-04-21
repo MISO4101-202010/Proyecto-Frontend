@@ -6,11 +6,12 @@ import { MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { ContenidoService } from 'src/app/services/contenido.service';
 import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
+import { InteraccionAlumnoService } from '../../interaccion-alumno.service';
 
 const activityTypesComponents = {
   'Pregunta de opción múltiple': CrearSeleccionMultipleComponent,
   'Pregunta abierta': CrearPreguntaAbiertaComponent,
-  'Pregunta Falso o Verdadero': CrearPreguntaVerdaderoFalsoComponent,
+  'Pregunta falso o verdadero': CrearPreguntaVerdaderoFalsoComponent,
   'Pregunta tipo pausa': CrearPreguntaPausaComponent
 };
 
@@ -21,7 +22,7 @@ const activityTypesComponents = {
 })
 export class ConfigurarContenidoInteractivoComponent {
   player: YT.Player;
-  id: string;
+  videoId: string;
   playerVars = {
     // Oculta la barra de reproducción (0)
     controls: 0,
@@ -31,34 +32,33 @@ export class ConfigurarContenidoInteractivoComponent {
   };
   playing = false;
   progressBarValue = 0;
-  contenidoInt;
-  contId;
+  marcas: any[];
+  contenidoInteractivo;
   contentsLoaded: Promise<boolean>;
   marcasPorcentaje;
 
-  constructor(public dialog: MatDialog, private activatedRoute: ActivatedRoute,
-    private contenidoService: ContenidoService) {
+  constructor(public dialog: MatDialog,
+              private activatedRoute: ActivatedRoute,
+              private contenidoService: ContenidoService,
+              private interaccionAlumnoService: InteraccionAlumnoService) {
     this.loadData();
   }
 
   opcionesMarca = [
     'Pregunta tipo pausa',
     'Pregunta de opción múltiple',
-    'Pregunta Falso o Verdadero',
+    'Pregunta falso o verdadero',
     'Pregunta abierta',
-    'Pausa',
-    //'Foro'
+    'Pausa'
   ];
   marcaSeleccionada = this.opcionesMarca[0];
-
-  ngAfterViewInit() {
-  }
 
   savePlayer(player) {
     this.player = player;
     // Update the controls on load
     this.updateProgressBar();
-    this.loadMarcas(this.contenidoInt.marcas);
+    this.getContentMark();
+    this.loadMarcas(this.contenidoInteractivo.marcas);
   }
 
   onStateChange(event) {
@@ -106,18 +106,17 @@ export class ConfigurarContenidoInteractivoComponent {
   loadData() {
     this.activatedRoute.params.subscribe(params => {
       if (params.id) {
-        this.contId = params.id;
-        this.getContentInteractiveDetail();
+        this.getContentInteractiveDetail(params.id);
       }
     });
   }
 
-  getContentInteractiveDetail() {
-    this.contenidoService.getDetalleContenidoInteractivo(this.contId).subscribe(contenido => {
-      this.contenidoInt = contenido;
+  getContentInteractiveDetail(contenidoInteractivoId) {
+    this.contenidoService.getDetalleContenidoInteractivo(contenidoInteractivoId).subscribe(contenido => {
+      this.contenidoInteractivo = contenido;
       this.contentsLoaded = Promise.resolve(true);
-      this.loadMarcas(this.contenidoInt.marcas);
-      this.id = this.contenidoInt.contenido.url.split('watch?v=')[1];
+      this.loadMarcas(this.contenidoInteractivo.marcas);
+      this.videoId = this.contenidoInteractivo.contenido.url.split('watch?v=')[1];
     });
   }
 
@@ -172,18 +171,25 @@ export class ConfigurarContenidoInteractivoComponent {
     return resultStr;
   }
 
-  addMarker() {
+  createOrUpdateMark(mark) {
     this.pause();
-    // Por ahora solo se podría selección multiple
-    console.log('Añadir marca en', this.player.getCurrentTime());
-    if (this.contId) {
-      const punto = this.player.getCurrentTime();
-      const marca = {
-        nombre: 'marca ' + this.getCurrentTime(),
-        punto,
-        contenido_id: +this.contId
-      };
-      this.openDialog(marca);
+    if (mark) {
+      // Buscar la marca correcta
+      // TODO JSAE buscar la marca por el id
+      mark = this.marcas.lodash.find === id;
+      console.log('Editar marca:', mark);
+      this.openDialog(mark);
+    } else {
+      console.log('Añadir marca en', this.player.getCurrentTime());
+      if (this.contenidoInteractivo) {
+        const punto = this.player.getCurrentTime();
+        const newMark = {
+          nombre: 'marca ' + this.getCurrentTime(),
+          punto,
+          contenido_id: +this.contenidoInteractivo.id
+        };
+        this.openDialog(newMark);
+      }
     }
   }
 
@@ -196,8 +202,8 @@ export class ConfigurarContenidoInteractivoComponent {
     });
 
     dialogRef.afterClosed().subscribe(_ => {
-      this.getContentInteractiveDetail();
-     });
+      this.getContentInteractiveDetail(this.contenidoInteractivo.id);
+    });
   }
 
   getDuration(punto): string {
@@ -212,5 +218,20 @@ export class ConfigurarContenidoInteractivoComponent {
     // Cantidad de puntos a restar para ubicar la marca, los "10" son el tamaño de la marca
     const pixelsToRest = (punto * 10 / 100);
     return (punto * 854 / 100) - pixelsToRest;
+  }
+
+  getContentMark() {
+    this.interaccionAlumnoService.getMarcasXacontenido(parseInt(this.contenidoInteractivo.id, 10))
+    .subscribe(
+      (val: any) => {
+        this.marcas = val.results;
+      },
+      response => {
+        console.log('Error obteniendo las marcas', response);
+      },
+      () => {
+        console.log('Proceso de obtención de las marcas completado');
+      }
+    );
   }
 }

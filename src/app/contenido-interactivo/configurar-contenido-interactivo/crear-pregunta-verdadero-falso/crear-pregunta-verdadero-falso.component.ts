@@ -1,8 +1,8 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {FormBuilder, FormGroup, Validators, FormArray, FormControl} from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-import {ContenidoService} from 'src/app/services/contenido.service';
+import { ContenidoService } from 'src/app/services/contenido.service';
 
 export interface DialogData {
   marca: any;
@@ -27,6 +27,7 @@ export class CrearPreguntaVerdaderoFalsoComponent implements OnInit {
   }
 
   initializeForm() {
+    console.log('JSAE segundo');
     this.questionForm = this.formBuilder.group({
       pregunta: ['', [Validators.required]],
       nombre: ['', [Validators.required]],
@@ -36,6 +37,7 @@ export class CrearPreguntaVerdaderoFalsoComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('JSAE primero');
   }
 
   cancel() {
