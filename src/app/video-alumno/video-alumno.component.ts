@@ -17,8 +17,8 @@ export class VideoAlumnoComponent {
   player: YT.Player;
   videoId = "";
   marcas: any[];
-  mustWait: boolean = true;
-  public progressBarValue: number = 0;
+  mustWait = true;
+  public progressBarValue = 0;
   playing = false;
   playerVars = {
     // Oculta la barra de reproducción (0)
@@ -51,7 +51,7 @@ export class VideoAlumnoComponent {
       console.log(data);
     });
     this.activatedRoute.params.subscribe(params => {
-      this.getContentInteractiveDetail(params["id"] ? params["id"] : "");
+      this.getContentInteractiveDetail(params.id ? params.id : "");
     });
   }
 
@@ -59,7 +59,7 @@ export class VideoAlumnoComponent {
     this.player = player;
     console.log("Player instance", player);
     this.getContentMark();
-    this.loadMarcas(this.contenidoInt.marcas);
+    this.loadMarcas(this.contenidoInteractivo.marcas);
 
     await console.log("Player current time", this.player.getCurrentTime());
     while (true) {

@@ -7,13 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ContenidoService } from 'src/app/services/contenido.service';
 import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
 import { InteraccionAlumnoService } from '../../interaccion-alumno.service';
-
-const activityTypesComponents = {
-  'Pregunta de opción múltiple': CrearSeleccionMultipleComponent,
-  'Pregunta abierta': CrearPreguntaAbiertaComponent,
-  'Pregunta falso o verdadero': CrearPreguntaVerdaderoFalsoComponent,
-  'Pregunta tipo pausa': CrearPreguntaPausaComponent
-};
+import * as _ from 'underscore';
 
 @Component({
   selector: 'app-configurar-contenido-interactivo',
@@ -44,13 +38,23 @@ export class ConfigurarContenidoInteractivoComponent {
     this.loadData();
   }
 
-  opcionesMarca = [
-    'Pregunta tipo pausa',
-    'Pregunta de opción múltiple',
-    'Pregunta falso o verdadero',
-    'Pregunta abierta',
-    'Pausa'
-  ];
+  opcionesMarca = [{
+    text: 'Pregunta de selección múltiple',
+    value: 1,
+    modalType: CrearSeleccionMultipleComponent
+  }, {
+    text: 'Pregunta falso o verdadero',
+    value: 2,
+    modalType: CrearPreguntaVerdaderoFalsoComponent
+  }, {
+    text: 'Pregunta tipo pausa',
+    value: 3,
+    modalType: CrearPreguntaPausaComponent
+  }, {
+    text: 'Pregunta abierta',
+    value: 4,
+    modalType: CrearPreguntaAbiertaComponent
+  }];
   marcaSeleccionada = this.opcionesMarca[0];
 
   savePlayer(player) {
@@ -175,10 +179,12 @@ export class ConfigurarContenidoInteractivoComponent {
     this.pause();
     if (mark) {
       // Buscar la marca correcta
-      // TODO JSAE buscar la marca por el id
-      mark = this.marcas.lodash.find === id;
-      console.log('Editar marca:', mark);
-      this.openDialog(mark);
+      // tslint:disable-next-line:only-arrow-functions
+      const selectedMark = _.filter(this.marcas, function(m) {
+        return m.marca_id === mark.id;
+      })[0];
+      console.log('Editar marca:', selectedMark);
+      this.openDialog(selectedMark);
     } else {
       console.log('Añadir marca en', this.player.getCurrentTime());
       if (this.contenidoInteractivo) {
@@ -186,7 +192,9 @@ export class ConfigurarContenidoInteractivoComponent {
         const newMark = {
           nombre: 'marca ' + this.getCurrentTime(),
           punto,
-          contenido_id: +this.contenidoInteractivo.id
+          contenido_id: +this.contenidoInteractivo.id,
+          tipoActividad: undefined,
+          marca_id: undefined
         };
         this.openDialog(newMark);
       }
@@ -194,14 +202,23 @@ export class ConfigurarContenidoInteractivoComponent {
   }
 
   openDialog(marca): void {
-    const dialogRef = this.dialog.open(activityTypesComponents[this.marcaSeleccionada], {
+    let modalType;
+    if (marca.tipoActividad === undefined) {
+      modalType = this.marcaSeleccionada.modalType;
+    } else {
+      // tslint:disable-next-line:only-arrow-functions
+      modalType = _.filter(this.opcionesMarca, function(opc) {
+        return opc.value === marca.tipoActividad;
+      })[0].modalType;
+    }
+    const dialogRef = this.dialog.open(modalType, {
       width: '70%',
       data: {
         marca
       }
     });
 
-    dialogRef.afterClosed().subscribe(_ => {
+    dialogRef.afterClosed().subscribe(res => {
       this.getContentInteractiveDetail(this.contenidoInteractivo.id);
     });
   }

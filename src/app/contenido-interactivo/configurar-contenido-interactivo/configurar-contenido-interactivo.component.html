@@ -34,7 +34,7 @@
         <mat-form-field style="width:30%">
             <mat-label>Seleccione un tipo de marca</mat-label>
             <mat-select [(value)]="marcaSeleccionada" enabled>
-                <mat-option *ngFor="let marca of opcionesMarca" [value]="marca">{{marca}}</mat-option>
+                <mat-option *ngFor="let marca of opcionesMarca" [value]="marca">{{ marca.text }}</mat-option>
             </mat-select>
         </mat-form-field>
         <span></span>

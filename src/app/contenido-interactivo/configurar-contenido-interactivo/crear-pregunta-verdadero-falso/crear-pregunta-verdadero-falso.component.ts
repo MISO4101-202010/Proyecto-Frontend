@@ -1,8 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ContenidoService } from 'src/app/services/contenido.service';
+import { ActivitiesService } from "../../../services/activities-service/activities.service";
 
 export interface DialogData {
   marca: any;
@@ -13,31 +14,52 @@ export interface DialogData {
   templateUrl: './crear-pregunta-verdadero-falso.component.html',
   styleUrls: ['./crear-pregunta-verdadero-falso.component.css']
 })
-export class CrearPreguntaVerdaderoFalsoComponent implements OnInit {
+export class CrearPreguntaVerdaderoFalsoComponent {
 
   questionForm: FormGroup;
   respuestaControl = new FormControl('verdadero');
   retroalimentacionControl = new FormControl('no');
+  title: string;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData,
               private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<CrearPreguntaVerdaderoFalsoComponent>,
-              private contenidoService: ContenidoService) {
+              private contenidoService: ContenidoService,
+              private activityService: ActivitiesService) {
     this.initializeForm();
+    this.getQuestion();
   }
 
   initializeForm() {
-    console.log('JSAE segundo');
     this.questionForm = this.formBuilder.group({
       pregunta: ['', [Validators.required]],
       nombre: ['', [Validators.required]],
       retroalimentacion: [''],
-      numeroDeIntentos: ['', [Validators.required]]
+      numeroDeIntentos: ['', [Validators.required]],
+      respuestaControl: ['', [Validators.required]]
     });
   }
 
-  ngOnInit() {
-    console.log('JSAE primero');
+  getQuestion() {
+    // Si hay un valor en "marca_id" significa que la pregunta se debe editar
+    if (this.data.marca.marca_id) {
+      this.title = 'Editar';
+      this.activityService.getActivityFVById(this.data.marca.marca_id).subscribe(
+        preguntaVF => {
+          this.questionForm.get('pregunta').setValue(preguntaVF.body.pregunta);
+          this.questionForm.get('nombre').setValue(preguntaVF.body.nombre);
+          this.respuestaControl.setValue(preguntaVF.body.esVerdadero ? 'verdadero' : 'falso');
+          this.retroalimentacionControl.setValue(preguntaVF.body.tieneRetroalimentacion ? 'si' : 'no');
+          this.questionForm.get('numeroDeIntentos').setValue(preguntaVF.body.numeroDeIntentos);
+        }, error => {
+          console.error('Ocurrió un error al obtener la pregunta', error);
+          Swal.fire('Oops...', 'Ocurrió un error al obtener la pregunta, por favor inténtalo de nuevo', 'error');
+          this.cancel();
+        }
+      );
+    } else {
+      this.title = 'Crear';
+    }
   }
 
   cancel() {
