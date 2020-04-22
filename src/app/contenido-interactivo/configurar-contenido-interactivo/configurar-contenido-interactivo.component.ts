@@ -180,6 +180,29 @@ export class ConfigurarContenidoInteractivoComponent {
     return resultStr;
   }
 
+  getMarcaSelected(pregunta): any {
+    //SI EXISTE ACTUALIZA
+    if(pregunta) {
+      switch(pregunta[0].type) { 
+        case 'preguntaOpcionMultiple': { 
+           return CrearSeleccionMultipleComponent;
+          } 
+          case 'preguntaAbierta': { 
+            return CrearPreguntaAbiertaComponent;
+          } 
+          case 'pausa': { 
+            return CrearPreguntaPausaComponent;
+        } 
+        case 'preguntaFV': { 
+          return CrearPreguntaVerdaderoFalsoComponent;
+          } 
+      } 
+      //SI NO EXISTE CREA
+    } else {
+      return activityTypesComponents[this.marcaSeleccionada];
+    } 
+  }
+
   async addMarker(pregunta?) {
     this.player.pauseVideo();
     // Por ahora solo se podría selección multiple
@@ -210,8 +233,10 @@ export class ConfigurarContenidoInteractivoComponent {
     }
   }
 
+
+
   openDialog(marca?): void {
-    const dialogRef = this.dialog.open(activityTypesComponents[this.marcaSeleccionada], {
+    const dialogRef = this.dialog.open(this.getMarcaSelected(marca.pregunta), {
       width: '70%',
       data: {
         marca
@@ -262,7 +287,7 @@ export class ConfigurarContenidoInteractivoComponent {
     if (this.selected.tipoActividad === 2) {
       this.activityService.getActivityFVById(this.selected.marca_id).subscribe(
         data => {
-          this.questionSelected = data.body;
+          this.questionSelected = [data.body];
         }, error => {
           console.log('Error getting question information -> ', error);
         }
