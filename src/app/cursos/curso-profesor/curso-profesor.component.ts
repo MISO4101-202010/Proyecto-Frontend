@@ -14,6 +14,7 @@ export class CursoProfesorComponent implements OnInit {
   interactive_contents;
   mostrar;
   currentIndex;
+  courseName: string;
   constructor(private contenidoService: ContenidoService, config: NgbCarouselConfig, private activatedRoute: ActivatedRoute) {
     config.interval = 4000;
     config.wrap = true;
@@ -35,6 +36,7 @@ export class CursoProfesorComponent implements OnInit {
           this.interactive_contents = interactive_contents;
           if(Object.keys(interactive_contents).length !== 0)
           {
+            this.courseName = this.interactive_contents[0].cursos.find(course => { return course.id == params.id }).nombre;
             for (let i in this.interactive_contents) {
               this.interactive_contents.currentIndex=0;
               this.mostrar = this.interactive_contents.slice(0, 3);
