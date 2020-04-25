@@ -69,7 +69,7 @@ export class ContenidoService {
   }
 
   agregarMarcaPreguntaAbierta(marca: any): Observable<any> {
-    return this.httpClient.post(this.addPreguntaAbiertaUrl, marca);
+    return this.httpClient.put(this.addPreguntaAbiertaUrl, marca);
   }
 
 
