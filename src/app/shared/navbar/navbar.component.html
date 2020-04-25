@@ -14,7 +14,11 @@
       <a mat-list-item class="navbar__menuA"><mat-icon>account_circle</mat-icon>{{name}}
         <button class="dropDown" (click)="toggleProfileMenu()">v</button>
       </a>
-
+      <div *ngIf="showMenu == true" class="menu">
+        <div class="menuItem">
+          <a routerLink="/login" (click)="logout()">Log out</a>
+        </div>
+      </div>
       <!--
       <mat-tree class="tree" mat-list-item [dataSource]="dataSource" [treeControl]="treeControl">
         This is the tree node template for leaf nodes
