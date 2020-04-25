@@ -65,7 +65,7 @@ export class ContenidoService {
   }
 
   agregarMarcaPreguntaSeleccionMultiple(marca: any): Observable<any> {
-    return this.httpClient.post(this.addPreguntaSelecconMultipleUrl, marca);
+    return this.httpClient.put(this.addPreguntaSelecconMultipleUrl, marca);
   }
 
   agregarMarcaPreguntaAbierta(marca: any): Observable<any> {
