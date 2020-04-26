@@ -6,7 +6,7 @@
   width: 230px;
   background-color: #43425d;
 }
-.mat-list-item{
+.mat-list-item {
   color: #ffffff;
 }
 mat-icon {
@@ -27,7 +27,7 @@ mat-toolbar {
 }
 .tree {
   background: inherit;
-  color: #FFFFFF;
+  color: #ffffff;
   margin-right: 5%;
   margin-left: 2%;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -59,6 +59,8 @@ mat-toolbar {
   border: none;
   color: white;
   margin-left: auto;
+  margin-left: 6px;
+  margin-top: 4px;
 }
 
 .navbar__menuA {
