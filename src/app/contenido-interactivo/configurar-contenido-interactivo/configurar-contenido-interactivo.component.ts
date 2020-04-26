@@ -6,6 +6,8 @@ import { MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { ContenidoService } from 'src/app/services/contenido.service';
 import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
+import {InteraccionAlumnoService} from '../../interaccion-alumno.service';
+import {ActivitiesService} from '../../services/activities-service/activities.service';
 
 const activityTypesComponents = {
   'Pregunta de opción múltiple': CrearSeleccionMultipleComponent,
@@ -33,11 +35,16 @@ export class ConfigurarContenidoInteractivoComponent {
   progressBarValue = 0;
   contenidoInt;
   contId;
+  marcas: any[];
+  selected: any;
+  questionSelected: any;
   contentsLoaded: Promise<boolean>;
   marcasPorcentaje;
 
   constructor(public dialog: MatDialog, private activatedRoute: ActivatedRoute,
-    private contenidoService: ContenidoService) {
+              private contenidoService: ContenidoService,
+              private retroalimentacionService: InteraccionAlumnoService,
+              private activityService: ActivitiesService) {
     this.loadData();
   }
 
@@ -47,7 +54,7 @@ export class ConfigurarContenidoInteractivoComponent {
     'Pregunta Falso o Verdadero',
     'Pregunta abierta',
     'Pausa',
-    //'Foro'
+    // 'Foro'
   ];
   marcaSeleccionada = this.opcionesMarca[0];
 
@@ -115,8 +122,9 @@ export class ConfigurarContenidoInteractivoComponent {
   getContentInteractiveDetail() {
     this.contenidoService.getDetalleContenidoInteractivo(this.contId).subscribe(contenido => {
       this.contenidoInt = contenido;
-      this.contentsLoaded = Promise.resolve(true);
       this.loadMarcas(this.contenidoInt.marcas);
+      this.getContentMark();
+      this.contentsLoaded = Promise.resolve(true);
       this.id = this.contenidoInt.contenido.url.split('watch?v=')[1];
     });
   }
@@ -172,23 +180,63 @@ export class ConfigurarContenidoInteractivoComponent {
     return resultStr;
   }
 
-  addMarker() {
-    this.pause();
+  getMarcaSelected(pregunta): any {
+    //SI EXISTE ACTUALIZA
+    if(pregunta) {
+      switch(pregunta[0].type) { 
+        case 'preguntaOpcionMultiple': { 
+           return CrearSeleccionMultipleComponent;
+          } 
+          case 'preguntaAbierta': { 
+            return CrearPreguntaAbiertaComponent;
+          } 
+          case 'pausa': { 
+            return CrearPreguntaPausaComponent;
+        } 
+        case 'preguntaFV': { 
+          return CrearPreguntaVerdaderoFalsoComponent;
+          } 
+      } 
+      //SI NO EXISTE CREA
+    } else {
+      return activityTypesComponents[this.marcaSeleccionada];
+    } 
+  }
+
+  async addMarker(pregunta?) {
+    this.player.pauseVideo();
     // Por ahora solo se podría selección multiple
-    console.log('Añadir marca en', this.player.getCurrentTime());
+
+    if (pregunta !== undefined) {
+          await console.log('Añadir marca en', this.player.getCurrentTime());
+          for (let i = 0; i < this.marcas.length; i++) {
+            if (pregunta.id === this.marcas[i].marca_id) {
+              this.selected = this.marcas[i];
+              break;
+            }
+          }
+          await this.getInfoQuestion();
+          while (this.questionSelected === undefined) {
+            await this.delay(500);
+          }
+    }
+
     if (this.contId) {
       const punto = this.player.getCurrentTime();
       const marca = {
-        nombre: 'marca ' + this.getCurrentTime(),
+        nombre: this.selected ? this.selected.nombre : 'marca ' + this.getCurrentTime(),
         punto,
-        contenido_id: +this.contId
+        contenido_id: +this.contId,
+        pregunta: this.questionSelected
       };
       this.openDialog(marca);
     }
   }
 
-  openDialog(marca): void {
-    const dialogRef = this.dialog.open(activityTypesComponents[this.marcaSeleccionada], {
+
+
+  openDialog(marca?): void {
+    const dialogRef = this.dialog.open(this.getMarcaSelected(marca.pregunta), {
       width: '70%',
       data: {
         marca
@@ -212,5 +260,56 @@ export class ConfigurarContenidoInteractivoComponent {
     // Cantidad de puntos a restar para ubicar la marca, los "10" son el tamaño de la marca
     const pixelsToRest = (punto * 10 / 100);
     return (punto * 854 / 100) - pixelsToRest;
+  }
+
+   getContentMark() {
+     this.retroalimentacionService
+      .getMarcasXacontenido(this.contId)
+      .subscribe(
+        (val: any) => {
+          this.marcas = val.results;
+          this.contentsLoaded = Promise.resolve(true);
+          console.log('POST call successful value returned in body', val);
+        },
+        response => {
+          console.log('POST call in error', response);
+        },
+        () => {
+          console.log('The POST observable is now completed.');
+        }
+      );
+     this.selected = undefined;
+     this.questionSelected = undefined;
+  }
+
+  getInfoQuestion() {
+    console.log('info data', this.selected);
+    if (this.selected.tipoActividad === 2) {
+      this.activityService.getActivityFVById(this.selected.marca_id).subscribe(
+        data => {
+          this.questionSelected = [data.body];
+        }, error => {
+          console.log('Error getting question information -> ', error);
+        }
+      );
+    } else {
+      this.activityService.getActivityById(this.selected.marca_id).subscribe(
+        data => {
+          let results = [];
+          data.forEach(o => {
+            results = results.concat(o.body.results);
+          });
+          console.log(results);
+          this.questionSelected = results;
+        },
+        error => {
+          console.log('Error getting question information -> ', error);
+        }
+      );
+    }
+  }
+
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

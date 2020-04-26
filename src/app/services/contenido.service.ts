@@ -14,7 +14,7 @@ export class ContenidoService {
   private reporteListUrl = `${environment.apiUrl}/activities/reportList/`;
   private cursosUrl = `${environment.apiUrl}/content/courses/`;
   private contenidoInteractivoUrl = `${environment.apiUrl}/content/interactiveContentByCourse/`;
-  
+
   private addPreguntaSelecconMultipleUrl = `${environment.apiUrl}/activities/generate-question-multiple-choice`;
   private addPreguntaAbiertaUrl = `${environment.apiUrl}/activities/generate-open-question`;
   private addPreguntaFalsoVerdaderoUrl = `${environment.apiUrl}/activities/pregunta_f_v`;
@@ -60,8 +60,8 @@ export class ContenidoService {
   getCursosList(): Observable<any>  {
     return this.httpClient.get<any>(this.cursosUrl);
   }
-  getCursosIdList(id:string): Observable<any>  {
-    return this.httpClient.get<any>(this.contenidoInteractivoUrl+id);
+  getCursosIdList(id: string): Observable<any>  {
+    return this.httpClient.get<any>(this.contenidoInteractivoUrl + id);
   }
 
   agregarMarcaPreguntaSeleccionMultiple(marca: any): Observable<any> {
@@ -69,7 +69,7 @@ export class ContenidoService {
   }
 
   agregarMarcaPreguntaAbierta(marca: any): Observable<any> {
-    return this.httpClient.post(this.addPreguntaAbiertaUrl, marca);
+    return this.httpClient.put(this.addPreguntaAbiertaUrl, marca);
   }
 
 
@@ -81,10 +81,10 @@ export class ContenidoService {
     return this.httpClient.post(this.crearMarca, marca);
   }
 
-  agregarMarcaPreguntaPausa(marca:any) : Observable<any> {
+  agregarMarcaPreguntaPausa(marca: any): Observable<any> {
 
     console.log('Añadiendo tipo pausa', marca);
 
-    return this.httpClient.post(this.createPauseMark, marca);
+    return this.httpClient.put(this.createPauseMark, marca);
   }
 }
