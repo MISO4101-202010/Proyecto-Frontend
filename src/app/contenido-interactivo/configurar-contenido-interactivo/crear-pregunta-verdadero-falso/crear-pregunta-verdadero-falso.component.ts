@@ -35,8 +35,7 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       pregunta: ['', [Validators.required]],
       nombre: ['', [Validators.required]],
       retroalimentacion: [''],
-      numeroDeIntentos: ['', [Validators.required]],
-      respuestaControl: ['', [Validators.required]]
+      numeroDeIntentos: ['', [Validators.required]]
     });
   }
 
@@ -66,8 +65,33 @@ export class CrearPreguntaVerdaderoFalsoComponent {
     this.dialogRef.close();
   }
 
+  checkValidators() {
+    if (this.respuestaControl.value === 'falso') {
+      Swal.fire('Oops...', 'La pregunta debe tener por lo menos una respuesta correcta', 'error');
+      return true;
+    }
+    if (this.questionForm.get('numeroDeIntentos').value <= 0 || this.questionForm.get('numeroDeIntentos').value >= 20) {
+      Swal.fire('Oops...', 'La pregunta debe tener por lo menos un intento', 'error');
+      return true;
+    }
+    if (this.questionForm.get('nombre').value === '') {
+      Swal.fire('Oops...', 'El nombre no puede ser vacío', 'error');
+      return true;
+    }
+    if (this.questionForm.get('pregunta').value === '') {
+      Swal.fire('Oops...', 'La pregunta no puede ser vacía', 'error');
+      return true;
+    }
+    if(this.retroalimentacionControl.value === 'si' && this.questionForm.get('retroalimentacion').value === ''){
+      Swal.fire('Oops...', 'La retroalimentación no puede ser vacía si se escogió retroalimentación', 'error');
+      return true;
+    }
+    return false;
+  }
+
   crearMarca() {
-    if (this.questionForm.valid) {
+    if (this.questionForm.valid && !this.checkValidators()) {
+      console.log('llega');
       this.data.marca.punto = Math.round(this.data.marca.punto);
       const infoMarca = this.data.marca;
       infoMarca.contenido = infoMarca.contenido_id;
