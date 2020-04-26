@@ -1,52 +1,56 @@
 <div class="container">
-    <h2>Añadir marcas</h2>
-    <div *ngIf="contentsLoaded | async" class="video-container">
-        <div style="width: 100%;">
-            <youtube-player style="pointer-events: none;" id="ytplayer" [videoId]="id" height="480" width="854" (ready)="savePlayer($event)"
-                (change)="onStateChange($event)" [playerVars]="playerVars">
-            </youtube-player>
-        </div>
-
-        <div class="bar-container">
-            <div id="outer-marks">
-              <div id="inner-marks">
-                <div title="{{ getDuration(punto) }}" id="inner-inner-mark" *ngFor="let punto of marcasPorcentaje"
-                     [ngStyle]="{'left': getPosition(punto) + 'px'}"
-                     (click)="handleTouchProgressBar(punto)"
-                ></div>
-              </div>
-            </div>
-
-          <input type="range" id="progressBar" step="0.1" (ngModelChange)='handleTouchProgressBar($event)'
-                 [ngModel]="progressBarValue">
-
-            <button mat-flat-button color="primary" *ngIf="!playing" (click)="play()">
-                <mat-icon>play_circle_outline</mat-icon>
-            </button>
-            <button mat-flat-button color="primary" *ngIf="playing" (click)="pause()">
-                <mat-icon>pause_circle_outline
-                </mat-icon>
-            </button>
-            {{ getCurrentTime()}}/{{getTotalTime()}}
-
-        </div>
-        <mat-form-field style="width:30%">
-            <mat-label>Seleccione un tipo de marca</mat-label>
-            <mat-select [(value)]="marcaSeleccionada" enabled>
-                <mat-option *ngFor="let marca of opcionesMarca" [value]="marca">{{marca}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <span></span>
-        <button mat-flat-button color="primary" (click)="addMarker()">
-            Añadir marca
-        </button>
-        <div>
-            <div>
-                <button style="float: right;" mat-flat-button color="primary"
-                    [routerLink]="['/contenido-interactivo/detalle/' + contenidoInt.id]">
-                    Terminar configuración
-                </button>
-            </div>
-        </div>
+  <h2>Añadir marcas</h2>
+  <div *ngIf="contentsLoaded | async" class="video-container">
+    <div style="width: 100%;">
+      <youtube-player style="pointer-events: none;" id="ytplayer" [videoId]="id" height="480" width="854"
+                      (ready)="savePlayer($event)"
+                      (change)="onStateChange($event)" [playerVars]="playerVars">
+      </youtube-player>
     </div>
+
+    <div cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="drop($event)">
+      <div cdkDragLockAxis="x" *ngFor="let marcas of marcasPorcentaje" class="example-box" cdkDrag>{{marcas.toString()}}</div>
+    </div>
+    <div class="bar-container">
+      <div id="outer-marks">
+        <div id="inner-marks">
+          <div title="{{ getDuration(punto) }}" id="inner-inner-mark" *ngFor="let punto of marcasPorcentaje"
+               [ngStyle]="{'left': getPosition(punto) + 'px'}"
+               (click)="handleTouchProgressBar(punto)"
+          ></div>
+        </div>
+      </div>
+
+      <input type="range" id="progressBar" step="0.1" (ngModelChange)='handleTouchProgressBar($event)'
+             [ngModel]="progressBarValue">
+
+      <button mat-flat-button color="primary" *ngIf="!playing" (click)="play()">
+        <mat-icon>play_circle_outline</mat-icon>
+      </button>
+      <button mat-flat-button color="primary" *ngIf="playing" (click)="pause()">
+        <mat-icon>pause_circle_outline
+        </mat-icon>
+      </button>
+      {{ getCurrentTime()}}/{{getTotalTime()}}
+
+    </div>
+    <mat-form-field style="width:30%">
+      <mat-label>Seleccione un tipo de marca</mat-label>
+      <mat-select [(value)]="marcaSeleccionada" enabled>
+        <mat-option *ngFor="let marca of opcionesMarca" [value]="marca">{{marca}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <span></span>
+    <button mat-flat-button color="primary" (click)="addMarker()">
+      Añadir marca
+    </button>
+    <div>
+      <div>
+        <button style="float: right;" mat-flat-button color="primary"
+                [routerLink]="['/contenido-interactivo/detalle/' + contenidoInt.id]">
+          Terminar configuración
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

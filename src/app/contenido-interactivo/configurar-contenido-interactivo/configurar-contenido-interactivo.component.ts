@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { ContenidoService } from 'src/app/services/contenido.service';
 import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 const activityTypesComponents = {
   'Pregunta de opción múltiple': CrearSeleccionMultipleComponent,
@@ -101,6 +102,10 @@ export class ConfigurarContenidoInteractivoComponent {
       this.player.pauseVideo();
       this.playing = false;
     }
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.marcasPorcentaje, event.previousIndex, event.currentIndex);
   }
 
   loadData() {

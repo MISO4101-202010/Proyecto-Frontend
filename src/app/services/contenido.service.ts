@@ -34,7 +34,7 @@ export class ContenidoService {
       nombre: nombre,
       contenido: contenidoId,
       puedeSaltar: puedeSaltar,
-      tieneRetroalimentacion: tieneRetroalimentacion
+      // tieneRetroalimentacion: tieneRetroalimentacion
     };
     console.log('body:', body);
     return this.httpClient.post(this.crearContenidoInteractivo, body);
