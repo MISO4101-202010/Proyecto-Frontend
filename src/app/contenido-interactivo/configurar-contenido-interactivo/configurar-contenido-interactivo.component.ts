@@ -229,17 +229,12 @@ export class ConfigurarContenidoInteractivoComponent {
   }
 
   saveContent() {
-
-    console.log(this.canJump);
-    console.log(this.hasRetro);
-    console.log(this.name);
-    this.contenidoService.agregarMarcaPreguntaAbierta(this.questionForm.value).subscribe(result => {
+    this.contenidoService.saveInteractiveContent(this.name, this.canJump, this.hasRetro).subscribe(result => {
       Swal.fire('Contenido interactivo', 'Contenido interactivo guardado con éxito', 'success');
       this.dialogRef.close();
     }, error => {
       console.error(error);
       Swal.fire('Oops...', 'Ocurrió un error guardando el contenido interactivo, intentelo más tarde', 'error');
     });
-
   }
 }
