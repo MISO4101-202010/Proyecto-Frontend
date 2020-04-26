@@ -14,7 +14,7 @@ export class ContenidoService {
   private reporteListUrl = `${environment.apiUrl}/activities/reportList/`;
   private cursosUrl = `${environment.apiUrl}/content/courses/`;
   private contenidoInteractivoUrl = `${environment.apiUrl}/content/interactiveContentByCourse/`;
-  
+
   private addPreguntaSelecconMultipleUrl = `${environment.apiUrl}/activities/generate-question-multiple-choice`;
   private addPreguntaAbiertaUrl = `${environment.apiUrl}/activities/generate-open-question`;
   private addPreguntaFalsoVerdaderoUrl = `${environment.apiUrl}/activities/pregunta_f_v`;
@@ -72,19 +72,23 @@ export class ContenidoService {
     return this.httpClient.post(this.addPreguntaAbiertaUrl, marca);
   }
 
-
   agregarMarcaVerdaderoFalso(pregunta: any): Observable<any> {
     return this.httpClient.post(this.addPreguntaFalsoVerdaderoUrl, pregunta);
-}
+  }
 
   agregarMarca(marca: any): Observable<any> {
     return this.httpClient.post(this.crearMarca, marca);
   }
 
   agregarMarcaPreguntaPausa(marca:any) : Observable<any> {
-
-    console.log('Añadiendo tipo pausa', marca);
-
     return this.httpClient.post(this.createPauseMark, marca);
+  }
+  saveInteractiveContent(name: string, canJump: boolean, hasRetro: boolean) {
+    const body = {
+      nombre: nombre,
+      canJump: canJump,
+      hasRetro: hasRetro
+    };
+    return this.httpClient.put(this.contenidoUrl, body);
   }
 }
