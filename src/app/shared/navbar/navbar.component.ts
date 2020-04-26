@@ -38,7 +38,7 @@ interface ExampleFlatNode {
   templateUrl: "./navbar.component.html",
   styleUrls: ["./navbar.component.css"],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit{
   student: boolean;
   user: any;
   name: string;
@@ -77,6 +77,23 @@ export class NavbarComponent {
   logout() {
     console.log("LLEGO ACA");
     this.auth.logout();
+  }
+
+  ngOnInit() {
+    this.getName();
+  }
+
+  getName() {
+    if(this.user.isAlumno){
+      this.name = this.user.dataAlumno.first_name + " " + this.user.dataAlumno.last_name;
+    }
+    else {
+      this.name = this.user.dataProfesor.first_name + " " + this.user.dataProfesor.last_name;
+    } 
+  }
+
+  toggleProfileMenu() {
+    this.showMenu = !this.showMenu;
   }
 
   isHandset$: Observable<boolean> = this.breakpointObserver

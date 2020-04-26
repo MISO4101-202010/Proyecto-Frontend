@@ -35,3 +35,32 @@ mat-toolbar {
   /* background-color: #43425d; */
   /* font-weight: bold; */
 }
+
+.menu {
+  background-color: #ffffff;
+  position: absolute;
+  left: 50px;
+  width: 160px;
+  border-radius: 5px;
+}
+
+.menuItem {
+  padding: 5px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.menuItem:hover {
+  background-color: rgba(211, 211, 211, 0.425);
+}
+
+.dropDown {
+  background-color: transparent;
+  border: none;
+  color: white;
+  margin-left: auto;
+}
+
+.navbar__menuA {
+  color: white !important;
+}
