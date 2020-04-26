@@ -32,6 +32,9 @@ export class ConfigurarContenidoInteractivoComponent {
   playing = false;
   progressBarValue = 0;
   contenidoInt;
+  name = "";
+  canJump;
+  hasRetro;
   contId;
   contentsLoaded: Promise<boolean>;
   marcasPorcentaje;
@@ -115,6 +118,9 @@ export class ConfigurarContenidoInteractivoComponent {
   getContentInteractiveDetail() {
     this.contenidoService.getDetalleContenidoInteractivo(this.contId).subscribe(contenido => {
       this.contenidoInt = contenido;
+      this.name = contenido.nombre;
+      this.canJump = contenido.puedeSaltar;
+      this.hasRetro = contenido.tiene_retroalimentacion;
       this.contentsLoaded = Promise.resolve(true);
       this.loadMarcas(this.contenidoInt.marcas);
       this.id = this.contenidoInt.contenido.url.split('watch?v=')[1];
@@ -212,5 +218,21 @@ export class ConfigurarContenidoInteractivoComponent {
     // Cantidad de puntos a restar para ubicar la marca, los "10" son el tamaño de la marca
     const pixelsToRest = (punto * 10 / 100);
     return (punto * 854 / 100) - pixelsToRest;
+  }
+
+  checkCanJump(value) {
+    this.canJump = value;
+  }
+
+  checkHasRetro(value) {
+    this.hasRetro = value;
+  }
+
+  saveContent() {
+
+    console.log(this.canJump);
+    console.log(this.hasRetro);
+    console.log(this.name);
+
   }
 }
