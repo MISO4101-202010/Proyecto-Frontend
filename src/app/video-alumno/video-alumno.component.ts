@@ -21,6 +21,7 @@ export class VideoAlumnoComponent {
   mustWait: boolean = true;
   public progressBarValue: number = 0;
   playing = false;
+  alreadyStart = false;
   playerVars = {
     // Oculta la barra de reproducción (0)
     controls: 0,
@@ -65,18 +66,20 @@ export class VideoAlumnoComponent {
 
     await console.log('Player current time', this.player.getCurrentTime());
     while (true) {
-      this.mustWait = true;
-      await this.delay(1000);
-      console.log('Player current time', Math.round(this.player.getCurrentTime()));
-      for (let i = 0; i < this.marcas.length; i++) {
-        if (Math.round(this.player.getCurrentTime()) === this.marcas[i].punto) {
-          // if (this.marcas[i].numIntentosRestantes > 0) { // Esta es la corrección que pidió Ricardo del punto 3
-            this.player.pauseVideo();
-            await this.open(this.marcas[i]);
-            while (this.mustWait) {
-              await this.delay(1000);
+        this.mustWait = true;
+        await this.delay(1000);
+        console.log('Player current time', Math.round(this.player.getCurrentTime()));
+      if (this.alreadyStart) {
+        for (let i = 0; i < this.marcas.length; i++) {
+          if (Math.round(this.player.getCurrentTime()) === this.marcas[i].punto) {
+            if (this.marcas[i].numIntentos > 0) {// Esta es la corrección que pidió Ricardo del punto 3
+              this.player.pauseVideo();
+              await this.open(this.marcas[i]);
+              while (this.mustWait) {
+                await this.delay(1000);
+              }
             }
-          // }
+          }
         }
       }
     }
@@ -119,7 +122,7 @@ export class VideoAlumnoComponent {
       .getMarcasXacontenido(parseInt(this.idContent, 10))
       .subscribe(
         (val: any) => {
-          this.marcas = val.results;
+          this.marcas = val;
           console.log('POST call successful value returned in body', val);
         },
         response => {
@@ -182,6 +185,7 @@ export class VideoAlumnoComponent {
   }
 
   play(): void {
+    this.alreadyStart = true;
     if (!this.playing) {
       this.playing = true;
       this.player.playVideo();
