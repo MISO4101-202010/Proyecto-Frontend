@@ -57,6 +57,7 @@ export class ActivitiesService {
     const url = this.activitiesUrl + 'pregunta_f_v/' + id;
     return this.httpService.getRequestWithoutParams(url).map(
       response => {
+        response.body.type = 'preguntaFV';
         return response;
       }, error => {
         return error;
