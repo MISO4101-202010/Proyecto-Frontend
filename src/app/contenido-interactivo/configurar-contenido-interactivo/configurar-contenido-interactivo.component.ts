@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { ContenidoService } from 'src/app/services/contenido.service';
 import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
+import Swal from 'sweetalert2';
 
 const activityTypesComponents = {
   'Pregunta de opción múltiple': CrearSeleccionMultipleComponent,
@@ -231,7 +232,6 @@ export class ConfigurarContenidoInteractivoComponent {
   saveContent() {
     this.contenidoService.saveInteractiveContent(this.name, this.canJump, this.hasRetro).subscribe(result => {
       Swal.fire('Contenido interactivo', 'Contenido interactivo guardado con éxito', 'success');
-      this.dialogRef.close();
     }, error => {
       console.error(error);
       Swal.fire('Oops...', 'Ocurrió un error guardando el contenido interactivo, intentelo más tarde', 'error');

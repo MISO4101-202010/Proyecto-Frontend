@@ -85,7 +85,7 @@ export class ContenidoService {
   }
   saveInteractiveContent(name: string, canJump: boolean, hasRetro: boolean) {
     const body = {
-      nombre: nombre,
+      name: name,
       canJump: canJump,
       hasRetro: hasRetro
     };
