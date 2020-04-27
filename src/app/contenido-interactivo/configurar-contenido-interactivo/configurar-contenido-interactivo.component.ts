@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
-import { CrearSeleccionMultipleComponent } from './crear-seleccion-multiple/crear-seleccion-multiple.component';
-import { CrearPreguntaAbiertaComponent } from './crear-pregunta-abierta/crear-pregunta-abierta.component';
-import { CrearPreguntaVerdaderoFalsoComponent } from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
-import { MatDialog } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
-import { ContenidoService } from 'src/app/services/contenido.service';
-import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
+import {Component} from '@angular/core';
+import {CrearSeleccionMultipleComponent} from './crear-seleccion-multiple/crear-seleccion-multiple.component';
+import {CrearPreguntaAbiertaComponent} from './crear-pregunta-abierta/crear-pregunta-abierta.component';
+import {CrearPreguntaVerdaderoFalsoComponent} from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
+import {MatDialog} from '@angular/material';
+import {ActivatedRoute} from '@angular/router';
+import {ContenidoService} from 'src/app/services/contenido.service';
+import {CrearPreguntaPausaComponent} from './crear-pregunta-pausa/crear-pregunta-pausa.component';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import Swal from 'sweetalert2';
 
 const activityTypesComponents = {
   'Pregunta de opción múltiple': CrearSeleccionMultipleComponent,
@@ -36,9 +37,11 @@ export class ConfigurarContenidoInteractivoComponent {
   contId;
   contentsLoaded: Promise<boolean>;
   marcasPorcentaje;
+  tiempoVideo = 0;
+  marcasUbicadas = [];
 
   constructor(public dialog: MatDialog, private activatedRoute: ActivatedRoute,
-    private contenidoService: ContenidoService) {
+              private contenidoService: ContenidoService) {
     this.loadData();
   }
 
@@ -105,7 +108,29 @@ export class ConfigurarContenidoInteractivoComponent {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.marcasPorcentaje, event.previousIndex, event.currentIndex);
+    const marcaCambiar = this.marcasUbicadas[event.previousIndex];
+    const marcaEnPos = this.marcasUbicadas[event.currentIndex];
+    if (!marcaEnPos.conMarca) {
+      this.contenidoService.actualizarMarca(marcaCambiar.idMarca, +this.contId, event.currentIndex, marcaCambiar.nombreMarca)
+        .subscribe(res => {
+          moveItemInArray(this.marcasUbicadas, event.previousIndex, event.currentIndex);
+          Swal.fire('Pregunta Actualizada', 'La pregunta se movió satisfactoriamente', 'success');
+        }, error => {
+          console.error(error);
+          Swal.fire('Oops...', 'Ocurrió un error actualizando la marca, por favor inténtalo de nuevo', 'error');
+        });
+    } else {
+      Swal.fire('Oops...',
+        'Ya hay una marca en la posición que seleccionaste, por favor inténtalo de nuevo en un espacio disponible',
+        'error');
+    }
+  }
+
+  actualizarVistaMarca() {
+    const tiempoActual = Math.round(this.player.getCurrentTime());
+    const moverse = tiempoActual * 10;
+    const resultado = 'translateX(-' + moverse + 'px)';
+    return resultado;
   }
 
   loadData() {
@@ -121,16 +146,45 @@ export class ConfigurarContenidoInteractivoComponent {
     this.contenidoService.getDetalleContenidoInteractivo(this.contId).subscribe(contenido => {
       this.contenidoInt = contenido;
       this.contentsLoaded = Promise.resolve(true);
-      this.loadMarcas(this.contenidoInt.marcas);
+      // this.loadMarcas(this.contenidoInt.marcas);
       this.id = this.contenidoInt.contenido.url.split('watch?v=')[1];
     });
   }
 
   loadMarcas(marcas) {
     this.marcasPorcentaje = [];
+    this.tiempoVideo = this.player.getDuration();
+    let i = 0;
+    while (i <= this.tiempoVideo) {
+      const marcaIn = {
+        texto: '',
+        conMarca: false,
+        segundo: i,
+        idMarca: 0,
+        nombreMarca: ''
+      };
+      this.marcasUbicadas.push(marcaIn);
+      i++;
+    }
     for (const marca of marcas) {
+      const conMarca = {
+        texto: '',
+        conMarca: true,
+        segundo: marca.punto,
+        idMarca: marca.id,
+        nombreMarca: marca.nombre
+      };
+      this.marcasUbicadas[marca.punto] = conMarca;
       const marcaP = this.calcPercentage(+marca.punto);
       this.marcasPorcentaje.push(marcaP);
+    }
+  }
+
+  darEstiloMarca(marca) {
+    if (marca) {
+      return 'example-box-marca';
+    } else {
+      return 'example-box';
     }
   }
 
@@ -202,7 +256,7 @@ export class ConfigurarContenidoInteractivoComponent {
 
     dialogRef.afterClosed().subscribe(_ => {
       this.getContentInteractiveDetail();
-     });
+    });
   }
 
   getDuration(punto): string {
