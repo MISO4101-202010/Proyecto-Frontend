@@ -85,4 +85,10 @@ export class ContenidoService {
 
     return this.httpClient.post(this.createPauseMark, marca);
   }
+
+  modificarPreguntaFV(marcaId: number,marca: any): Observable<any> {
+    return this.httpClient.patch(this.addPreguntaFalsoVerdaderoUrl + '/update/' + marcaId + '/', marca);
+  }
+
+
 }

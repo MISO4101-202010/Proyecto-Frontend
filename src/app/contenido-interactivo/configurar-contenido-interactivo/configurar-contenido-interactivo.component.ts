@@ -101,10 +101,8 @@ export class ConfigurarContenidoInteractivoComponent {
   }
 
   pause(): void {
-    if (this.playing) {
       this.player.pauseVideo();
       this.playing = false;
-    }
   }
 
   loadData() {

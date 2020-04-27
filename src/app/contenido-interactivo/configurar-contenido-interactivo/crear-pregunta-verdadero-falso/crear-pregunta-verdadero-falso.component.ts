@@ -45,11 +45,13 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       this.title = 'Editar';
       this.activityService.getActivityFVById(this.data.marca.marca_id).subscribe(
         preguntaVF => {
+          console.log(preguntaVF);
           this.questionForm.get('pregunta').setValue(preguntaVF.body.pregunta);
           this.questionForm.get('nombre').setValue(preguntaVF.body.nombre);
           this.respuestaControl.setValue(preguntaVF.body.esVerdadero ? 'verdadero' : 'falso');
           this.retroalimentacionControl.setValue(preguntaVF.body.tieneRetroalimentacion ? 'si' : 'no');
           this.questionForm.get('numeroDeIntentos').setValue(preguntaVF.body.numeroDeIntentos);
+          this.questionForm.get('retroalimentacion').setValue(preguntaVF.body.retroalimentacion);
         }, error => {
           console.error('Ocurrió un error al obtener la pregunta', error);
           Swal.fire('Oops...', 'Ocurrió un error al obtener la pregunta, por favor inténtalo de nuevo', 'error');
@@ -66,10 +68,6 @@ export class CrearPreguntaVerdaderoFalsoComponent {
   }
 
   checkValidators() {
-    if (this.respuestaControl.value === 'falso') {
-      Swal.fire('Oops...', 'La pregunta debe tener por lo menos una respuesta correcta', 'error');
-      return true;
-    }
     if (this.questionForm.get('numeroDeIntentos').value <= 0 || this.questionForm.get('numeroDeIntentos').value >= 20) {
       Swal.fire('Oops...', 'La pregunta debe tener por lo menos un intento', 'error');
       return true;
@@ -90,7 +88,7 @@ export class CrearPreguntaVerdaderoFalsoComponent {
   }
 
   crearMarca() {
-    if (this.questionForm.valid && !this.checkValidators()) {
+    if (this.questionForm.valid && !this.checkValidators() && !this.data.marca.marca_id) {
       console.log('llega');
       this.data.marca.punto = Math.round(this.data.marca.punto);
       const infoMarca = this.data.marca;
@@ -113,6 +111,32 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       }, error => {
         console.error(error);
         Swal.fire('Oops...', 'Ocurrió un error agregando la marca, por favor inténtalo de nuevo', 'error');
+      });
+    }
+    if (this.questionForm.valid && !this.checkValidators() && this.data.marca.marca_id) {
+      console.log('Editardddasdsadsad');
+      let booleanEsRespuestaVerdadero = false;
+      let booleanTieneRetroalimentacion = false;
+      if (this.respuestaControl.value === 'verdadero') {
+        booleanEsRespuestaVerdadero = true;
+      }
+      if (this.retroalimentacionControl.value === 'si') {
+        booleanTieneRetroalimentacion = true;
+      }
+      const marcaAEditar = {
+        pregunta: this.questionForm.get('pregunta').value,
+        nombre: this.questionForm.get('nombre').value,
+        numeroDeIntentos: this.questionForm.get('numeroDeIntentos').value,
+        esVerdadero: booleanEsRespuestaVerdadero,
+        tieneRetroalimentacion: booleanTieneRetroalimentacion,
+        retroalimentacion: this.questionForm.get('retroalimentacion').value
+      };
+      this.contenidoService.modificarPreguntaFV(this.data.marca.marca_id, marcaAEditar).subscribe(response => {
+        Swal.fire('Pregunta Modificada', 'Pregunta modificada correctamente', 'success');
+        this.dialogRef.close();
+      }, error => {
+        console.error(error);
+        Swal.fire('Oops...', 'Ocurrió un error modificando la marca, por favor inténtalo de nuevo', 'error');
       });
     }
   }
