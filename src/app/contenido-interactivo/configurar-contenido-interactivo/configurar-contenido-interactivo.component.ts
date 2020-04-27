@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ContenidoService } from 'src/app/services/contenido.service';
 import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
 import { InteraccionAlumnoService } from '../../interaccion-alumno.service';
+import { ActivitiesService } from '../../services/activities-service/activities.service';
 import * as _ from 'underscore';
 
 @Component({
@@ -34,28 +35,35 @@ export class ConfigurarContenidoInteractivoComponent {
   constructor(public dialog: MatDialog,
               private activatedRoute: ActivatedRoute,
               private contenidoService: ContenidoService,
-              private interaccionAlumnoService: InteraccionAlumnoService) {
+              private interaccionAlumnoService: InteraccionAlumnoService,
+              private activityService: ActivitiesService) {
     this.loadData();
   }
 
+  // Este arreglo necesita un refactor porque no necesita o 'value' o 'type', solo uno de los 2 es necesario en
+  // el futuro
   opcionesMarca = [{
     text: 'Pregunta de selección múltiple',
     value: 1,
+    type: 'preguntaOpcionMultiple',
     modalType: CrearSeleccionMultipleComponent
   }, {
     text: 'Pregunta falso o verdadero',
     value: 2,
+    type: 'preguntaFV',
     modalType: CrearPreguntaVerdaderoFalsoComponent
   }, {
     text: 'Pregunta tipo pausa',
     value: 3,
+    type: 'pausa',
     modalType: CrearPreguntaPausaComponent
   }, {
     text: 'Pregunta abierta',
     value: 4,
+    type: 'preguntaAbierta',
     modalType: CrearPreguntaAbiertaComponent
   }];
-  marcaSeleccionada = this.opcionesMarca[0];
+  tipoMarcaSeleccionada = this.opcionesMarca[0];
 
   savePlayer(player) {
     this.player = player;
@@ -176,13 +184,12 @@ export class ConfigurarContenidoInteractivoComponent {
   createOrUpdateMark(mark) {
     this.pause();
     if (mark) {
-      // Buscar la marca correcta
+      // Buscar la marca correcta en la lista "marcas"
       // tslint:disable-next-line:only-arrow-functions
       const selectedMark = _.filter(this.marcas, function(m) {
         return m.marca_id === mark.id;
       })[0];
-      console.log('Editar marca:', selectedMark);
-      this.openDialog(selectedMark);
+      this.setPreguntaToMark(selectedMark);
     } else {
       console.log('Añadir marca en', this.player.getCurrentTime());
       if (this.contenidoInteractivo) {
@@ -192,7 +199,8 @@ export class ConfigurarContenidoInteractivoComponent {
           punto,
           contenido_id: +this.contenidoInteractivo.id,
           tipoActividad: undefined,
-          marca_id: undefined
+          marca_id: undefined,
+          pregunta: undefined
         };
         this.openDialog(newMark);
       }
@@ -200,15 +208,7 @@ export class ConfigurarContenidoInteractivoComponent {
   }
 
   openDialog(marca): void {
-    let modalType;
-    if (marca.tipoActividad === undefined) {
-      modalType = this.marcaSeleccionada.modalType;
-    } else {
-      // tslint:disable-next-line:only-arrow-functions
-      modalType = _.filter(this.opcionesMarca, function(opc) {
-        return opc.value === marca.tipoActividad;
-      })[0].modalType;
-    }
+    let modalType = this.getModalType(marca);
     const dialogRef = this.dialog.open(modalType, {
       width: '70%',
       data: {
@@ -219,6 +219,28 @@ export class ConfigurarContenidoInteractivoComponent {
     dialogRef.afterClosed().subscribe(res => {
       this.getContentInteractiveDetail(this.contenidoInteractivo.id);
     });
+  }
+
+  // Este método necesita un refactor debido a que está buscando el tipo de modal para preguntas abierta, pausa
+  // y selección múltiple y por el otro lado busca el tipo de modal para preguntas F/V
+  private getModalType(marca): any {
+    if (!(marca.pregunta === undefined)) {
+      // Esto puede ser una pregunta abierta, pausa o selección múltiple
+      // tslint:disable-next-line:only-arrow-functions
+      return _.filter(this.opcionesMarca, function (opc) {
+        return opc.type === marca.pregunta.type;
+      })[0].modalType;
+    } else if (!(marca.tipoActividad === undefined)) {
+      // Esta es una pregunta V/F
+      // tslint:disable-next-line:only-arrow-functions
+      return _.filter(this.opcionesMarca, function (opc) {
+        return opc.value === marca.tipoActividad;
+      })[0].modalType;
+    } else {
+      // No se va a editar una pregunta, lo que se requiere es crear una nueva.
+      // Por eso busca el valor en el combobox de 'Tipo de marca seleccionada'
+      return this.tipoMarcaSeleccionada.modalType;
+    }
   }
 
   getDuration(punto): string {
@@ -248,5 +270,30 @@ export class ConfigurarContenidoInteractivoComponent {
         console.log('Proceso de obtención de las marcas completado');
       }
     );
+  }
+
+  // Si la marca es de tipo actividad = 2, significa que es una pregunta F/V, es decir que no necesita una "pregunta",
+  // en cambio, si el tipo actividad no es = 2, significa que puede ser una pregunta abierta, pausa o selección múltiple
+  // y necesita una "pregunta"
+  setPreguntaToMark(selectedMark): void {
+    console.log('Editar marca:', selectedMark);
+    if (selectedMark.tipoActividad === 2) {
+      selectedMark.pregunta = undefined;
+      this.openDialog(selectedMark);
+    } else {
+      this.activityService.getActivityById(selectedMark.marca_id).subscribe(
+        data => {
+          let results = [];
+          data.forEach(o => {
+            results = results.concat(o.body.results);
+          });
+          selectedMark.pregunta = results[0];
+          this.openDialog(selectedMark);
+        },
+        error => {
+          console.log('Error getting question information -> ', error);
+        }
+      );
+    }
   }
 }

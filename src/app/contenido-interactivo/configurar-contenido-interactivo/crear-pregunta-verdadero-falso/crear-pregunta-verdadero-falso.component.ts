@@ -68,10 +68,6 @@ export class CrearPreguntaVerdaderoFalsoComponent {
   }
 
   checkValidators() {
-    if (this.questionForm.get('numeroDeIntentos').value <= 0 || this.questionForm.get('numeroDeIntentos').value >= 20) {
-      Swal.fire('Oops...', 'La pregunta debe tener por lo menos un intento', 'error');
-      return true;
-    }
     if (this.questionForm.get('nombre').value === '') {
       Swal.fire('Oops...', 'El nombre no puede ser vacío', 'error');
       return true;
@@ -80,8 +76,17 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       Swal.fire('Oops...', 'La pregunta no puede ser vacía', 'error');
       return true;
     }
-    if(this.retroalimentacionControl.value === 'si' && this.questionForm.get('retroalimentacion').value === ''){
+    if (this.retroalimentacionControl.value === 'si' && this.questionForm.get('retroalimentacion').value === '') {
       Swal.fire('Oops...', 'La retroalimentación no puede ser vacía si se escogió retroalimentación', 'error');
+      return true;
+    }
+    if (this.questionForm.get('numeroDeIntentos').value <= 0) {
+      Swal.fire('Oops...', 'La pregunta no puede tener intentos en 0 o negativos', 'error');
+      return true;
+    }
+    // TODO reemplazar el valor real de los intentos
+    if (this.questionForm.get('numeroDeIntentos').value > 100) {
+      Swal.fire('Oops...', 'La cantidad máxima de intentos de una pregunta es 100', 'error');
       return true;
     }
     return false;
@@ -89,7 +94,6 @@ export class CrearPreguntaVerdaderoFalsoComponent {
 
   crearMarca() {
     if (this.questionForm.valid && !this.checkValidators() && !this.data.marca.marca_id) {
-      console.log('llega');
       this.data.marca.punto = Math.round(this.data.marca.punto);
       const infoMarca = this.data.marca;
       infoMarca.contenido = infoMarca.contenido_id;
@@ -140,5 +144,4 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       });
     }
   }
-
 }
