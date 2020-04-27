@@ -118,7 +118,6 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       });
     }
     if (this.questionForm.valid && !this.checkValidators() && this.data.marca.marca_id) {
-      console.log('Editardddasdsadsad');
       let booleanEsRespuestaVerdadero = false;
       let booleanTieneRetroalimentacion = false;
       if (this.respuestaControl.value === 'verdadero') {

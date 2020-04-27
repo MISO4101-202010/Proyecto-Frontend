@@ -86,6 +86,4 @@ export class ContenidoService {
   modificarPreguntaFV(marcaId: number, marca: any): Observable<any> {
     return this.httpClient.patch(this.addPreguntaFalsoVerdaderoUrl + '/update/' + marcaId + '/', marca);
   }
-
-
 }

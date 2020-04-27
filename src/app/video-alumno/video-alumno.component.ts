@@ -113,19 +113,19 @@ export class VideoAlumnoComponent {
 
   getContentMark() {
     this.interaccionAlumnoService
-      .getMarcasXacontenido(parseInt(this.contenidoInteractivo.id, 10))
-      .subscribe(
-        (val: any) => {
-          this.marcas = val.results;
-          console.log("POST call successful value returned in body", val);
-        },
-        response => {
-          console.log("POST call in error", response);
-        },
-        () => {
-          console.log("The POST observable is now completed.");
-        }
-      );
+    .getMarcasXacontenido(parseInt(this.contenidoInteractivo.id, 10))
+    .subscribe(
+      (val: any) => {
+        this.marcas = val.results;
+        console.log("POST call successful value returned in body", val);
+      },
+      response => {
+        console.log("POST call in error", response);
+      },
+      () => {
+        console.log("The POST observable is now completed.");
+      }
+    );
   }
 
   getContentInteractiveDetail(contenidoInteractivoId) {

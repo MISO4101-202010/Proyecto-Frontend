@@ -40,8 +40,8 @@ export class ConfigurarContenidoInteractivoComponent {
     this.loadData();
   }
 
-  // Este arreglo necesita un refactor porque no necesita o 'value' o 'type', solo uno de los 2 es necesario en
-  // el futuro
+  // Este arreglo necesita un refactor porque no necesita 'value' y 'type' al tiempo, solo uno de los dos es
+  // necesario, 'value' y 'type' están retornando del backend.
   opcionesMarca = [{
     text: 'Pregunta de selección múltiple',
     value: 1,
@@ -258,7 +258,8 @@ export class ConfigurarContenidoInteractivoComponent {
   }
 
   getContentMark() {
-    this.interaccionAlumnoService.getMarcasXacontenido(parseInt(this.contenidoInteractivo.id, 10))
+    this.interaccionAlumnoService
+    .getMarcasXacontenido(parseInt(this.contenidoInteractivo.id, 10))
     .subscribe(
       (val: any) => {
         this.marcas = val.results;

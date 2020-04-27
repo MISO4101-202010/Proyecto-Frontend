@@ -7,10 +7,11 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class InteraccionAlumnoService {
-  loadSendUrl =  `${environment.apiUrl}`;
+  loadSendUrl = `${ environment.apiUrl }`;
   private retroalimentacionMul: RetroalimentacionOpMul;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   getRetroOpMultiple(pregunta: number) {
     return this.http.get(this.loadSendUrl + '/activities/respuestaOpcionMultiple?esCorrecta=true&preguntaSeleccionMultiple=' + pregunta);
