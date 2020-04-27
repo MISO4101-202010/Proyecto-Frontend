@@ -6,6 +6,7 @@ import {MatDialog} from '@angular/material';
 import {ActivatedRoute} from '@angular/router';
 import {ContenidoService} from 'src/app/services/contenido.service';
 import {CrearPreguntaPausaComponent} from './crear-pregunta-pausa/crear-pregunta-pausa.component';
+import {ViewportScroller} from '@angular/common';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import Swal from 'sweetalert2';
 
@@ -82,6 +83,17 @@ export class ConfigurarContenidoInteractivoComponent {
   // Actualiza el estado de la barra de reproducción cuando se navega
   public updateProgressBar(): void {
     this.progressBarValue = (this.player.getCurrentTime() / this.player.getDuration()) * 100;
+    if (this.marcasUbicadas.length > 0) {
+      const tamanioContenedor = document.getElementById('lista-minutos').offsetWidth;
+      const cantidadCuadros = Math.floor(tamanioContenedor / 11) - 1;
+      const valorA = 'lista-' + (Math.round(this.player.getCurrentTime()) + cantidadCuadros);
+      const valorB = 'lista-' + (Math.round(this.player.getCurrentTime()));
+      if (document.getElementById(valorA) !== null && this.playing === true &&
+        document.getElementById(valorB).scrollIntoView() !== null) {
+        document.getElementById(valorA).scrollIntoView();
+        document.getElementById(valorB).scrollIntoView();
+      }
+    }
   }
 
   handleTouchProgressBar(e: any): void {
@@ -113,6 +125,7 @@ export class ConfigurarContenidoInteractivoComponent {
     if (!marcaEnPos.conMarca) {
       this.contenidoService.actualizarMarca(marcaCambiar.idMarca, +this.contId, event.currentIndex, marcaCambiar.nombreMarca)
         .subscribe(res => {
+          this.marcasUbicadas[event.previousIndex].segundo = this.marcasUbicadas[event.currentIndex].segundo;
           moveItemInArray(this.marcasUbicadas, event.previousIndex, event.currentIndex);
           Swal.fire('Pregunta Actualizada', 'La pregunta se movió satisfactoriamente', 'success');
         }, error => {
