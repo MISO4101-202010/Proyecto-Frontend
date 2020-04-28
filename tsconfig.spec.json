@@ -2,7 +2,11 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "types": [
+      "youtube",
       "jasmine",
       "node"
     ]
