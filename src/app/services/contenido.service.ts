@@ -60,16 +60,16 @@ export class ContenidoService {
   getCursosList(): Observable<any>  {
     return this.httpClient.get<any>(this.cursosUrl);
   }
-  getCursosIdList(id:string): Observable<any>  {
-    return this.httpClient.get<any>(this.contenidoInteractivoUrl+id);
+  getCursosIdList(id: string): Observable<any>  {
+    return this.httpClient.get<any>(this.contenidoInteractivoUrl + id);
   }
 
   agregarMarcaPreguntaSeleccionMultiple(marca: any): Observable<any> {
-    return this.httpClient.post(this.addPreguntaSelecconMultipleUrl, marca);
+    return this.httpClient.put(this.addPreguntaSelecconMultipleUrl, marca);
   }
 
   agregarMarcaPreguntaAbierta(marca: any): Observable<any> {
-    return this.httpClient.post(this.addPreguntaAbiertaUrl, marca);
+    return this.httpClient.put(this.addPreguntaAbiertaUrl, marca);
   }
 
   agregarMarcaVerdaderoFalso(pregunta: any): Observable<any> {
@@ -80,8 +80,11 @@ export class ContenidoService {
     return this.httpClient.post(this.crearMarca, marca);
   }
 
-  agregarMarcaPreguntaPausa(marca:any) : Observable<any> {
-    return this.httpClient.post(this.createPauseMark, marca);
+  agregarMarcaPreguntaPausa(marca: any): Observable<any> {
+
+    console.log('Añadiendo tipo pausa', marca);
+
+    return this.httpClient.put(this.createPauseMark, marca);
   }
   saveInteractiveContent(name: string, canJump: boolean, hasRetro: boolean) {
     const body = {

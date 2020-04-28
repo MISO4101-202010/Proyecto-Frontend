@@ -31,10 +31,17 @@ export class CrearPreguntaAbiertaComponent implements OnInit {
   }
 
   initializeForm() {
+    console.log('abierta',this.data);
     this.questionForm = this.formBuilder.group({
-      enunciado: ['', [Validators.required]],
-      nombre: ['', [Validators.required]]
+      marca_id: [this.data.marca.pregunta ? this.data.marca.pregunta[0].marca : ''],
+      abierta_id: [this.data.marca.pregunta ? this.data.marca.pregunta[0].id : ''],
+      enunciado: [this.data.marca.pregunta ? this.data.marca.pregunta[0].enunciado : '', [Validators.required]],
+      nombre: [this.data.marca.pregunta ? this.data.marca.pregunta[0].nombre : '', [Validators.required]]
     });
+    if (!this.data.marca.pregunta) {
+      this.questionForm.removeControl('marca_id');
+      this.questionForm.removeControl('abierta_id');
+    }
   }
 
   cancel() {
@@ -45,13 +52,26 @@ export class CrearPreguntaAbiertaComponent implements OnInit {
     console.log('data', this.data);
     console.log('form', this.questionForm.value);
     if (this.questionForm.valid) {
+      let texto;
+      let texto2;
+      let texto3;
+      if (this.data.marca.pregunta) {
+        delete this.data.marca.pregunta;
+        texto = 'Actualizar Marca';
+        texto2 = 'Marca actualizada correctamente';
+        texto3 = 'actualizando';
+      } else{
+        texto = 'Agregar Marca';
+        texto2 = 'Marca agregada correctamente';
+        texto3 = 'agregando';
+      }
       this.questionForm.value.marca = this.data.marca;
       this.contenidoService.agregarMarcaPreguntaAbierta(this.questionForm.value).subscribe(result => {
-        Swal.fire('Agregar Marca', 'Marca agregada correctamente', 'success');
+        Swal.fire(texto, texto2, 'success');
         this.dialogRef.close();
       }, error => {
         console.error(error);
-        Swal.fire('Oops...', 'Ocurrió un error agregando la marca, por favor inténtalo de nuevo', 'error');
+        Swal.fire('Oops...', 'Ocurrió un error '+ texto3 +' la marca, por favor inténtalo de nuevo', 'error');
       });
     }
   }

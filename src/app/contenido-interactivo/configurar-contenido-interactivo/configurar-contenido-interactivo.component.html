@@ -12,8 +12,9 @@
         <div class="bar-container">
             <div id="outer-marks">
               <div id="inner-marks">
-                <div title="{{ getDuration(punto) }}" id="inner-inner-mark" *ngFor="let punto of marcasPorcentaje"
+                <div title="{{ getDuration(punto) }}" id="inner-inner-mark" *ngFor="let punto of marcasPorcentaje;let i=index"
                      [ngStyle]="{'left': getPosition(punto) + 'px'}"
+                     (dblclick)="addMarker(contenidoInt.marcas[i])"
                      (click)="handleTouchProgressBar(punto)"
                 ></div>
               </div>
