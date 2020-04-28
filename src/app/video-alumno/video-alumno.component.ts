@@ -113,7 +113,7 @@ export class VideoAlumnoComponent {
 
   getContentMark() {
     this.interaccionAlumnoService
-    .getMarcasXacontenido(parseInt(this.contenidoInteractivo.id, 10))
+    .getMarcasXacontenido(this.contenidoInteractivo.id)
     .subscribe(
       (val: any) => {
         this.marcas = val.results;

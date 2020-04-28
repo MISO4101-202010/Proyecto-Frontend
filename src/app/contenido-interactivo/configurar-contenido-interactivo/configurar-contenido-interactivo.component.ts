@@ -69,7 +69,6 @@ export class ConfigurarContenidoInteractivoComponent {
     this.player = player;
     // Update the controls on load
     this.updateProgressBar();
-    this.getContentMark();
     this.loadMarcas(this.contenidoInteractivo.marcas);
   }
 
@@ -116,17 +115,21 @@ export class ConfigurarContenidoInteractivoComponent {
   loadData() {
     this.activatedRoute.params.subscribe(params => {
       if (params.id) {
-        this.getContentInteractiveDetail(params.id);
+        this.getContentInteractiveDetail(params.id, true);
       }
     });
   }
 
-  getContentInteractiveDetail(contenidoInteractivoId) {
+  private getContentInteractiveDetail(contenidoInteractivoId, firstCall) {
     this.contenidoService.getDetalleContenidoInteractivo(contenidoInteractivoId).subscribe(contenido => {
       this.contenidoInteractivo = contenido;
-      this.contentsLoaded = Promise.resolve(true);
       this.loadMarcas(this.contenidoInteractivo.marcas);
-      this.videoId = this.contenidoInteractivo.contenido.url.split('watch?v=')[1];
+      this.getContentMark();
+
+      if (firstCall) {
+        this.contentsLoaded = Promise.resolve(true);
+        this.videoId = this.contenidoInteractivo.contenido.url.split('watch?v=')[1];
+      }
     });
   }
 
@@ -208,7 +211,7 @@ export class ConfigurarContenidoInteractivoComponent {
   }
 
   openDialog(marca): void {
-    let modalType = this.getModalType(marca);
+    const modalType = this.getModalType(marca);
     const dialogRef = this.dialog.open(modalType, {
       width: '70%',
       data: {
@@ -217,7 +220,7 @@ export class ConfigurarContenidoInteractivoComponent {
     });
 
     dialogRef.afterClosed().subscribe(res => {
-      this.getContentInteractiveDetail(this.contenidoInteractivo.id);
+      this.getContentInteractiveDetail(this.contenidoInteractivo.id, false);
     });
   }
 
@@ -227,13 +230,13 @@ export class ConfigurarContenidoInteractivoComponent {
     if (!(marca.pregunta === undefined)) {
       // Esto puede ser una pregunta abierta, pausa o selección múltiple
       // tslint:disable-next-line:only-arrow-functions
-      return _.filter(this.opcionesMarca, function (opc) {
+      return _.filter(this.opcionesMarca, function(opc) {
         return opc.type === marca.pregunta.type;
       })[0].modalType;
     } else if (!(marca.tipoActividad === undefined)) {
       // Esta es una pregunta V/F
       // tslint:disable-next-line:only-arrow-functions
-      return _.filter(this.opcionesMarca, function (opc) {
+      return _.filter(this.opcionesMarca, function(opc) {
         return opc.value === marca.tipoActividad;
       })[0].modalType;
     } else {
@@ -259,7 +262,7 @@ export class ConfigurarContenidoInteractivoComponent {
 
   getContentMark() {
     this.interaccionAlumnoService
-    .getMarcasXacontenido(parseInt(this.contenidoInteractivo.id, 10))
+    .getMarcasXacontenido(this.contenidoInteractivo.id)
     .subscribe(
       (val: any) => {
         this.marcas = val.results;
