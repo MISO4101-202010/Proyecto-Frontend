@@ -80,13 +80,12 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       Swal.fire('Oops...', 'La retroalimentación no puede ser vacía si se escogió retroalimentación', 'error');
       return true;
     }
-    if (this.questionForm.get('numeroDeIntentos').value <= 0) {
-      Swal.fire('Oops...', 'La pregunta no puede tener intentos en 0 o negativos', 'error');
+    if (this.questionForm.get('numeroDeIntentos').value < 0) {
+      Swal.fire('Oops...', 'La pregunta no puede tener intentos negativos', 'error');
       return true;
     }
-    // TODO reemplazar el valor real de los intentos
-    if (this.questionForm.get('numeroDeIntentos').value > 100) {
-      Swal.fire('Oops...', 'La cantidad máxima de intentos de una pregunta es 100', 'error');
+    if (this.questionForm.get('numeroDeIntentos').value === 0) {
+      Swal.fire('Oops...', 'La pregunta no puede tener 0 intentos', 'error');
       return true;
     }
     return false;
@@ -105,7 +104,6 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       this.contenidoService.agregarMarca(infoMarca).subscribe(result1 => {
         this.questionForm.value.marca = result1.id;
         this.contenidoService.agregarMarcaVerdaderoFalso(this.questionForm.value).subscribe(result2 => {
-          console.error(result2);
           Swal.fire('Pregunta Agregada', 'Pregunta agregada correctamente', 'success');
           this.dialogRef.close();
         }, error => {
