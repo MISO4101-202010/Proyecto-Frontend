@@ -116,7 +116,7 @@ export class VideoAlumnoComponent {
     .getMarcasXacontenido(this.contenidoInteractivo.id)
     .subscribe(
       (val: any) => {
-        this.marcas = val.results;
+        this.marcas = val;
         console.log("POST call successful value returned in body", val);
       },
       response => {

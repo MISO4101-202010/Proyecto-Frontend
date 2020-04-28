@@ -265,7 +265,7 @@ export class ConfigurarContenidoInteractivoComponent {
     .getMarcasXacontenido(this.contenidoInteractivo.id)
     .subscribe(
       (val: any) => {
-        this.marcas = val.results;
+        this.marcas = val;
       },
       response => {
         console.log('Error obteniendo las marcas', response);
