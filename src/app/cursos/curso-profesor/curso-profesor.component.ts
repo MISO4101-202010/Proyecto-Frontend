@@ -12,7 +12,7 @@ export class CursoProfesorComponent implements OnInit {
 
   URL_REGEXP = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
   interactive_contents;
-  mostrar;
+  show;
   currentIndex;
   courseName: string;
   constructor(private contenidoService: ContenidoService, config: NgbCarouselConfig, private activatedRoute: ActivatedRoute) {
@@ -32,15 +32,13 @@ export class CursoProfesorComponent implements OnInit {
       if (params.id) {
         this.contenidoService.getCursosIdList(params.id).subscribe(interactive_contents =>
         {
-          console.log('interactive_contents', interactive_contents);
           this.interactive_contents = interactive_contents;
           if(Object.keys(interactive_contents).length !== 0)
           {
             this.courseName = this.interactive_contents[0].cursos.find(course => { return course.id == params.id }).nombre;
             for (let i in this.interactive_contents) {
               this.interactive_contents.currentIndex=0;
-              this.mostrar = this.interactive_contents.slice(0, 3);
-              console.log('mostrar', this.interactive_contents.mostrar);
+              this.show = this.interactive_contents.slice(0, 3);
             }
           }
         });
@@ -52,21 +50,21 @@ export class CursoProfesorComponent implements OnInit {
     return 'http://img.youtube.com/vi/ID/0.jpg'.replace('ID', url.match(this.URL_REGEXP)[7]);
   }
 
-  siguiente() {
+  next() {
     let tam = this.interactive_contents.length;
-    console.log(tam);
+
     if (this.interactive_contents.currentIndex < tam - 3) {
       this.interactive_contents.currentIndex += 1;
-      this.interactive_contents.mostrar = this.interactive_contents.slice(this.interactive_contents.currentIndex, this.interactive_contents.currentIndex + 3);
+      this.show = this.interactive_contents.slice(this.interactive_contents.currentIndex, this.interactive_contents.currentIndex + 3);
     }
   }
 
-  anterior() {
+  previous() {
     let tam = this.interactive_contents.length;
-    console.log(tam);
-    if (this.interactive_contents.currentIndex < tam - 3) {
+
+    if (this.interactive_contents.currentIndex > 0) {
       this.interactive_contents.currentIndex -= 1;
-      this.interactive_contents.mostrar = this.interactive_contents.slice(this.interactive_contents.currentIndex, this.interactive_contents.currentIndex + 3);
+      this.show = this.interactive_contents.slice(this.interactive_contents.currentIndex, this.interactive_contents.currentIndex + 3);
     }
   }
 }

@@ -2,18 +2,18 @@
   <h1 class="titulo">{{courseName || "Información curso"}}</h1>
     <div class="myCard example-card mat-card">
       <div class="contenedor">
-        <button class="boton" (click)="anterior(nombre)">
+        <button class="boton" (click)="previous()">
           <img src="https://res.cloudinary.com/drfggfn8f/image/upload/v1585253592/cs6jgqlod6vvidig51b9.svg" alt="">
         </button>
         <div class="imagenes">
-          <div class="cuadrado" *ngFor="let contenido of mostrar">
+          <div class="cuadrado" *ngFor="let contenido of show">
             <a href="./#/contenido-interactivo/configurar/{{contenido.id}}">
               <img src="{{getURLImageYoutube(contenido.contenido.url)}}" alt="" class="imagen" />
             </a>
             <p>{{contenido.nombre}}</p>
           </div>
         </div>
-        <button class="boton2" (click)="siguiente(nombre)">
+        <button class="boton2" (click)="next()">
           <img src="https://res.cloudinary.com/drfggfn8f/image/upload/v1585253592/whqml0lhrf6uzm4ymcct.svg" alt="">
         </button>
       </div>
