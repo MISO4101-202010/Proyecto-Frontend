@@ -279,7 +279,7 @@ export class ConfigurarContenidoInteractivoComponent {
   }
 
   saveContent() {
-    this.contenidoService.saveInteractiveContent(this.name, this.canJump, this.hasRetro).subscribe(result => {
+    this.contenidoService.saveInteractiveContent(this.contId, this.name, this.canJump, this.hasRetro).subscribe(result => {
       Swal.fire('Contenido interactivo', 'Contenido interactivo guardado con éxito', 'success');
     }, error => {
       console.error(error);

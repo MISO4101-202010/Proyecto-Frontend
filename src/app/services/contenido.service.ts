@@ -86,12 +86,12 @@ export class ContenidoService {
 
     return this.httpClient.put(this.createPauseMark, marca);
   }
-  saveInteractiveContent(name: string, canJump: boolean, hasRetro: boolean) {
+  saveInteractiveContent(contenidoId: number, name: string, canJump: boolean, hasRetro: boolean) {
     const body = {
-      name: name,
-      canJump: canJump,
-      hasRetro: hasRetro
+      nombre: name,
+      puedeSaltar: canJump,
+      tiene_retroalimentacion: hasRetro
     };
-    return this.httpClient.put(this.contenidoUrl, body);
+    return this.httpClient.patch(this.detalleUrl + contenidoId, body);
   }
 }
