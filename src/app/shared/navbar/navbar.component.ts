@@ -1,14 +1,11 @@
-import { Component, OnInit } from "@angular/core";
-import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
-import { Observable } from "rxjs";
-import { map, shareReplay } from "rxjs/operators";
-import { FlatTreeControl } from "@angular/cdk/tree";
-import {
-  MatTreeFlatDataSource,
-  MatTreeFlattener,
-} from "@angular/material/tree";
-import { Router } from "@angular/router";
-import { AuthService } from "src/app/services/usuario/auth.service";
+import {Component, OnInit} from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Observable } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/usuario/auth.service';
 
 /**
  * Food data with nested structure.
@@ -21,9 +18,12 @@ interface NavNode {
 
 const TREE_DATA: NavNode[] = [
   {
-    name: "Contenido Interactivo",
-    children: [{ name: "Subir Video" }, { name: "Ver Contenido Interactivo" }],
-  },
+    name: 'Contenido Interactivo',
+    children: [
+      { name: 'Subir Video' },
+      { name: 'Ver Contenido Interactivo' },
+    ]
+  }
 ];
 
 /** Flat node with expandable and level information */
@@ -34,11 +34,11 @@ interface ExampleFlatNode {
 }
 
 @Component({
-  selector: "app-navbar",
-  templateUrl: "./navbar.component.html",
-  styleUrls: ["./navbar.component.css"],
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit{
+export class NavbarComponent implements OnInit {
   student: boolean;
   user: any;
   name: string;
@@ -50,32 +50,31 @@ export class NavbarComponent implements OnInit{
     private auth: AuthService
   ) {
     this.dataSource.data = TREE_DATA;
-    var actualUser = sessionStorage.getItem("userConectaTe");
+    const actualUser = sessionStorage.getItem('userConectaTe');
     this.student = JSON.parse(actualUser).isAlumno;
     this.user = JSON.parse(actualUser);
-    this.name = "";
+    this.name = '';
     this.showMenu = false;
   }
 
   navNodeLinks(pag: string) {
     switch (pag) {
-      case "Subir Video": {
-        this.router.navigate(["/load-videos"]);
+      case 'Subir Video': {
+        this.router.navigate(['/load-videos']);
         break;
       }
-      case "Ver Contenido Interactivo": {
-        this.router.navigate(["/contenido-interactivo"]);
+      case 'Ver Contenido Interactivo': {
+        this.router.navigate(['/contenido-interactivo']);
         break;
       }
       default: {
-        console.log("Ruta no encontrada para la entrada: ", pag);
+        console.log('Ruta no encontrada para la entrada: ', pag);
         break;
       }
     }
   }
 
   logout() {
-    console.log("LLEGO ACA");
     this.auth.logout();
   }
 
@@ -84,12 +83,11 @@ export class NavbarComponent implements OnInit{
   }
 
   getName() {
-    if(this.user.isAlumno){
-      this.name = this.user.dataAlumno.first_name + " " + this.user.dataAlumno.last_name;
+    if (this.user.isAlumno) {
+      this.name = this.user.dataAlumno.first_name + ' ' + this.user.dataAlumno.last_name;
+    } else {
+      this.name = this.user.dataProfesor.first_name + ' ' + this.user.dataProfesor.last_name;
     }
-    else {
-      this.name = this.user.dataProfesor.first_name + " " + this.user.dataProfesor.last_name;
-    } 
   }
 
   toggleProfileMenu() {
@@ -109,18 +107,12 @@ export class NavbarComponent implements OnInit{
       name: node.name,
       level: level,
     };
-  };
+  }
   treeControl = new FlatTreeControl<ExampleFlatNode>(
-    (node) => node.level,
-    (node) => node.expandable
-  );
+    node => node.level, node => node.expandable);
 
   treeFlattener = new MatTreeFlattener(
-    this._transformer,
-    (node) => node.level,
-    (node) => node.expandable,
-    (node) => node.children
-  );
+    this._transformer, node => node.level, node => node.expandable, node => node.children);
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
