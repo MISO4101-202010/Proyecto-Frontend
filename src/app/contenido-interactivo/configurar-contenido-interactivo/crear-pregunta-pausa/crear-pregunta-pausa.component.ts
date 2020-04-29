@@ -1,6 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ContenidoService } from 'src/app/services/contenido.service';
 
@@ -30,12 +30,12 @@ export class CrearPreguntaPausaComponent implements OnInit {
 
   initializeForm(data) {
     this.questionForm = this.formBuilder.group({
-      marca_id: [data.marca.pregunta ? data.marca.pregunta[0].marca : ''],
-      pausa_id: [data.marca.pregunta ? data.marca.pregunta[0].id : ''],
+      marca_id: [data.marca.pregunta ? data.marca.pregunta.marca : ''],
+      pausa_id: [data.marca.pregunta ? data.marca.pregunta.id : ''],
       nombre: [data.marca.pregunta ? data.marca.nombre : '', [Validators.required]],
-      tiempo: [data.marca.pregunta ? data.marca.pregunta[0].tiempo : '',
+      tiempo: [data.marca.pregunta ? data.marca.pregunta.tiempo : '',
         [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
-      enunciado: [data.marca.pregunta ? data.marca.pregunta[0].enunciado : '', [Validators.required]]
+      enunciado: [data.marca.pregunta ? data.marca.pregunta.enunciado : '', [Validators.required]]
     });
     if (!data.marca.pregunta) {
       this.questionForm.get('nombre').setValidators(null);
