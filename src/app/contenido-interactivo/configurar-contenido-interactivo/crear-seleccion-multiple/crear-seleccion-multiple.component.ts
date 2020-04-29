@@ -1,6 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ContenidoService } from 'src/app/services/contenido.service';
 
@@ -17,6 +17,7 @@ export class CrearSeleccionMultipleComponent implements OnInit {
 
   questionForm: FormGroup;
   formArray = new FormArray([]);
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private formBuilder: FormBuilder,
@@ -30,9 +31,9 @@ export class CrearSeleccionMultipleComponent implements OnInit {
   }
 
   initializeForm() {
-    console.log('multiple', this.data );   
+    console.log('multiple', this.data );
     if(this.data.marca.pregunta)
-      this.data.marca.pregunta[0].opciones.forEach(e => {
+      this.data.marca.pregunta.opciones.forEach(e => {
       let formGroup = new FormBuilder();
       this.formArray.push(   formGroup.group({
                                                 opcion_id: [e.id],
@@ -41,13 +42,13 @@ export class CrearSeleccionMultipleComponent implements OnInit {
                                               }))});
 
     this.questionForm = this.formBuilder.group({
-      marca_id: [this.data.marca.pregunta ? this.data.marca.pregunta[0].marca : ''],
-      seleccion_multiple_id: [this.data.marca.pregunta ? this.data.marca.pregunta[0].id : ''],
-      enunciado: [this.data.marca.pregunta ? this.data.marca.pregunta[0].enunciado : '', [Validators.required]],
-      esMultipleResp: [this.data.marca.pregunta ? this.data.marca.pregunta[0].esMultipleResp : false, [Validators.required]],
-      nombre: [this.data.marca.pregunta ? this.data.marca.pregunta[0].nombre : '', [Validators.required]],
-      tieneRetroalimentacion: [this.data.marca.pregunta ? this.data.marca.pregunta[0].tieneRetroalimentacion : false, [Validators.required]],
-      numeroDeIntentos: [this.data.marca.pregunta ? this.data.marca.pregunta[0].numeroDeIntentos : 1, [Validators.required, Validators.min(1)]],
+      marca_id: [this.data.marca.pregunta ? this.data.marca.pregunta.marca : ''],
+      seleccion_multiple_id: [this.data.marca.pregunta ? this.data.marca.pregunta.id : ''],
+      enunciado: [this.data.marca.pregunta ? this.data.marca.pregunta.enunciado : '', [Validators.required]],
+      esMultipleResp: [this.data.marca.pregunta ? this.data.marca.pregunta.esMultipleResp : false, [Validators.required]],
+      nombre: [this.data.marca.pregunta ? this.data.marca.pregunta.nombre : '', [Validators.required]],
+      tieneRetroalimentacion: [this.data.marca.pregunta ? this.data.marca.pregunta.tieneRetroalimentacion : false, [Validators.required]],
+      numeroDeIntentos: [this.data.marca.pregunta ? this.data.marca.pregunta.numeroDeIntentos : 1, [Validators.required, Validators.min(1)]],
       opciones:  (this.data.marca.pregunta) ? this.formArray : this.formBuilder.array([])
     });
     if (!this.data.marca.pregunta) {
