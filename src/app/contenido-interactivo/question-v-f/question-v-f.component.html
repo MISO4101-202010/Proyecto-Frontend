@@ -10,12 +10,12 @@
           <mat-radio-button class="falso" value="falso">Falso</mat-radio-button>
         </mat-radio-group>
       </div>
-      <div *ngIf="yaRespondio" id="respuesta" class="columna-flex">
+      <div *ngIf="yaRespondio && (infoPregunta.tieneRetroalimentacion || hasFeedBackContent)" id="respuesta" class="columna-flex">
         <h4 class="negrilla">Respuesta Correcta</h4>
         <p>{{respuesta}}</p>
       </div>
     </div>
-    <div *ngIf="yaRespondio && infoPregunta.tieneRetroalimentacion" class="columna-flex">
+    <div *ngIf="yaRespondio && (infoPregunta.tieneRetroalimentacion || hasFeedBackContent)" class="columna-flex">
       <h3 class="subrayar">Retroalimentación:</h3>
       <label>{{infoPregunta.retroalimentacion}}</label>
     </div>
