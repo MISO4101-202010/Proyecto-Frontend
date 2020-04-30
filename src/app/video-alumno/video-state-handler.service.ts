@@ -2,7 +2,7 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { interval } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { filter } from 'rxjs/operators';
-import * as _ from 'loadsh';
+import * as _ from 'underscore';
 
 @Injectable({
   providedIn: 'root',
