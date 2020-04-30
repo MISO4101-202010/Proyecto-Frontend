@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import {Component, OnDestroy} from "@angular/core";
 import { InteraccionAlumnoService } from "../interaccion-alumno.service";
 import { ActivatedRoute } from "@angular/router";
 import { LoadVideoService } from "../services/contenidoInter/load-video.service";
@@ -7,17 +7,18 @@ import { QuestionModalComponent } from "src/app/contenido-interactivo/question-m
 import { ContenidoService } from "../services/contenido.service";
 import Swal from "sweetalert2";
 import { QuestionVFComponent } from '../contenido-interactivo/question-v-f/question-v-f.component';
+import { VideoStateHandler } from "./video-state-handler.service";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: "app-video-alumno",
   templateUrl: "./video-alumno.component.html",
   styleUrls: ["./video-alumno.component.css"]
 })
-export class VideoAlumnoComponent {
+export class VideoAlumnoComponent{
   player: YT.Player;
   videoId = "";
   marcas: any[];
-  mustWait = true;
   public progressBarValue = 0;
   playing = false;
   playerVars = {
@@ -39,7 +40,8 @@ export class VideoAlumnoComponent {
     private interaccionAlumnoService: InteraccionAlumnoService,
     public dialog: MatDialog,
     private contentService: LoadVideoService,
-    private contenidoService: ContenidoService
+    private contenidoService: ContenidoService,
+    private videoStateHandler: VideoStateHandler
   ) {
     this.loadData();
   }
@@ -56,32 +58,26 @@ export class VideoAlumnoComponent {
   }
 
   async savePlayer(player) {
+    this.videoStateHandler.reset();
     this.player = player;
-    console.log("Player instance", player);
-    this.getContentMark();
-    this.loadMarcas(this.contenidoInteractivo.marcas);
-
-    await console.log("Player current time", this.player.getCurrentTime());
-    while (true) {
-      this.mustWait = true;
-      await this.delay(1000);
-      console.log("Player current time", Math.round(this.player.getCurrentTime()));
-      for (let i = 0; i < this.marcas.length; i++) {
-        if (Math.round(this.player.getCurrentTime()) === this.marcas[i].punto) {
-          this.player.pauseVideo();
-
-          await this.open(this.marcas[i]);
-          while (this.mustWait) {
-            await this.delay(1000);
-          }
-        }
+    this.getContentMark().subscribe(
+      (val: any) => {
+        this.marcas = val;
+        this.loadMarcas(this.contenidoInteractivo.marcas);
+        this.videoStateHandler.init(this.marcas, player);
+        this.videoStateHandler.mustOpenMark$.pipe(takeUntil(this.videoStateHandler.reset$))
+          .subscribe(mark => this.open(mark));
+        this.videoStateHandler.handleVideoState();
+      },
+      response => {
+        console.log("POST call in error", response);
+      },
+      () => {
+        console.log("The POST observable is now completed.");
       }
-    }
+    );
   }
 
-  delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
 
   open(marca: any) {
     // Acá debería ir un switch que tire un dialogo distinto dependiendo del tipo de pregunta
@@ -107,25 +103,13 @@ export class VideoAlumnoComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       this.player.playVideo();
-      this.mustWait = false;
+      this.videoStateHandler.modalOpened = false;
     });
   }
 
   getContentMark() {
-    this.interaccionAlumnoService
+    return this.interaccionAlumnoService
     .getMarcasXacontenido(this.contenidoInteractivo.id)
-    .subscribe(
-      (val: any) => {
-        this.marcas = val;
-        console.log("POST call successful value returned in body", val);
-      },
-      response => {
-        console.log("POST call in error", response);
-      },
-      () => {
-        console.log("The POST observable is now completed.");
-      }
-    );
   }
 
   getContentInteractiveDetail(contenidoInteractivoId) {
