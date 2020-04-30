@@ -40,6 +40,7 @@ export class ConfigurarContenidoInteractivoComponent {
   marcasPorcentaje;
   tiempoVideo = 0;
   marcasUbicadas = [];
+  tamanioMarca = 0;
 
   constructor(public dialog: MatDialog, private activatedRoute: ActivatedRoute,
               private contenidoService: ContenidoService) {
@@ -83,17 +84,6 @@ export class ConfigurarContenidoInteractivoComponent {
   // Actualiza el estado de la barra de reproducción cuando se navega
   public updateProgressBar(): void {
     this.progressBarValue = (this.player.getCurrentTime() / this.player.getDuration()) * 100;
-    if (this.marcasUbicadas.length > 0) {
-      const tamanioContenedor = document.getElementById('lista-minutos').offsetWidth;
-      const cantidadCuadros = Math.floor(tamanioContenedor / 11) - 1;
-      const valorA = 'lista-' + (Math.round(this.player.getCurrentTime()) + cantidadCuadros);
-      const valorB = 'lista-' + (Math.round(this.player.getCurrentTime()));
-      if (document.getElementById(valorA) !== null && this.playing === true &&
-        document.getElementById(valorB).scrollIntoView() !== null) {
-        document.getElementById(valorA).scrollIntoView();
-        document.getElementById(valorB).scrollIntoView();
-      }
-    }
   }
 
   handleTouchProgressBar(e: any): void {
@@ -127,7 +117,8 @@ export class ConfigurarContenidoInteractivoComponent {
         .subscribe(res => {
           this.marcasUbicadas[event.previousIndex].segundo = this.marcasUbicadas[event.currentIndex].segundo;
           moveItemInArray(this.marcasUbicadas, event.previousIndex, event.currentIndex);
-          Swal.fire('Pregunta Actualizada', 'La pregunta se movió satisfactoriamente', 'success');
+          Swal.fire('Pregunta Actualizada', 'La pregunta se movió satisfactoriamente al minuto ' + this.toMin(marcaEnPos.segundo),
+            'success');
         }, error => {
           console.error(error);
           Swal.fire('Oops...', 'Ocurrió un error actualizando la marca, por favor inténtalo de nuevo', 'error');
@@ -168,6 +159,7 @@ export class ConfigurarContenidoInteractivoComponent {
     this.marcasPorcentaje = [];
     this.tiempoVideo = this.player.getDuration();
     let i = 0;
+    let tamanioMarcasVacias = document.getElementById('lista-minutos').offsetWidth;
     while (i <= this.tiempoVideo) {
       const marcaIn = {
         texto: '',
@@ -187,10 +179,12 @@ export class ConfigurarContenidoInteractivoComponent {
         idMarca: marca.id,
         nombreMarca: marca.nombre
       };
+      tamanioMarcasVacias = tamanioMarcasVacias - 10;
       this.marcasUbicadas[marca.punto] = conMarca;
       const marcaP = this.calcPercentage(+marca.punto);
       this.marcasPorcentaje.push(marcaP);
     }
+    this.tamanioMarca = tamanioMarcasVacias / (this.player.getDuration() * 2);
   }
 
   darEstiloMarca(marca) {
@@ -198,6 +192,19 @@ export class ConfigurarContenidoInteractivoComponent {
       return 'example-box-marca';
     } else {
       return 'example-box';
+    }
+  }
+
+  darTamanioMarca(marca) {
+    let tamanio;
+    if (marca !== undefined) {
+      if (marca.conMarca) {
+        tamanio = '0 5px';
+        return {padding: tamanio};
+      } else {
+        tamanio = '0 ' + this.tamanioMarca + 'px';
+        return {padding: tamanio};
+      }
     }
   }
 
