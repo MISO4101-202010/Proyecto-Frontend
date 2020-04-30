@@ -25,7 +25,7 @@ export class VideoStateHandler {
     this.currentVideoTime = Math.round(this.player.getCurrentTime());
     console.log('Player current time', this.currentVideoTime);
     const mark = _.find(this.marks, { punto: this.currentVideoTime });
-    if (this.lastMarkShown && this.lastTimeSeen < this.currentVideoTime) {
+    if (this.lastMarkShown && (this.lastTimeSeen > this.currentVideoTime)) {
       this.lastMarkShown = null;
     }
     if (mark && mark !== this.lastMarkShown) {
