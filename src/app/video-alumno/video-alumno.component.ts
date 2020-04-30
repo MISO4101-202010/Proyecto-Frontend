@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from "@angular/core";
+import { Component } from "@angular/core";
 import { InteraccionAlumnoService } from "../interaccion-alumno.service";
 import { ActivatedRoute } from "@angular/router";
 import { LoadVideoService } from "../services/contenidoInter/load-video.service";
@@ -8,7 +8,7 @@ import { ContenidoService } from "../services/contenido.service";
 import Swal from "sweetalert2";
 import { QuestionVFComponent } from '../contenido-interactivo/question-v-f/question-v-f.component';
 import { VideoStateHandler } from "./video-state-handler.service";
-import {takeUntil} from "rxjs/operators";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "app-video-alumno",
