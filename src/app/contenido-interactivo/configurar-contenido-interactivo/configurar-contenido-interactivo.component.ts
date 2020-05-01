@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
-import { CrearSeleccionMultipleComponent } from './crear-seleccion-multiple/crear-seleccion-multiple.component';
-import { CrearPreguntaAbiertaComponent } from './crear-pregunta-abierta/crear-pregunta-abierta.component';
-import { CrearPreguntaVerdaderoFalsoComponent } from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
-import { MatDialog } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
-import { ContenidoService } from 'src/app/services/contenido.service';
-import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
+import {Component} from '@angular/core';
+import {CrearSeleccionMultipleComponent} from './crear-seleccion-multiple/crear-seleccion-multiple.component';
+import {CrearPreguntaAbiertaComponent} from './crear-pregunta-abierta/crear-pregunta-abierta.component';
+import {CrearPreguntaVerdaderoFalsoComponent} from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
+import {MatDialog} from '@angular/material';
+import {ActivatedRoute} from '@angular/router';
+import {ContenidoService} from 'src/app/services/contenido.service';
+import {CrearPreguntaPausaComponent} from './crear-pregunta-pausa/crear-pregunta-pausa.component';
 import { InteraccionAlumnoService } from '../../interaccion-alumno.service';
 import { ActivitiesService } from '../../services/activities-service/activities.service';
+import {ViewportScroller} from '@angular/common';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import * as _ from 'underscore';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-configurar-contenido-interactivo',
@@ -27,10 +31,17 @@ export class ConfigurarContenidoInteractivoComponent {
   };
   playing = false;
   progressBarValue = 0;
+  name = "";
+  canJump;
+  hasRetro;
+
   marcas: any[];
   contenidoInteractivo;
   contentsLoaded: Promise<boolean>;
   marcasPorcentaje;
+  tiempoVideo = 0;
+  marcasUbicadas = [];
+  tamanioMarca = 0;
 
   constructor(public dialog: MatDialog,
               private activatedRoute: ActivatedRoute,
@@ -112,6 +123,34 @@ export class ConfigurarContenidoInteractivoComponent {
       this.playing = false;
   }
 
+  drop(event: CdkDragDrop<string[]>) {
+    const marcaCambiar = this.marcasUbicadas[event.previousIndex];
+    const marcaViejaEnPos = this.marcasUbicadas[event.currentIndex];
+    if (!marcaViejaEnPos.conMarca) {
+      this.contenidoService.actualizarMarca(marcaCambiar.idMarca, +this.contenidoInteractivo, event.currentIndex, marcaCambiar.nombreMarca)
+        .subscribe(res => {
+          this.marcasUbicadas[event.previousIndex].segundo = this.marcasUbicadas[event.currentIndex].segundo;
+          moveItemInArray(this.marcasUbicadas, event.previousIndex, event.currentIndex);
+          Swal.fire('Pregunta Actualizada', 'La pregunta se movió satisfactoriamente al minuto ' + this.toMin(marcaViejaEnPos.segundo),
+            'success');
+        }, error => {
+          console.error(error);
+          Swal.fire('Oops...', 'Ocurrió un error actualizando la marca, por favor inténtalo de nuevo', 'error');
+        });
+    } else {
+      Swal.fire('Oops...',
+        'Ya hay una marca en la posición que seleccionaste, por favor inténtalo de nuevo en un espacio disponible',
+        'error');
+    }
+  }
+
+  actualizarVistaMarca() {
+    const tiempoActual = Math.round(this.player.getCurrentTime());
+    const moverse = tiempoActual * 10;
+    const resultado = 'translateX(-' + moverse + 'px)';
+    return resultado;
+  }
+
   loadData() {
     this.activatedRoute.params.subscribe(params => {
       if (params.id) {
@@ -120,12 +159,15 @@ export class ConfigurarContenidoInteractivoComponent {
     });
   }
 
+
   private getContentInteractiveDetail(contenidoInteractivoId, firstCall) {
     this.contenidoService.getDetalleContenidoInteractivo(contenidoInteractivoId).subscribe(contenido => {
       this.contenidoInteractivo = contenido;
+      this.name = contenido.nombre;
+      this.canJump = contenido.puedeSaltar;
+      this.hasRetro = contenido.tiene_retroalimentacion;
       this.loadMarcas(this.contenidoInteractivo.marcas);
       this.getContentMark();
-
       if (firstCall) {
         this.contentsLoaded = Promise.resolve(true);
         this.videoId = this.contenidoInteractivo.contenido.url.split('watch?v=')[1];
@@ -135,9 +177,54 @@ export class ConfigurarContenidoInteractivoComponent {
 
   loadMarcas(marcas) {
     this.marcasPorcentaje = [];
+    this.tiempoVideo = this.player.getDuration();
+    let i = 0;
+    let tamanioMarcasVacias = document.getElementById('lista-minutos').offsetWidth;
+    while (i <= this.tiempoVideo) {
+      const marcaIn = {
+        texto: '',
+        conMarca: false,
+        segundo: i,
+        idMarca: 0,
+        nombreMarca: ''
+      };
+      this.marcasUbicadas.push(marcaIn);
+      i++;
+    }
     for (const marca of marcas) {
+      const conMarca = {
+        texto: '',
+        conMarca: true,
+        segundo: marca.punto,
+        idMarca: marca.id,
+        nombreMarca: marca.nombre
+      };
+      tamanioMarcasVacias = tamanioMarcasVacias - 10;
+      this.marcasUbicadas[marca.punto] = conMarca;
       const marcaP = this.calcPercentage(+marca.punto);
       this.marcasPorcentaje.push(marcaP);
+    }
+    this.tamanioMarca = tamanioMarcasVacias / (this.player.getDuration() * 2);
+  }
+
+  darEstiloMarca(marca) {
+    if (marca) {
+      return 'example-box-marca';
+    } else {
+      return 'example-box';
+    }
+  }
+
+  darTamanioMarca(marca) {
+    let tamanio;
+    if (marca !== undefined) {
+      if (marca.conMarca) {
+        tamanio = '0 5px';
+        return {padding: tamanio};
+      } else {
+        tamanio = '0 ' + this.tamanioMarca + 'px';
+        return {padding: tamanio};
+      }
     }
   }
 
@@ -215,12 +302,13 @@ export class ConfigurarContenidoInteractivoComponent {
     const dialogRef = this.dialog.open(modalType, {
       width: '70%',
       data: {
-        marca
+        marca,
+        tiene_retroalimentacion: this.contenidoInteractivo.tiene_retroalimentacion
       }
     });
 
     dialogRef.afterClosed().subscribe(res => {
-      this.getContentInteractiveDetail(this.contenidoInteractivo.id, false);
+      this.getContentInteractiveDetail(this.contenidoInteractivo.id, true);
     });
   }
 
@@ -258,6 +346,23 @@ export class ConfigurarContenidoInteractivoComponent {
     // Cantidad de puntos a restar para ubicar la marca, los "10" son el tamaño de la marca
     const pixelsToRest = (punto * 10 / 100);
     return (punto * 854 / 100) - pixelsToRest;
+  }
+
+  checkCanJump(value) {
+    this.canJump = value;
+  }
+
+  checkHasRetro(value) {
+    this.hasRetro = value;
+  }
+
+  saveContent() {
+    this.contenidoService.saveInteractiveContent(this.contenidoInteractivo.id, this.name, this.canJump, this.hasRetro).subscribe(result => {
+      Swal.fire('Contenido interactivo', 'Contenido interactivo guardado con éxito', 'success');
+    }, error => {
+      console.error(error);
+      Swal.fire('Oops...', 'Ocurrió un error guardando el contenido interactivo, intentelo más tarde', 'error');
+    });
   }
 
   getContentMark() {

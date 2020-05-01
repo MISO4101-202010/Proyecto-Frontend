@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { ListaContenidoComponent } from './lista-contenido/lista-contenido.component';
 import { Routes, RouterModule } from '@angular/router';
@@ -46,7 +47,8 @@ const routes: Routes = [
     RichTextEditorAllModule,
     FormsModule,
     MatDialogModule,
-    YoutubePlayerModule
+    YoutubePlayerModule,
+    DragDropModule
   ],
   exports: [RouterModule],
   entryComponents: [
