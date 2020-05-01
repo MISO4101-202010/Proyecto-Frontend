@@ -15,7 +15,6 @@ import Swal from 'sweetalert2';
 })
 export class VideoAlumnoComponent {
   player: YT.Player;
-  idContent = '';
   id = '';
   videoId = "";
   marcas: any[];
