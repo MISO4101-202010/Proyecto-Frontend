@@ -7,18 +7,20 @@ import { QuestionModalComponent } from "src/app/contenido-interactivo/question-m
 import { ContenidoService } from "../services/contenido.service";
 import Swal from "sweetalert2";
 import { QuestionVFComponent } from '../contenido-interactivo/question-v-f/question-v-f.component';
+import { VideoStateHandler } from "./video-state-handler.service";
+import { takeUntil, filter , distinctUntilChanged, take} from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { interval, Observable } from 'rxjs';
 
 @Component({
   selector: "app-video-alumno",
   templateUrl: "./video-alumno.component.html",
   styleUrls: ["./video-alumno.component.css"]
 })
-export class VideoAlumnoComponent {
+export class VideoAlumnoComponent{
   player: YT.Player;
   videoId = "";
   marcas: any[];
-  mustWait = true;
   public progressBarValue = 0;
   playing = false;
   playerVars = {
@@ -34,6 +36,8 @@ export class VideoAlumnoComponent {
   marcasPorcentaje;
   contenidoInteractivo;
   isVideoLineal: boolean;
+  interval$: Observable<any> = interval(1000);
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -41,6 +45,7 @@ export class VideoAlumnoComponent {
     public dialog: MatDialog,
     private contentService: LoadVideoService,
     private contenidoService: ContenidoService,
+    private videoStateHandler: VideoStateHandler,
     public router: Router
   ) {
     this.loadData();
@@ -58,38 +63,38 @@ export class VideoAlumnoComponent {
   }
 
   async savePlayer(player) {
+    this.videoStateHandler.reset();
     this.player = player;
-    console.log("Player instance", player);
-    this.getContentMark();
-    this.loadMarcas(this.contenidoInteractivo.marcas);
-
-    await console.log("Player current time", this.player.getCurrentTime());
-    while (true) {
-      this.mustWait = true;
-      await this.delay(1000);
-      console.log("Player current time", Math.round(this.player.getCurrentTime()));
-      for (let i = 0; i < this.marcas.length; i++) {
-        if (Math.round(this.player.getCurrentTime()) === this.marcas[i].punto) {
-          this.player.pauseVideo();
-
-          await this.open(this.marcas[i]);
-          while (this.mustWait) {
-            await this.delay(1000);
-          }
-        }
+    this.getContentMark().subscribe(
+      (val: any) => {
+        this.marcas = val;
+        this.loadMarcas(this.contenidoInteractivo.marcas);
+        this.videoStateHandler.init(this.marcas, player);
+        this.videoStateHandler.mustOpenMark$.pipe(takeUntil(this.videoStateHandler.reset$))
+          .subscribe(mark => this.open(mark));
+        this.videoStateHandler.handleVideoState();
+        this.videoStateHandler.isFinished$.pipe(
+            takeUntil(this.videoStateHandler.reset$),
+            distinctUntilChanged()
+          ).subscribe(finished =>{
+            if(finished){
+              this.openFeedBack();
+            }
+          });
+      },
+      response => {
+        console.log("POST call in error", response);
+      },
+      () => {
+        console.log("The POST observable is now completed.");
       }
-      if(this.finished()){
-        this.openFeedBack();
-      }
-    }
+    );
   }
 
-  delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
 
   open(marca: any) {
     // Acá debería ir un switch que tire un dialogo distinto dependiendo del tipo de pregunta
+    console.log('open')
     let dialogRef;
     if (marca.tipoActividad === 2) {
       dialogRef = this.dialog.open(QuestionVFComponent, {
@@ -112,25 +117,13 @@ export class VideoAlumnoComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       this.player.playVideo();
-      this.mustWait = false;
+      this.videoStateHandler.modalOpened$.next(false);
     });
   }
 
   getContentMark() {
-    this.interaccionAlumnoService
+    return this.interaccionAlumnoService
     .getMarcasXacontenido(this.contenidoInteractivo.id)
-    .subscribe(
-      (val: any) => {
-        this.marcas = val;
-        console.log("POST call successful value returned in body", val);
-      },
-      response => {
-        console.log("POST call in error", response);
-      },
-      () => {
-        console.log("The POST observable is now completed.");
-      }
-    );
   }
 
   getContentInteractiveDetail(contenidoInteractivoId) {
@@ -262,12 +255,16 @@ export class VideoAlumnoComponent {
     return (punto * 854 / 100) - pixelsToRest;
   }
 
-  finished(){
-    return this.getCurrentTime() === this.getTotalTime();
+  delay(ms) {
+    return new Promise ((resolve)=> setTimeout(resolve,ms));
   }
 
-  openFeedBack(){
-     this.router.navigate(['/contenido-interactivo/revision/'+this.contenidoInteractivo]);
-  }
+  async openFeedBack(){
+    await this.delay(1000);
+    this.videoStateHandler.modalOpened$.pipe(
+      filter(value => !value),
+      take(1))
+        .subscribe(() => this.router.navigate(['/contenido-interactivo/revision/'+this.contenidoInteractivo.id]))
+    }
 
 }
