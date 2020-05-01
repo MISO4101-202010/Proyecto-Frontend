@@ -18,7 +18,8 @@
             <div style="flex-direction: column; width: 30%;">
                 <mat-checkbox color="primary" formControlName="esMultipleResp">¿Tiene múltiples respuestas?
                 </mat-checkbox>
-                <mat-checkbox color="primary" formControlName="tieneRetroalimentacion">¿Tiene retroalimentación?
+                <mat-checkbox color="primary" formControlName="tieneRetroalimentacion"
+                              [disabled]="data.tiene_retroalimentacion">¿Tiene retroalimentación?
                 </mat-checkbox>
             </div>
             <mat-form-field appearance="outline" style="height:40px">

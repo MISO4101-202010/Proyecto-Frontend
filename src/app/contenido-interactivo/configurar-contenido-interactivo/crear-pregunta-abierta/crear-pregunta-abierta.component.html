@@ -15,10 +15,10 @@
             </mat-form-field>
         </div>
       <div class="row-container">
-        <mat-checkbox color="primary" formControlName="tieneRetroalimentacion">¿Tiene retroalimentación?
+        <mat-checkbox color="primary" formControlName="tieneRetroalimentacion" [disabled]="data.tiene_retroalimentacion">¿Tiene retroalimentación?
         </mat-checkbox>
       </div>
-      <div class="row-container">
+      <div class="row-container" *ngIf="questionForm.get('tieneRetroalimentacion').value">
         <mat-form-field appearance="outline" style="width:100%">
           <mat-label>Escribe la retroalimentación para el estudiante</mat-label>
           <input type="text" matInput placeholder="Retroalimentación" formControlName="retroalimentacion"/>

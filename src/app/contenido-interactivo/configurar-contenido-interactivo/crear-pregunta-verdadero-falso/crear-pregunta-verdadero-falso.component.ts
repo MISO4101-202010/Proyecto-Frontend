@@ -7,6 +7,7 @@ import { ActivitiesService } from "../../../services/activities-service/activiti
 
 export interface DialogData {
   marca: any;
+  tiene_retroalimentacion?: boolean;
 }
 
 @Component({
@@ -34,12 +35,14 @@ export class CrearPreguntaVerdaderoFalsoComponent {
     this.questionForm = this.formBuilder.group({
       pregunta: ['', [Validators.required]],
       nombre: ['', [Validators.required]],
+      tieneRetroalimentacion:[false || this.data.tiene_retroalimentacion],
       retroalimentacion: [''],
       numeroDeIntentos: ['', [Validators.required]]
     });
   }
 
   getQuestion() {
+    console.log('RETRO',this.data.tiene_retroalimentacion)
     // Si hay un valor en "marca_id" significa que la pregunta se debe editar
     if (this.data.marca.marca_id) {
       this.title = 'Editar';
@@ -51,7 +54,7 @@ export class CrearPreguntaVerdaderoFalsoComponent {
           this.respuestaControl.setValue(preguntaVF.body.esVerdadero ? 'verdadero' : 'falso');
           this.retroalimentacionControl.setValue(preguntaVF.body.tieneRetroalimentacion ? 'si' : 'no');
           this.questionForm.get('numeroDeIntentos').setValue(preguntaVF.body.numeroDeIntentos);
-          this.questionForm.get('retroalimentacion').setValue(preguntaVF.body.retroalimentacion);
+          this.questionForm.get('retroalimentacion').setValue((preguntaVF.body.retroalimentacion || this.data.tiene_retroalimentacion));
         }, error => {
           console.error('Ocurrió un error al obtener la pregunta', error);
           Swal.fire('Oops...', 'Ocurrió un error al obtener la pregunta, por favor inténtalo de nuevo', 'error');

@@ -31,18 +31,12 @@
             {{ getCurrentTime()}}/{{getTotalTime()}}
 
         </div>
-      <div>
-        <mat-checkbox color="primary" formControlName="tieneRetroalimentacion">¿Tiene retroalimentación (global)?
-        </mat-checkbox>
-      </div>
-      <div>
         <mat-form-field style="width:30%">
             <mat-label>Seleccione un tipo de marca</mat-label>
             <mat-select [(value)]="tipoMarcaSeleccionada" enabled>
                 <mat-option *ngFor="let marca of opcionesMarca" [value]="marca">{{ marca.text }}</mat-option>
             </mat-select>
         </mat-form-field>
-      </div>
         <span></span>
         <button mat-flat-button color="primary" (click)="createOrUpdateMark(undefined)">
             Añadir marca

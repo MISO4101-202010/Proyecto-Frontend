@@ -6,6 +6,7 @@ import { ContenidoService } from 'src/app/services/contenido.service';
 
 export interface DialogData {
   marca: any;
+  tiene_retroalimentacion?: boolean;
 }
 
 @Component({
@@ -51,6 +52,9 @@ export class CrearSeleccionMultipleComponent implements OnInit {
       numeroDeIntentos: [this.data.marca.pregunta ? this.data.marca.pregunta.numeroDeIntentos : 1, [Validators.required, Validators.min(1)]],
       opciones:  (this.data.marca.pregunta) ? this.formArray : this.formBuilder.array([])
     });
+    if(this.data.tiene_retroalimentacion){
+      this.questionForm.get('tieneRetroalimentacion').setValue(true);
+    }
     if (!this.data.marca.pregunta) {
       this.questionForm.removeControl('marca_id');
       this.questionForm.removeControl('seleccion_multiple_id');

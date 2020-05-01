@@ -6,6 +6,7 @@ import { ContenidoService } from 'src/app/services/contenido.service';
 
 export interface DialogData {
   marca: any;
+  tiene_retroalimentacion?: boolean;
 }
 
 @Component({
@@ -39,6 +40,9 @@ export class CrearPreguntaAbiertaComponent implements OnInit {
       tieneRetroalimentacion: [this.data.marca.tieneRetroalimentacion ? this.data.marca.pregunta.tieneRetroalimentacion : false],
       retroalimentacion: [this.data.marca.retroalimentacion ? this.data.marca.pregunta.retroalimentacion : ''],
     });
+    if(this.data.tiene_retroalimentacion){
+      this.questionForm.get('tieneRetroalimentacion').setValue(true);
+    }
     if (!this.data.marca.pregunta) {
       this.questionForm.removeControl('marca_id');
       this.questionForm.removeControl('abierta_id');
