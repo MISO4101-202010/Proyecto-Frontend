@@ -10,9 +10,11 @@
   <div style="flex-direction: column; width: 30%; margin: 20px;">
     <mat-checkbox color="primary" #puedeSaltar>¿El estudiante puede saltar entre marcas?
     </mat-checkbox>
+    <mat-checkbox color="primary" #tieneRetroalimentacion>¿El estudiante recibirá retroalimentación inmediata?
+    </mat-checkbox>
   </div>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()" style="margin-left: 50px;">No Asociar</button>
-  <button mat-button (click)="crearContenido(nom, data.id, puedeSaltar.checked)" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="crearContenido(nom, data.id, puedeSaltar.checked, tieneRetroalimentacion.checked)" cdkFocusInitial>Ok</button>
 </div>

@@ -9,28 +9,26 @@
             </youtube-player>
         </div>
 
+      <div id="lista-minutos" cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="drop($event)">
+        <div cdkDragLockAxis="x" *ngFor="let marca of marcasUbicadas;let i=index" [cdkDragDisabled]="!marca.conMarca"
+             [ngStyle]="darTamanioMarca(marca)" class="{{darEstiloMarca(marca.conMarca)}}"
+             (dblclick)="createOrUpdateMark(contenidoInteractivo.marcas[i])" cdkDrag>
+          {{marca.texto}}
+          <h1 *cdkDragPreview>Minuto: {{toMin(marca.segundo)}}</h1>
+        </div>
+      </div>
         <div class="bar-container">
-            <div id="outer-marks">
-              <div id="inner-marks">
-                <div title="{{ getDuration(punto) }}" id="inner-inner-mark" *ngFor="let punto of marcasPorcentaje;let i=index"
-                     [ngStyle]="{'left': getPosition(punto) + 'px'}"
-                     (dblclick)="createOrUpdateMark(contenidoInteractivo.marcas[i])"
-                     (click)="handleTouchProgressBar(punto)"
-                ></div>
-              </div>
-            </div>
+      <input type="range" id="progressBar" step="0.1" (ngModelChange)='handleTouchProgressBar($event)'
+             [ngModel]="progressBarValue">
 
-          <input type="range" id="progressBar" step="0.1" (ngModelChange)='handleTouchProgressBar($event)'
-                 [ngModel]="progressBarValue">
-
-            <button mat-flat-button color="primary" *ngIf="!playing" (click)="play()">
-                <mat-icon>play_circle_outline</mat-icon>
-            </button>
-            <button mat-flat-button color="primary" *ngIf="playing" (click)="pause()">
-                <mat-icon>pause_circle_outline
-                </mat-icon>
-            </button>
-            {{ getCurrentTime()}}/{{getTotalTime()}}
+      <button mat-flat-button color="primary" *ngIf="!playing" (click)="play()">
+        <mat-icon>play_circle_outline</mat-icon>
+      </button>
+      <button mat-flat-button color="primary" *ngIf="playing" (click)="pause()">
+        <mat-icon>pause_circle_outline
+        </mat-icon>
+      </button>
+      {{ getCurrentTime()}}/{{getTotalTime()}}
 
         </div>
 

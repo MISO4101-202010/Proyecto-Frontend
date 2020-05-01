@@ -27,11 +27,22 @@ export class ContenidoService {
     return this.httpClient.get<any>(this.contenidoUrl);
   }
 
-  postContenidoInteractivo(nombre: string, contenidoId: number, puedeSaltar: boolean) {
+  actualizarMarca(marcaid: number, contenidoId: number, puntoId: number, nombre: string) {
+    const body = {
+      marca_id: marcaid,
+      nombre: nombre,
+      punto: puntoId,
+      contenido: contenidoId
+    };
+    return this.httpClient.put(this.crearMarca, body);
+  }
+
+  postContenidoInteractivo(nombre: string, contenidoId: number, puedeSaltar: boolean, tieneRetroalimentacion: boolean) {
     const body = {
       nombre: nombre,
       contenido: contenidoId,
-      puedeSaltar: puedeSaltar
+      puedeSaltar: puedeSaltar,
+      tiene_retroalimentacion: tieneRetroalimentacion
     };
     console.log('body:', body);
     return this.httpClient.post(this.crearContenidoInteractivo, body);
