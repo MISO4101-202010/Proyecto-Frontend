@@ -1,0 +1,17 @@
+.detail-card {
+    max-width: 100%;
+    margin:1em;
+  }
+    
+  button {
+    background-color: #225c32;
+    color: white;
+    margin-top: auto;
+  }
+  .details{
+    margin-top:2em;
+    margin-bottom:2em;
+  }
+  a {
+    color: black;
+  }

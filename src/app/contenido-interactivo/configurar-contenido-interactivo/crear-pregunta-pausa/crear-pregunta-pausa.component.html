@@ -1,6 +1,12 @@
 <h1 mat-dialog-title>Crear pregunta tipo pausa {{data.marca.nombre}}</h1>
 <div mat-dialog-content style="margin-bottom: 1em;">
     <form [formGroup]="questionForm" (ngSubmit)="agregarMarca()">
+        <div class="row-container" *ngIf="data.marca.pregunta">
+          <mat-form-field appearance="outline" style="width:100%">
+            <mat-label>Nombre</mat-label>
+              <input type="text" matInput matInput placeholder="Nombre" formControlName="nombre" />
+          </mat-form-field>
+        </div>
         <div class="row-container">
             <mat-form-field appearance="outline" style="width:100%">
                 <mat-label>Nombre de la pregunta</mat-label>
