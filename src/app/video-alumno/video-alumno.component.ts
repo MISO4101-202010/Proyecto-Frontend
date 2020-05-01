@@ -93,30 +93,34 @@ export class VideoAlumnoComponent {
 
   open(marca: any) {
     // Acá debería ir un switch que tire un dialogo distinto dependiendo del tipo de pregunta
-    let dialogRef;
-    if (marca.tipoActividad === 2) {
-      dialogRef = this.dialog.open(QuestionVFComponent, {
-        width: '70%',
-        data: {
-          marca,
-          contenidoInteractivo: this.contenidoInteractivo
-        }
+    if (marca.numIntentos > 0) {
+      let dialogRef;
+      if (marca.tipoActividad === 2) {
+        dialogRef = this.dialog.open(QuestionVFComponent, {
+          width: '70%',
+          data: {
+            marca,
+            contenidoInteractivo: this.contenidoInteractivo
+          }
+        });
+      } else {
+        dialogRef = this.dialog.open(QuestionModalComponent, {
+          width: '70%',
+          data: {
+            idActivity: '1',
+            idMarca: marca.marca_id,
+            contenidoInteractivo: this.contenidoInteractivo
+          }
+        });
+      }
+
+      dialogRef.afterClosed().subscribe(result => {
+        this.player.playVideo();
+        this.videoStateHandler.modalOpened$.next(false);
       });
     } else {
-      dialogRef = this.dialog.open(QuestionModalComponent, {
-        width: '70%',
-        data: {
-          idActivity: '1',
-          idMarca: marca.marca_id,
-          contenidoInteractivo: this.contenidoInteractivo
-        }
-      });
-    }
-
-    dialogRef.afterClosed().subscribe(result => {
-      this.player.playVideo();
       this.videoStateHandler.modalOpened$.next(false);
-    });
+    }
   }
 
   getContentMark() {
@@ -178,7 +182,9 @@ export class VideoAlumnoComponent {
     if (!this.alreadyStart) {
       this.videoStateHandler.init(this.marcas, this.player);
       this.videoStateHandler.mustOpenMark$.pipe(takeUntil(this.videoStateHandler.reset$))
-        .subscribe(mark => this.open(mark));
+        .subscribe(mark => {
+          this.open(mark);
+        });
       this.alreadyStart = true;
     }
     if (!this.playing) {
