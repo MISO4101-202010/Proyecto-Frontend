@@ -13,6 +13,7 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import * as _ from 'underscore';
 import Swal from 'sweetalert2';
 
+
 @Component({
   selector: 'app-configurar-contenido-interactivo',
   templateUrl: './configurar-contenido-interactivo.component.html',
@@ -30,6 +31,10 @@ export class ConfigurarContenidoInteractivoComponent {
   };
   playing = false;
   progressBarValue = 0;
+  name = "";
+  canJump;
+  hasRetro;
+
   marcas: any[];
   contenidoInteractivo;
   contentsLoaded: Promise<boolean>;
@@ -154,9 +159,14 @@ export class ConfigurarContenidoInteractivoComponent {
     });
   }
 
+
   private getContentInteractiveDetail(contenidoInteractivoId, firstCall) {
     this.contenidoService.getDetalleContenidoInteractivo(contenidoInteractivoId).subscribe(contenido => {
       this.contenidoInteractivo = contenido;
+      this.name = contenido.nombre;
+      this.canJump = contenido.puedeSaltar;
+      this.hasRetro = contenido.tiene_retroalimentacion;
+      this.loadMarcas(this.contenidoInteractivo.marcas);
       this.getContentMark();
       if (firstCall) {
         this.contentsLoaded = Promise.resolve(true);
@@ -292,7 +302,8 @@ export class ConfigurarContenidoInteractivoComponent {
     const dialogRef = this.dialog.open(modalType, {
       width: '70%',
       data: {
-        marca
+        marca,
+        tiene_retroalimentacion: this.contenidoInteractivo.tiene_retroalimentacion
       }
     });
 
@@ -335,6 +346,23 @@ export class ConfigurarContenidoInteractivoComponent {
     // Cantidad de puntos a restar para ubicar la marca, los "10" son el tamaño de la marca
     const pixelsToRest = (punto * 10 / 100);
     return (punto * 854 / 100) - pixelsToRest;
+  }
+
+  checkCanJump(value) {
+    this.canJump = value;
+  }
+
+  checkHasRetro(value) {
+    this.hasRetro = value;
+  }
+
+  saveContent() {
+    this.contenidoService.saveInteractiveContent(this.contenidoInteractivo.id, this.name, this.canJump, this.hasRetro).subscribe(result => {
+      Swal.fire('Contenido interactivo', 'Contenido interactivo guardado con éxito', 'success');
+    }, error => {
+      console.error(error);
+      Swal.fire('Oops...', 'Ocurrió un error guardando el contenido interactivo, intentelo más tarde', 'error');
+    });
   }
 
   getContentMark() {
