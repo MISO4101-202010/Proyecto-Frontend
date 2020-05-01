@@ -8,8 +8,9 @@ import { ContenidoService } from "../services/contenido.service";
 import Swal from "sweetalert2";
 import { QuestionVFComponent } from '../contenido-interactivo/question-v-f/question-v-f.component';
 import { VideoStateHandler } from "./video-state-handler.service";
-import { takeUntil, distinctUntilChanged } from "rxjs/operators";
+import { takeUntil, filter , distinctUntilChanged, take} from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { interval, Observable } from 'rxjs';
 
 @Component({
   selector: "app-video-alumno",
@@ -35,6 +36,8 @@ export class VideoAlumnoComponent{
   marcasPorcentaje;
   contenidoInteractivo;
   isVideoLineal: boolean;
+  interval$: Observable<any> = interval(1000);
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -91,6 +94,7 @@ export class VideoAlumnoComponent{
 
   open(marca: any) {
     // Acá debería ir un switch que tire un dialogo distinto dependiendo del tipo de pregunta
+    console.log('open')
     let dialogRef;
     if (marca.tipoActividad === 2) {
       dialogRef = this.dialog.open(QuestionVFComponent, {
@@ -113,7 +117,7 @@ export class VideoAlumnoComponent{
 
     dialogRef.afterClosed().subscribe(result => {
       this.player.playVideo();
-      this.videoStateHandler.modalOpened = false;
+      this.videoStateHandler.modalOpened$.next(false);
     });
   }
 
@@ -251,8 +255,16 @@ export class VideoAlumnoComponent{
     return (punto * 854 / 100) - pixelsToRest;
   }
 
-  openFeedBack(){
-     this.router.navigate(['/contenido-interactivo/revision/'+this.contenidoInteractivo]);
+  delay(ms) {
+    return new Promise ((resolve)=> setTimeout(resolve,ms));
   }
+
+  async openFeedBack(){
+    await this.delay(1000);
+    this.videoStateHandler.modalOpened$.pipe(
+      filter(value => !value),
+      take(1))
+        .subscribe(() => this.router.navigate(['/contenido-interactivo/revision/'+this.contenidoInteractivo.id]))
+    }
 
 }

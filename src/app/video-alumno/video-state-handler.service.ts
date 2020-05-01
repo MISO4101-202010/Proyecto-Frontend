@@ -8,7 +8,7 @@ import * as _ from 'underscore';
   providedIn: 'root',
 })
 export class VideoStateHandler {
-  modalOpened: boolean;
+  modalOpened$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   player: YT.Player;
   marks: any[] = [];
   mustOpenMark$: Subject<any> = new Subject<any>();
@@ -45,7 +45,7 @@ export class VideoStateHandler {
   }
 
   open(marca: any) {
-    this.modalOpened = true;
+    this.modalOpened$.next(true);
     this.mustOpenMark$.next(marca);
   }
 
@@ -53,7 +53,7 @@ export class VideoStateHandler {
     this.marks = marcas;
     this.player = player;
     this.changesListeningSubscription = this.interval$
-      .pipe(filter(() => !this.modalOpened))
+      .pipe(filter(() => !this.modalOpened$.getValue()))
       .subscribe((data) => this.handleVideoState());
   }
 
@@ -63,7 +63,7 @@ export class VideoStateHandler {
     this.currentVideoTime = -1;
     this.lastTimeSeen = -1;
     this.lastMarkShown = null;
-    this.modalOpened = false;
+    this.modalOpened$.next(false);
     this.marks = [];
     this.player = null;
     if (this.changesListeningSubscription) {
