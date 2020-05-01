@@ -35,7 +35,9 @@ export class CrearPreguntaAbiertaComponent implements OnInit {
       marca_id: [this.data.marca.pregunta ? this.data.marca.pregunta.marca : ''],
       abierta_id: [this.data.marca.pregunta ? this.data.marca.pregunta.id : ''],
       enunciado: [this.data.marca.pregunta ? this.data.marca.pregunta.enunciado : '', [Validators.required]],
-      nombre: [this.data.marca.pregunta ? this.data.marca.pregunta.nombre : '', [Validators.required]]
+      nombre: [this.data.marca.pregunta ? this.data.marca.pregunta.nombre : '', [Validators.required]],
+      tieneRetroalimentacion: [this.data.marca.tieneRetroalimentacion ? this.data.marca.pregunta.tieneRetroalimentacion : false],
+      retroalimentacion: [this.data.marca.retroalimentacion ? this.data.marca.pregunta.retroalimentacion : ''],
     });
     if (!this.data.marca.pregunta) {
       this.questionForm.removeControl('marca_id');
