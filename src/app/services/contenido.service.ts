@@ -82,6 +82,14 @@ export class ContenidoService {
     console.log('Añadiendo tipo pausa', marca);
     return this.httpClient.put(this.createPauseMark, marca);
   }
+  saveInteractiveContent(contenidoId: number, name: string, canJump: boolean, hasRetro: boolean) {
+    const body = {
+      nombre: name,
+      puedeSaltar: canJump,
+      tiene_retroalimentacion: hasRetro
+    };
+    return this.httpClient.patch(this.detalleUrl + contenidoId, body);
+  }
 
   modificarPreguntaFV(marcaId: number, marca: any): Observable<any> {
     return this.httpClient.patch(this.addPreguntaFalsoVerdaderoUrl + '/update/' + marcaId + '/', marca);

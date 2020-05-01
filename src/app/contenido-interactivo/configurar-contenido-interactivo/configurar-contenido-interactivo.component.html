@@ -1,5 +1,7 @@
 <div class="container">
-    <h2>Añadir marcas</h2>
+    <mat-form-field appearance="outline" style="width:50%">
+      <input type="text" matInput [(ngModel)]= "this.name"/>
+    </mat-form-field>
     <div *ngIf="contentsLoaded | async" class="video-container">
         <div style="width: 100%;">
             <youtube-player style="pointer-events: none;" id="ytplayer" [videoId]="videoId" height="480" width="854" (ready)="savePlayer($event)"
@@ -31,20 +33,31 @@
             {{ getCurrentTime()}}/{{getTotalTime()}}
 
         </div>
-        <mat-form-field style="width:30%">
-            <mat-label>Seleccione un tipo de marca</mat-label>
-            <mat-select [(value)]="tipoMarcaSeleccionada" enabled>
+
+        <div class="row">
+
+          <div class="col-md-8 col-sm-6" >
+            <mat-form-field style="width:60%">
+              <mat-label>Seleccione un tipo de marca</mat-label>
+              <mat-select [(value)]="tipoMarcaSeleccionada" enabled>
                 <mat-option *ngFor="let marca of opcionesMarca" [value]="marca">{{ marca.text }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <span></span>
-        <button mat-flat-button color="primary" (click)="createOrUpdateMark(undefined)">
-            Añadir marca
-        </button>
+              </mat-select>
+            </mat-form-field>
+            <span></span>
+            <button mat-flat-button color="primary" (click)="createOrUpdateMark(undefined)">
+              Añadir marca
+            </button>
+          </div>
+          <div class="col-md-4 col-sm-2" >
+              <mat-checkbox (change)="checkCanJump($event.checked)" [checked]="this.canJump">Puede saltar</mat-checkbox>
+              <mat-checkbox (change)="checkHasRetro($event.checked)" [checked]="this.hasRetro">Tiene retroalimentación</mat-checkbox>
+          </div>
+        </div>
+
         <div>
-            <div>
+            <div style = "padding-top:5%">
                 <button style="float: right;" mat-flat-button color="primary"
-                    [routerLink]="['/contenido-interactivo/detalle/' + contenidoInteractivo.id]">
+                    [routerLink]="['/contenido-interactivo/detalle/' + contenidoInteractivo.id]" (click)="saveContent()">
                     Terminar configuración
                 </button>
             </div>
