@@ -25,6 +25,7 @@ export class QuestionVFComponent implements OnInit {
   respuestaControl = new FormControl();
   respuestaCorrecta = new FormControl();
   infoPregunta: PreguntaFalsoVerdadero;
+  hasFeedBackContent: boolean;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData,
               public dialogRef: MatDialogRef<QuestionVFComponent>,
@@ -45,6 +46,7 @@ export class QuestionVFComponent implements OnInit {
         this.respuesta = correcta;
         this.hayPregunta = true;
         this.canJump = this.data.contenidoInteractivo.puedeSaltar;
+        this.hasFeedBackContent = this.data.contenidoInteractivo.tiene_retroalimentacion;
       }, error => {
         console.log('Error getting question information -> ', error);
       }

@@ -27,7 +27,7 @@ export class AuthService implements CanActivate {
     userToken: null,
     isAlumno: null,
     dataAlumno: null,
-    dataProfesor: null
+    dataProfesor: null,
   };
 
   constructor(private router: Router, public http: HttpClient) {
@@ -58,6 +58,10 @@ export class AuthService implements CanActivate {
       );
   }
 
+  public logout() {
+    sessionStorage.removeItem('userConectaTe');
+  }
+
   getDatos(): InfoLogin {
     return this.dataLog;
   }
@@ -80,7 +84,7 @@ export class AuthService implements CanActivate {
       this.dataLog = this.getInfoLogin();
     }
     const signedIn = !!this.dataLog.userToken;
-    console.log("signedIn: ", signedIn);
+    console.log('signedIn: ', signedIn);
     if (!signedIn) {
       this.router.navigateByUrl('/login');
     }

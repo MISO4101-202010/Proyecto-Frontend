@@ -22,19 +22,21 @@ import { CrearPreguntaAbiertaComponent } from './configurar-contenido-interactiv
 import { CrearPreguntaVerdaderoFalsoComponent } from './configurar-contenido-interactivo/crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
 import { DetalleContenidoInteractivoComponent } from './detalle-contenido-interactivo/detalle-contenido-interactivo.component';
 import { CrearPreguntaPausaComponent } from './configurar-contenido-interactivo/crear-pregunta-pausa/crear-pregunta-pausa.component';
+import { RevisionContentComponent } from './revision-content/revision-content.component';
 
 const routes: Routes = [
   { path: '', component: ListaContenidoComponent },
   { path: 'reporte/:id', component: ReporteContenidoComponent },
   { path: 'manejar', component: MarkersComponent},
   { path: 'configurar/:id', component: ConfigurarContenidoInteractivoComponent},
-  { path: 'detalle/:id', component: DetalleContenidoInteractivoComponent}
+  { path: 'detalle/:id', component: DetalleContenidoInteractivoComponent},
+  { path: 'revision/:id', component: RevisionContentComponent}
 ];
 
 @NgModule({
   declarations: [ListaContenidoComponent, AddContenidoACursoComponent, ReporteContenidoComponent,
     MarkersComponent, ManyAnswersComponent, DetalleContenidoInteractivoComponent, ConfigurarContenidoInteractivoComponent,
-    CrearSeleccionMultipleComponent, CrearPreguntaAbiertaComponent, CrearPreguntaVerdaderoFalsoComponent, CrearPreguntaPausaComponent
+    CrearSeleccionMultipleComponent, CrearPreguntaAbiertaComponent, CrearPreguntaVerdaderoFalsoComponent, CrearPreguntaPausaComponent, RevisionContentComponent
 
   ],
   imports: [
