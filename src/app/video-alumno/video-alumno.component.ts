@@ -8,7 +8,8 @@ import { ContenidoService } from "../services/contenido.service";
 import Swal from "sweetalert2";
 import { QuestionVFComponent } from '../contenido-interactivo/question-v-f/question-v-f.component';
 import { VideoStateHandler } from "./video-state-handler.service";
-import { takeUntil } from "rxjs/operators";
+import { takeUntil, distinctUntilChanged } from "rxjs/operators";
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-video-alumno",
@@ -41,7 +42,8 @@ export class VideoAlumnoComponent{
     public dialog: MatDialog,
     private contentService: LoadVideoService,
     private contenidoService: ContenidoService,
-    private videoStateHandler: VideoStateHandler
+    private videoStateHandler: VideoStateHandler,
+    public router: Router
   ) {
     this.loadData();
   }
@@ -68,6 +70,14 @@ export class VideoAlumnoComponent{
         this.videoStateHandler.mustOpenMark$.pipe(takeUntil(this.videoStateHandler.reset$))
           .subscribe(mark => this.open(mark));
         this.videoStateHandler.handleVideoState();
+        this.videoStateHandler.isFinished$.pipe(
+            takeUntil(this.videoStateHandler.reset$),
+            distinctUntilChanged()
+          ).subscribe(finished =>{
+            if(finished){
+              this.openFeedBack();
+            }
+          });
       },
       response => {
         console.log("POST call in error", response);
@@ -240,4 +250,9 @@ export class VideoAlumnoComponent{
     const pixelsToRest = (punto * 10 / 100);
     return (punto * 854 / 100) - pixelsToRest;
   }
+
+  openFeedBack(){
+     this.router.navigate(['/contenido-interactivo/revision/'+this.contenidoInteractivo]);
+  }
+
 }
