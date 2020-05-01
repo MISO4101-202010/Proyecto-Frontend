@@ -1,50 +1,61 @@
 <div class="container">
-    <h2>Añadir marcas</h2>
+    <mat-form-field appearance="outline" style="width:50%">
+      <input type="text" matInput [(ngModel)]= "this.name"/>
+    </mat-form-field>
     <div *ngIf="contentsLoaded | async" class="video-container">
         <div style="width: 100%;">
-            <youtube-player style="pointer-events: none;" id="ytplayer" [videoId]="id" height="480" width="854" (ready)="savePlayer($event)"
+            <youtube-player style="pointer-events: none;" id="ytplayer" [videoId]="videoId" height="480" width="854" (ready)="savePlayer($event)"
                 (change)="onStateChange($event)" [playerVars]="playerVars">
             </youtube-player>
         </div>
 
+      <div id="lista-minutos" cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="drop($event)">
+        <div cdkDragLockAxis="x" *ngFor="let marca of marcasUbicadas;let i=index" [cdkDragDisabled]="!marca.conMarca"
+             [ngStyle]="darTamanioMarca(marca)" class="{{darEstiloMarca(marca.conMarca)}}"
+             (dblclick)="createOrUpdateMark(contenidoInteractivo.marcas[i])" cdkDrag>
+          {{marca.texto}}
+          <h1 *cdkDragPreview>Minuto: {{toMin(marca.segundo)}}</h1>
+        </div>
+      </div>
         <div class="bar-container">
-            <div id="outer-marks">
-              <div id="inner-marks">
-                <div title="{{ getDuration(punto) }}" id="inner-inner-mark" *ngFor="let punto of marcasPorcentaje;let i=index"
-                     [ngStyle]="{'left': getPosition(punto) + 'px'}"
-                     (dblclick)="addMarker(contenidoInt.marcas[i])"
-                     (click)="handleTouchProgressBar(punto)"
-                ></div>
-              </div>
-            </div>
+      <input type="range" id="progressBar" step="0.1" (ngModelChange)='handleTouchProgressBar($event)'
+             [ngModel]="progressBarValue">
 
-          <input type="range" id="progressBar" step="0.1" (ngModelChange)='handleTouchProgressBar($event)'
-                 [ngModel]="progressBarValue">
-
-            <button mat-flat-button color="primary" *ngIf="!playing" (click)="play()">
-                <mat-icon>play_circle_outline</mat-icon>
-            </button>
-            <button mat-flat-button color="primary" *ngIf="playing" (click)="pause()">
-                <mat-icon>pause_circle_outline
-                </mat-icon>
-            </button>
-            {{ getCurrentTime()}}/{{getTotalTime()}}
+      <button mat-flat-button color="primary" *ngIf="!playing" (click)="play()">
+        <mat-icon>play_circle_outline</mat-icon>
+      </button>
+      <button mat-flat-button color="primary" *ngIf="playing" (click)="pause()">
+        <mat-icon>pause_circle_outline
+        </mat-icon>
+      </button>
+      {{ getCurrentTime()}}/{{getTotalTime()}}
 
         </div>
-        <mat-form-field style="width:30%">
-            <mat-label>Seleccione un tipo de marca</mat-label>
-            <mat-select [(value)]="marcaSeleccionada" enabled>
-                <mat-option *ngFor="let marca of opcionesMarca" [value]="marca">{{marca}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <span></span>
-        <button mat-flat-button color="primary" (click)="addMarker()">
-            Añadir marca
-        </button>
+
+        <div class="row">
+
+          <div class="col-md-8 col-sm-6" >
+            <mat-form-field style="width:60%">
+              <mat-label>Seleccione un tipo de marca</mat-label>
+              <mat-select [(value)]="tipoMarcaSeleccionada" enabled>
+                <mat-option *ngFor="let marca of opcionesMarca" [value]="marca">{{ marca.text }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <span></span>
+            <button mat-flat-button color="primary" (click)="createOrUpdateMark(undefined)">
+              Añadir marca
+            </button>
+          </div>
+          <div class="col-md-4 col-sm-2" >
+              <mat-checkbox (change)="checkCanJump($event.checked)" [checked]="this.canJump">Puede saltar</mat-checkbox>
+              <mat-checkbox (change)="checkHasRetro($event.checked)" [checked]="this.hasRetro">Tiene retroalimentación</mat-checkbox>
+          </div>
+        </div>
+
         <div>
-            <div>
+            <div style = "padding-top:5%">
                 <button style="float: right;" mat-flat-button color="primary"
-                    [routerLink]="['/contenido-interactivo/detalle/' + contenidoInt.id]">
+                    [routerLink]="['/contenido-interactivo/detalle/' + contenidoInteractivo.id]" (click)="saveContent()">
                     Terminar configuración
                 </button>
             </div>

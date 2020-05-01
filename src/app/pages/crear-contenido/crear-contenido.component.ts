@@ -1,10 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { LoadVideoService } from '../../services/contenidoInter/load-video.service';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ContenidoService } from '../../services/contenido.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadVideoComponent } from '../loadVideo/load-video.component';
@@ -43,8 +39,13 @@ export class CrearContenidoComponent implements OnInit {
   openModal(video): void {
     console.log('llamado modal', video);
     const dialogRef = this.dialog.open(ModalAsociarContenidoInt, {
+<<<<<<< HEAD
       width: 'fit-content',
       data: { video: video.nombre, id: video.id },
+=======
+      width: '40%',
+      data: { video: video.nombre, id: video.id }
+>>>>>>> SP2-Integracion
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -81,11 +82,12 @@ export class ModalAsociarContenidoInt {
     this.dialogRef.close();
   }
 
-  crearContenido(nombre, id, puedeSaltar) {
+  crearContenido(nombre, id, puedeSaltar, tieneRetroalimentacion) {
     console.error('84', nombre.value, id);
     if (!nombre.value || nombre.value === ') {
       Swal.fire('Oops...', 'Por favor ingresa un nombre', 'error');
     } else {
+<<<<<<< HEAD
       this._contenidoService
         .postContenidoInteractivo(nombre.value, id, puedeSaltar)
         .subscribe((result) => {
@@ -96,6 +98,13 @@ export class ModalAsociarContenidoInt {
             result['id'],
           ]);
         });
+=======
+      this._contenidoService.postContenidoInteractivo(nombre.value, id, puedeSaltar, tieneRetroalimentacion).subscribe(result => {
+        // tslint:disable-next-line: no-string-literal
+        this.onNoClick();
+        this.router.navigate(['contenido-interactivo/configurar/', result['id']]);
+      });
+>>>>>>> SP2-Integracion
     }
   }
 }
