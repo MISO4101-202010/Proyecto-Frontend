@@ -1,4 +1,4 @@
-.row-equal > div[class*='col-'] {
+.row-equal > div[class*="col-"] {
   display: flex;
   flex: 1 0 auto;
 }
@@ -6,21 +6,21 @@
   width: 100%;
 }
 /* ensure equal card height inside carousel */
-.carousel-inner>.row-equal.active,
-.carousel-inner>.row-equal.next,
-.carousel-inner>.row-equal.prev {
+.carousel-inner > .row-equal.active,
+.carousel-inner > .row-equal.next,
+.carousel-inner > .row-equal.prev {
   display: flex;
   background: black;
 }
-.carousel-control-prev-icon{
-  background-image: url('https://apufpel.com.br/assets/img/seta_prim.png')
+.carousel-control-prev-icon {
+  background-image: url("https://apufpel.com.br/assets/img/seta_prim.png");
 }
-.carousel-control-next-icon{
-  background-image: url('https://apufpel.com.br/assets/img/seta_ult.png')
+.carousel-control-next-icon {
+  background-image: url("https://apufpel.com.br/assets/img/seta_ult.png");
 }
 /* prevent flicker during transition */
-.carousel-inner>.row-equal.active.left,
-.carousel-inner>.row-equal.active.right {
+.carousel-inner > .row-equal.active.left,
+.carousel-inner > .row-equal.active.right {
   opacity: 0.5;
   display: flex;
   background: black;
@@ -28,11 +28,13 @@
 /* control image height */
 .card-img-top-250 {
   max-height: 250px;
-  overflow:hidden;
+  overflow: hidden;
 }
-.card-header{color:dodgerblue}
+.card-header {
+  color: dodgerblue;
+}
 .modal-backdrop.show {
-  opacity:0;
+  opacity: 0;
 }
 
 .one {
@@ -53,19 +55,18 @@
 }
 
 .text-muted {
-  color: #fff!important;
+  color: #fff !important;
 }
 .card-footer {
-  padding: .75rem 1.25rem;
-  background-color:#343A40;
-  border-top: 1px solid #343A40;
+  padding: 0.75rem 1.25rem;
+  background-color: #343a40;
+  border-top: 1px solid #343a40;
 }
-
 
 .contenedor {
   position: relative;
   width: 100%;
-  height: 220px;
+  height: fit-content;
 }
 
 .imagen {
@@ -76,7 +77,6 @@
 
 .imagenes {
   text-align: center;
-  align-items: center;
   justify-content: center;
   display: inline-flex;
   width: 100%;
@@ -87,7 +87,7 @@
   margin: 10px;
 }
 
-.boton  {
+.boton {
   position: absolute;
   height: 50px;
   width: 50px;
@@ -97,7 +97,7 @@
   background-color: transparent;
 }
 
-.boton2  {
+.boton2 {
   position: absolute;
   height: 50px;
   width: 50px;
@@ -113,7 +113,7 @@
 }
 
 .myCard {
-  height: 300px;
+  height: fit-content;
   margin: 3%;
 }
 

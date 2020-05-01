@@ -17,9 +17,10 @@ export class VideoAlumnoComponent {
   player: YT.Player;
   idContent = '';
   id = '';
+  videoId = "";
   marcas: any[];
-  mustWait: boolean = true;
-  public progressBarValue: number = 0;
+  mustWait = true;
+  public progressBarValue = 0;
   playing = false;
   alreadyStart = false;
   playerVars = {
@@ -33,12 +34,12 @@ export class VideoAlumnoComponent {
   };
   contentsLoaded: Promise<boolean>;
   marcasPorcentaje;
-  contenidoInt;
+  contenidoInteractivo;
   isVideoLineal: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private retroalimentacionService: InteraccionAlumnoService,
+    private interaccionAlumnoService: InteraccionAlumnoService,
     public dialog: MatDialog,
     private contentService: LoadVideoService,
     private contenidoService: ContenidoService
@@ -49,22 +50,21 @@ export class VideoAlumnoComponent {
   loadData() {
     console.log('POST call successful value returned in body on init');
     const idPregunta = 1;
-    this.retroalimentacionService.getRetroOpMultiple(idPregunta).subscribe((data: any[]) => {
+    this.interaccionAlumnoService.getRetroOpMultiple(idPregunta).subscribe((data: any[]) => {
       console.log(data);
     });
     this.activatedRoute.params.subscribe(params => {
-      this.idContent = params['id'] ? params['id'] : '';
-      this.getContentInteractiveDetail(this.idContent);
+      this.getContentInteractiveDetail(params.id ? params.id : "");
     });
   }
 
   async savePlayer(player) {
     this.player = player;
-    console.log('player instance', player);
+    console.log("Player instance", player);
     this.getContentMark();
-    this.loadMarcas(this.contenidoInt.marcas);
+    this.loadMarcas(this.contenidoInteractivo.marcas);
 
-    await console.log('Player current time', this.player.getCurrentTime());
+    await console.log("Player current time", this.player.getCurrentTime());
     while (true) {
         this.mustWait = true;
         await this.delay(1000);
@@ -97,7 +97,7 @@ export class VideoAlumnoComponent {
         width: '70%',
         data: {
           marca,
-          contenidoInteractivo: this.contenidoInt
+          contenidoInteractivo: this.contenidoInteractivo
         }
       });
     } else {
@@ -106,7 +106,7 @@ export class VideoAlumnoComponent {
         data: {
           idActivity: '1',
           idMarca: marca.marca_id,
-          contenidoInteractivo: this.contenidoInt
+          contenidoInteractivo: this.contenidoInteractivo
         }
       });
     }
@@ -118,32 +118,32 @@ export class VideoAlumnoComponent {
   }
 
   getContentMark() {
-    this.retroalimentacionService
-      .getMarcasXacontenido(parseInt(this.idContent, 10))
-      .subscribe(
-        (val: any) => {
-          this.marcas = val;
-          console.log('POST call successful value returned in body', val);
-        },
-        response => {
-          console.log('POST call in error', response);
-        },
-        () => {
-          console.log('The POST observable is now completed.');
-        }
-      );
+    this.interaccionAlumnoService
+    .getMarcasXacontenido(this.contenidoInteractivo.id)
+    .subscribe(
+      (val: any) => {
+        this.marcas = val;
+        console.log("POST call successful value returned in body", val);
+      },
+      response => {
+        console.log("POST call in error", response);
+      },
+      () => {
+        console.log("The POST observable is now completed.");
+      }
+    );
   }
 
-  getContentInteractiveDetail(idContent) {
-    if (idContent !== undefined) {
-      this.contenidoService.getDetalleContenidoInteractivo(idContent).subscribe(
+  getContentInteractiveDetail(contenidoInteractivoId) {
+    if (contenidoInteractivoId !== undefined) {
+      this.contenidoService.getDetalleContenidoInteractivo(contenidoInteractivoId).subscribe(
         contenido => {
           this.isVideoLineal = !contenido.puedeSaltar;
-          this.contenidoInt = contenido;
-          this.id = contenido.contenido.url.split('watch?v=')[1];
+          this.contenidoInteractivo = contenido;
+          this.videoId = contenido.contenido.url.split("watch?v=")[1];
           this.contentsLoaded = Promise.resolve(true);
-          console.log('contenido alumno', contenido);
-          console.log('idd', this.id);
+          console.log("Contenido interactivo alumno", contenido);
+          console.log("Video ID", this.videoId);
         },
         error => {
           console.log('Error getting question information -> ', error);
