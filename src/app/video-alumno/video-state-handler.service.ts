@@ -2,7 +2,7 @@ import { Observable, Subject, Subscription, BehaviorSubject } from 'rxjs';
 import { interval } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { filter } from 'rxjs/operators';
-import * as _ from 'loadsh';
+import * as _ from 'underscore';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +29,7 @@ export class VideoStateHandler {
       this.isFinished$.next(true);
     }
     const mark = _.find(this.marks, { punto: this.currentVideoTime });
-    if (this.lastMarkShown && this.lastTimeSeen < this.currentVideoTime) {
+    if (this.lastMarkShown && (this.lastTimeSeen > this.currentVideoTime)) {
       this.lastMarkShown = null;
     }
     if (mark && mark !== this.lastMarkShown) {
