@@ -42,7 +42,6 @@ export class CrearPreguntaVerdaderoFalsoComponent {
   }
 
   getQuestion() {
-    console.log('RETRO',this.data.tiene_retroalimentacion)
     // Si hay un valor en "marca_id" significa que la pregunta se debe editar
     if (this.data.marca.marca_id) {
       this.title = 'Editar';
