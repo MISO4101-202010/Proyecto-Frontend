@@ -304,7 +304,7 @@ export class ConfigurarContenidoInteractivoComponent {
     });
 
     dialogRef.afterClosed().subscribe(res => {
-      this.getContentInteractiveDetail(this.contenidoInteractivo.id, false);
+      this.getContentInteractiveDetail(this.contenidoInteractivo.id, true);
     });
   }
 
