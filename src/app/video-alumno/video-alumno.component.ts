@@ -7,6 +7,7 @@ import { QuestionModalComponent } from "src/app/contenido-interactivo/question-m
 import { ContenidoService } from "../services/contenido.service";
 import Swal from "sweetalert2";
 import { QuestionVFComponent } from '../contenido-interactivo/question-v-f/question-v-f.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-video-alumno",
@@ -39,7 +40,8 @@ export class VideoAlumnoComponent {
     private interaccionAlumnoService: InteraccionAlumnoService,
     public dialog: MatDialog,
     private contentService: LoadVideoService,
-    private contenidoService: ContenidoService
+    private contenidoService: ContenidoService,
+    public router: Router
   ) {
     this.loadData();
   }
@@ -75,6 +77,9 @@ export class VideoAlumnoComponent {
             await this.delay(1000);
           }
         }
+      }
+      if(this.finished()){
+        this.openFeedBack();
       }
     }
   }
@@ -256,4 +261,13 @@ export class VideoAlumnoComponent {
     const pixelsToRest = (punto * 10 / 100);
     return (punto * 854 / 100) - pixelsToRest;
   }
+
+  finished(){
+    return this.getCurrentTime() === this.getTotalTime();
+  }
+
+  openFeedBack(){
+     this.router.navigate(['/contenido-interactivo/revision/'+this.contenidoInteractivo]);
+  }
+
 }
