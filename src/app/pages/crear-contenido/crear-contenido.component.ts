@@ -41,7 +41,7 @@ export class CrearContenidoComponent implements OnInit {
       data: { video: video.nombre, id: video.id }
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
   }
@@ -51,7 +51,7 @@ export class CrearContenidoComponent implements OnInit {
       width: '50%',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       this.loadContenido();
     });
