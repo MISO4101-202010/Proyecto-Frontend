@@ -225,7 +225,8 @@ export class ConfigurarContenidoInteractivoComponent {
     const dialogRef = this.dialog.open(modalType, {
       width: '70%',
       data: {
-        marca
+        marca,
+        tiene_retroalimentacion: this.contenidoInteractivo.tiene_retroalimentacion
       }
     });
 
