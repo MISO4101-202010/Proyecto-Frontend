@@ -13,13 +13,6 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import * as _ from 'underscore';
 import Swal from 'sweetalert2';
 
-const activityTypesComponents = {
-  'Pregunta de opción múltiple': CrearSeleccionMultipleComponent,
-  'Pregunta abierta': CrearPreguntaAbiertaComponent,
-  'Pregunta Falso o Verdadero': CrearPreguntaVerdaderoFalsoComponent,
-  'Pregunta tipo pausa': CrearPreguntaPausaComponent
-};
-
 @Component({
   selector: 'app-configurar-contenido-interactivo',
   templateUrl: './configurar-contenido-interactivo.component.html',
@@ -127,13 +120,13 @@ export class ConfigurarContenidoInteractivoComponent {
 
   drop(event: CdkDragDrop<string[]>) {
     const marcaCambiar = this.marcasUbicadas[event.previousIndex];
-    const marcaEnPos = this.marcasUbicadas[event.currentIndex];
-    if (!marcaEnPos.conMarca) {
+    const marcaViejaEnPos = this.marcasUbicadas[event.currentIndex];
+    if (!marcaViejaEnPos.conMarca) {
       this.contenidoService.actualizarMarca(marcaCambiar.idMarca, +this.contenidoInteractivo, event.currentIndex, marcaCambiar.nombreMarca)
         .subscribe(res => {
           this.marcasUbicadas[event.previousIndex].segundo = this.marcasUbicadas[event.currentIndex].segundo;
           moveItemInArray(this.marcasUbicadas, event.previousIndex, event.currentIndex);
-          Swal.fire('Pregunta Actualizada', 'La pregunta se movió satisfactoriamente al minuto ' + this.toMin(marcaEnPos.segundo),
+          Swal.fire('Pregunta Actualizada', 'La pregunta se movió satisfactoriamente al minuto ' + this.toMin(marcaViejaEnPos.segundo),
             'success');
         }, error => {
           console.error(error);
