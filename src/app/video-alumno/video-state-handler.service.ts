@@ -1,4 +1,4 @@
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, BehaviorSubject } from 'rxjs';
 import { interval } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { filter } from 'rxjs/operators';
@@ -18,12 +18,16 @@ export class VideoStateHandler {
   lastMarkShown: any;
   lastTimeSeen: number;
   currentVideoTime: number;
+  isFinished$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor() {}
 
   async handleVideoState() {
     this.currentVideoTime = Math.round(this.player.getCurrentTime());
     console.log('Player current time', this.currentVideoTime);
+    if(this.isFinished()){
+      this.isFinished$.next(true);
+    }
     const mark = _.find(this.marks, { punto: this.currentVideoTime });
     if (this.lastMarkShown && this.lastTimeSeen < this.currentVideoTime) {
       this.lastMarkShown = null;
@@ -34,6 +38,10 @@ export class VideoStateHandler {
       this.player.pauseVideo();
       this.open(mark);
     }
+  }
+
+  isFinished(){
+    return  Math.round(this.player.getDuration()) === this.currentVideoTime;
   }
 
   open(marca: any) {
@@ -51,6 +59,7 @@ export class VideoStateHandler {
 
   reset() {
     this.reset$.next();
+    this.isFinished$.next(false);
     this.currentVideoTime = -1;
     this.lastTimeSeen = -1;
     this.lastMarkShown = null;
