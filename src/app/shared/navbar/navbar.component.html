@@ -2,7 +2,7 @@
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menú</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="/cursos">
+      <a *ngIf="student == false" mat-list-item routerLink="/cursos">
         <mat-icon>library_books</mat-icon>Ver Cursos
       </a>
       <!-- <a mat-list-item routerLink="/contenido-interactivo"><mat-icon>apps</mat-icon>Manejar Contenido Interactivo</a> -->
