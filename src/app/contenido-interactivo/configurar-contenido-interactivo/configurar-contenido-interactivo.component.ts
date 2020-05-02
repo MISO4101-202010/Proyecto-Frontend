@@ -166,7 +166,6 @@ export class ConfigurarContenidoInteractivoComponent {
       this.name = contenido.nombre;
       this.canJump = contenido.puedeSaltar;
       this.hasRetro = contenido.tiene_retroalimentacion;
-      this.loadMarcas(this.contenidoInteractivo.marcas);
       this.getContentMark();
       if (firstCall) {
         this.contentsLoaded = Promise.resolve(true);
