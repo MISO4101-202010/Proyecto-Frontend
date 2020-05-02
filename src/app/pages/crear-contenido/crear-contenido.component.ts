@@ -18,24 +18,20 @@ export class CrearContenidoComponent implements OnInit {
   listContenido = [];
 
   ngOnInit() {
-
     this.loadContenido();
   }
 
   loadContenido() {
-    this._loadVideoService.getContenido()
-      .subscribe(
-        result => {
-          console.log("ED: ", result);
-          this.listContenido = result;
-        },
-        error => {
-          console.log("Edu: ", error);
-        },
-        () => {
-
-        }
-      );
+    this._loadVideoService.getContenido().subscribe(
+      (result) => {
+        console.log('ED: ', result);
+        this.listContenido = result;
+      },
+      (error) => {
+        console.log('Edu: ', error);
+      },
+      () => {}
+    );
   }
 
   openModal(video): void {
@@ -62,19 +58,18 @@ export class CrearContenidoComponent implements OnInit {
   }
 }
 
-
 //modal
 @Component({
   selector: 'modal-AsoContInt',
   templateUrl: 'modal-asociar-contenido.html',
 })
 export class ModalAsociarContenidoInt {
-
   constructor(
     public dialogRef: MatDialogRef<ModalAsociarContenidoInt>,
     @Inject(MAT_DIALOG_DATA) public data,
     public _contenidoService: ContenidoService,
-    public router: Router) { }
+    public router: Router
+  ) {}
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -90,8 +85,7 @@ export class ModalAsociarContenidoInt {
         this.onNoClick();
         this.router.navigate(['contenido-interactivo/configurar/', result['id']]);
       });
+
     }
-
   }
-
 }
