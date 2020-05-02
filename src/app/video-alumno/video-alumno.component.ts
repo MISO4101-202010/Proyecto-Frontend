@@ -1,16 +1,15 @@
-import {Component} from '@angular/core';
-import {InteraccionAlumnoService} from '../interaccion-alumno.service';
-import {ActivatedRoute} from '@angular/router';
-import {LoadVideoService} from '../services/contenidoInter/load-video.service';
-import {MatDialog} from '@angular/material/dialog';
-import {QuestionModalComponent} from 'src/app/contenido-interactivo/question-modal/question-modal.component';
-import {ContenidoService} from '../services/contenido.service';
-import {QuestionVFComponent} from '../contenido-interactivo/question-v-f/question-v-f.component';
+import { Component } from '@angular/core';
+import { InteraccionAlumnoService } from '../interaccion-alumno.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LoadVideoService } from '../services/contenidoInter/load-video.service';
+import { MatDialog } from '@angular/material/dialog';
+import { QuestionModalComponent } from 'src/app/contenido-interactivo/question-modal/question-modal.component';
+import { ContenidoService } from '../services/contenido.service';
+import { QuestionVFComponent } from '../contenido-interactivo/question-v-f/question-v-f.component';
 import Swal from 'sweetalert2';
-import {VideoStateHandler} from './video-state-handler.service';
-import {takeUntil, filter, distinctUntilChanged, take} from 'rxjs/operators';
-import {Router} from '@angular/router';
-import {interval, Observable} from 'rxjs';
+import { VideoStateHandler } from './video-state-handler.service';
+import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
+import { interval, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-video-alumno',
@@ -38,7 +37,6 @@ export class VideoAlumnoComponent {
   contenidoInteractivo;
   isVideoLineal: boolean;
   interval$: Observable<any> = interval(1000);
-
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -89,7 +87,6 @@ export class VideoAlumnoComponent {
       }
     );
   }
-
 
   open(marca: any) {
     // Acá debería ir un switch que tire un dialogo distinto dependiendo del tipo de pregunta
@@ -276,5 +273,4 @@ export class VideoAlumnoComponent {
       take(1))
       .subscribe(() => this.router.navigate(['/contenido-interactivo/revision/' + this.contenidoInteractivo.id]));
   }
-
 }

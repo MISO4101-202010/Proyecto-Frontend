@@ -1,18 +1,16 @@
-import {Component} from '@angular/core';
-import {CrearSeleccionMultipleComponent} from './crear-seleccion-multiple/crear-seleccion-multiple.component';
-import {CrearPreguntaAbiertaComponent} from './crear-pregunta-abierta/crear-pregunta-abierta.component';
-import {CrearPreguntaVerdaderoFalsoComponent} from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
-import {MatDialog} from '@angular/material';
-import {ActivatedRoute} from '@angular/router';
-import {ContenidoService} from 'src/app/services/contenido.service';
-import {CrearPreguntaPausaComponent} from './crear-pregunta-pausa/crear-pregunta-pausa.component';
+import { Component } from '@angular/core';
+import { CrearSeleccionMultipleComponent } from './crear-seleccion-multiple/crear-seleccion-multiple.component';
+import { CrearPreguntaAbiertaComponent } from './crear-pregunta-abierta/crear-pregunta-abierta.component';
+import { CrearPreguntaVerdaderoFalsoComponent } from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
+import { MatDialog } from '@angular/material';
+import { ActivatedRoute } from '@angular/router';
+import { ContenidoService } from 'src/app/services/contenido.service';
+import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
 import { InteraccionAlumnoService } from '../../interaccion-alumno.service';
 import { ActivitiesService } from '../../services/activities-service/activities.service';
-import {ViewportScroller} from '@angular/common';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import * as _ from 'underscore';
 import Swal from 'sweetalert2';
-
 
 @Component({
   selector: 'app-configurar-contenido-interactivo',
@@ -119,8 +117,8 @@ export class ConfigurarContenidoInteractivoComponent {
   }
 
   pause(): void {
-      this.player.pauseVideo();
-      this.playing = false;
+    this.player.pauseVideo();
+    this.playing = false;
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -144,13 +142,6 @@ export class ConfigurarContenidoInteractivoComponent {
     }
   }
 
-  actualizarVistaMarca() {
-    const tiempoActual = Math.round(this.player.getCurrentTime());
-    const moverse = tiempoActual * 10;
-    const resultado = 'translateX(-' + moverse + 'px)';
-    return resultado;
-  }
-
   loadData() {
     this.activatedRoute.params.subscribe(params => {
       if (params.id) {
@@ -158,7 +149,6 @@ export class ConfigurarContenidoInteractivoComponent {
       }
     });
   }
-
 
   private getContentInteractiveDetail(contenidoInteractivoId, firstCall) {
     this.contenidoService.getDetalleContenidoInteractivo(contenidoInteractivoId).subscribe(contenido => {
@@ -331,20 +321,6 @@ export class ConfigurarContenidoInteractivoComponent {
       // Por eso busca el valor en el combobox de 'Tipo de marca seleccionada'
       return this.tipoMarcaSeleccionada.modalType;
     }
-  }
-
-  getDuration(punto): string {
-    if (this.player) {
-      const seconds = this.player.getDuration() * punto / 100;
-      return this.toMin(seconds);
-    }
-    return '0';
-  }
-
-  getPosition(punto): number {
-    // Cantidad de puntos a restar para ubicar la marca, los "10" son el tamaño de la marca
-    const pixelsToRest = (punto * 10 / 100);
-    return (punto * 854 / 100) - pixelsToRest;
   }
 
   checkCanJump(value) {
