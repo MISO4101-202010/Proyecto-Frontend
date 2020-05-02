@@ -60,6 +60,7 @@ export class AuthService implements CanActivate {
 
   public logout() {
     sessionStorage.removeItem('userConectaTe');
+    window.location.href='/login';  
   }
 
   getDatos(): InfoLogin {
