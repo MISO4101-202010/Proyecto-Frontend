@@ -32,7 +32,6 @@ export class ConfigurarContenidoInteractivoComponent {
   name = "";
   canJump;
   hasRetro;
-
   marcas: any[];
   contenidoInteractivo;
   contentsLoaded: Promise<boolean>;
@@ -266,7 +265,7 @@ export class ConfigurarContenidoInteractivoComponent {
       // Buscar la marca correcta en la lista "marcas"
       // tslint:disable-next-line:only-arrow-functions
       const selectedMark = _.filter(this.marcas, function(m) {
-        return m.marca_id === mark.id;
+        return m.marca_id === mark.idMarca;
       })[0];
       this.setPreguntaToMark(selectedMark);
     } else {

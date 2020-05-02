@@ -12,7 +12,7 @@
       <div id="lista-minutos" cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="drop($event)">
         <div cdkDragLockAxis="x" *ngFor="let marca of marcasUbicadas;let i=index" [cdkDragDisabled]="!marca.conMarca"
              [ngStyle]="darTamanioMarca(marca)" class="{{darEstiloMarca(marca.conMarca)}}"
-             (dblclick)="createOrUpdateMark(contenidoInteractivo.marcas[i])" cdkDrag>
+             (dblclick)="createOrUpdateMark(marca)" cdkDrag>
           {{marca.texto}}
           <h1 *cdkDragPreview>Minuto: {{toMin(marca.segundo)}}</h1>
         </div>
