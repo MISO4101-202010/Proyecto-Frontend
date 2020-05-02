@@ -1,26 +1,28 @@
-import { Component } from "@angular/core";
-import { InteraccionAlumnoService } from "../interaccion-alumno.service";
-import { ActivatedRoute } from "@angular/router";
-import { LoadVideoService } from "../services/contenidoInter/load-video.service";
-import { MatDialog } from "@angular/material/dialog";
-import { QuestionModalComponent } from "src/app/contenido-interactivo/question-modal/question-modal.component";
-import { ContenidoService } from "../services/contenido.service";
-import Swal from "sweetalert2";
+import { Component } from '@angular/core';
+import { InteraccionAlumnoService } from '../interaccion-alumno.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LoadVideoService } from '../services/contenidoInter/load-video.service';
+import { MatDialog } from '@angular/material/dialog';
+import { QuestionModalComponent } from 'src/app/contenido-interactivo/question-modal/question-modal.component';
+import { ContenidoService } from '../services/contenido.service';
 import { QuestionVFComponent } from '../contenido-interactivo/question-v-f/question-v-f.component';
+import Swal from 'sweetalert2';
+import { VideoStateHandler } from './video-state-handler.service';
+import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
+import { interval, Observable } from 'rxjs';
 
 @Component({
-  selector: "app-video-alumno",
-  templateUrl: "./video-alumno.component.html",
-  styleUrls: ["./video-alumno.component.css"]
+  selector: 'app-video-alumno',
+  templateUrl: './video-alumno.component.html',
+  styleUrls: ['./video-alumno.component.css']
 })
 export class VideoAlumnoComponent {
   player: YT.Player;
-  idContent = "";
-  id = "";
+  videoId = '';
   marcas: any[];
-  mustWait: boolean = true;
-  public progressBarValue: number = 0;
+  public progressBarValue = 0;
   playing = false;
+  alreadyStart = false;
   playerVars = {
     // Oculta la barra de reproducción (0)
     controls: 0,
@@ -32,117 +34,110 @@ export class VideoAlumnoComponent {
   };
   contentsLoaded: Promise<boolean>;
   marcasPorcentaje;
-  contenidoInt;
+  contenidoInteractivo;
   isVideoLineal: boolean;
+  interval$: Observable<any> = interval(1000);
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private retroalimentacionService: InteraccionAlumnoService,
+    private interaccionAlumnoService: InteraccionAlumnoService,
     public dialog: MatDialog,
     private contentService: LoadVideoService,
-    private contenidoService: ContenidoService
+    private contenidoService: ContenidoService,
+    private videoStateHandler: VideoStateHandler,
+    public router: Router
   ) {
     this.loadData();
   }
 
   loadData() {
-    console.log("POST call successful value returned in body on init");
+    console.log('POST call successful value returned in body on init');
     const idPregunta = 1;
-    this.retroalimentacionService.getRetroOpMultiple(idPregunta).subscribe((data: any[]) => {
+    this.interaccionAlumnoService.getRetroOpMultiple(idPregunta).subscribe((data: any[]) => {
       console.log(data);
     });
     this.activatedRoute.params.subscribe(params => {
-      this.idContent = params["id"] ? params["id"] : "";
-      this.getContentInteractiveDetail(this.idContent);
+      this.getContentInteractiveDetail(params.id ? params.id : '');
     });
   }
 
   async savePlayer(player) {
+    this.videoStateHandler.reset();
     this.player = player;
-    console.log("player instance", player);
-    this.getContentMark();
-    this.loadMarcas(this.contenidoInt.marcas);
+    this.getContentMark().subscribe(
+      (val: any) => {
+        this.marcas = val;
+        this.loadMarcas(this.contenidoInteractivo.marcas);
 
-    await console.log("Player current time", this.player.getCurrentTime());
-    while (true) {
-      this.mustWait = true;
-      await this.delay(1000);
-      console.log("Player current time", Math.round(this.player.getCurrentTime()));
-      for (let i = 0; i < this.marcas.length; i++) {
-        if (Math.round(this.player.getCurrentTime()) === this.marcas[i].punto) {
-          this.player.pauseVideo();
-
-          await this.open(this.marcas[i]);
-          while (this.mustWait) {
-            await this.delay(1000);
+        this.videoStateHandler.handleVideoState();
+        this.videoStateHandler.isFinished$.pipe(
+          takeUntil(this.videoStateHandler.reset$),
+          distinctUntilChanged()
+        ).subscribe(finished => {
+          if (finished) {
+            this.openFeedBack();
           }
-        }
+        });
+      },
+      response => {
+        console.log('POST call in error', response);
+      },
+      () => {
+        console.log('The POST observable is now completed.');
       }
-    }
-  }
-
-  delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    );
   }
 
   open(marca: any) {
     // Acá debería ir un switch que tire un dialogo distinto dependiendo del tipo de pregunta
-    let dialogRef;
-    if (marca.tipoActividad === 2) {
-      dialogRef = this.dialog.open(QuestionVFComponent, {
-        width: '70%',
-        data: {
-          marca,
-          contenidoInteractivo: this.contenidoInt
-        }
+    if (marca.numIntentos > 0) {
+      let dialogRef;
+      if (marca.tipoActividad === 2) {
+        dialogRef = this.dialog.open(QuestionVFComponent, {
+          width: '70%',
+          data: {
+            marca,
+            contenidoInteractivo: this.contenidoInteractivo
+          }
+        });
+      } else {
+        dialogRef = this.dialog.open(QuestionModalComponent, {
+          width: '70%',
+          data: {
+            idActivity: '1',
+            idMarca: marca.marca_id,
+            contenidoInteractivo: this.contenidoInteractivo
+          }
+        });
+      }
+
+      dialogRef.afterClosed().subscribe(result => {
+        this.player.playVideo();
+        this.videoStateHandler.modalOpened$.next(false);
       });
     } else {
-      dialogRef = this.dialog.open(QuestionModalComponent, {
-        width: '70%',
-        data: {
-          idActivity: '1',
-          idMarca: marca.marca_id,
-          contenidoInteractivo: this.contenidoInt
-        }
-      });
+      this.videoStateHandler.modalOpened$.next(false);
     }
-
-    dialogRef.afterClosed().subscribe(result => {
-      this.player.playVideo();
-      this.mustWait = false;
-    });
   }
 
   getContentMark() {
-    this.retroalimentacionService
-      .getMarcasXacontenido(parseInt(this.idContent, 10))
-      .subscribe(
-        (val: any) => {
-          this.marcas = val.results;
-          console.log("POST call successful value returned in body", val);
-        },
-        response => {
-          console.log("POST call in error", response);
-        },
-        () => {
-          console.log("The POST observable is now completed.");
-        }
-      );
+    return this.interaccionAlumnoService
+      .getMarcasXacontenido(this.contenidoInteractivo.id);
   }
 
-  getContentInteractiveDetail(idContent) {
-    if (idContent !== undefined) {
-      this.contenidoService.getDetalleContenidoInteractivo(idContent).subscribe(
+  getContentInteractiveDetail(contenidoInteractivoId) {
+    if (contenidoInteractivoId !== undefined) {
+      this.contenidoService.getDetalleContenidoInteractivo(contenidoInteractivoId).subscribe(
         contenido => {
           this.isVideoLineal = !contenido.puedeSaltar;
-          this.contenidoInt = contenido;
-          this.id = contenido.contenido.url.split("watch?v=")[1];
+          this.contenidoInteractivo = contenido;
+          this.videoId = contenido.contenido.url.split('watch?v=')[1];
           this.contentsLoaded = Promise.resolve(true);
-          console.log("contenido alumno", contenido);
-          console.log("idd", this.id);
+          console.log('Contenido interactivo alumno', contenido);
+          console.log('Video ID', this.videoId);
         },
         error => {
-          console.log("Error getting question information -> ", error);
+          console.log('Error getting question information -> ', error);
         }
       );
     }
@@ -176,11 +171,19 @@ export class VideoAlumnoComponent {
       // Skip video to new time
       this.player.seekTo(newTime, true);
     } else {
-      Swal.fire("Oops...", "No se le permite saltar en el video", "warning");
+      Swal.fire('Oops...', 'No se le permite saltar en el video', 'warning');
     }
   }
 
   play(): void {
+    if (!this.alreadyStart) {
+      this.videoStateHandler.init(this.marcas, this.player);
+      this.videoStateHandler.mustOpenMark$.pipe(takeUntil(this.videoStateHandler.reset$))
+        .subscribe(mark => {
+          this.open(mark);
+        });
+      this.alreadyStart = true;
+    }
     if (!this.playing) {
       this.playing = true;
       this.player.playVideo();
@@ -214,7 +217,7 @@ export class VideoAlumnoComponent {
     if (this.player) {
       return this.toMin(this.player.getCurrentTime());
     } else {
-      return "0:00";
+      return '0:00';
     }
   }
 
@@ -222,25 +225,25 @@ export class VideoAlumnoComponent {
     if (this.player) {
       return this.toMin(this.player.getDuration());
     } else {
-      return "0:00";
+      return '0:00';
     }
   }
 
   toMin(sec: number): string {
     const result = Math.round(sec);
-    let resultStr = "0:00" + result;
+    let resultStr = '0:00' + result;
     let newSec = (result % 60).toString();
     if (+newSec < 10) {
-      newSec = "0" + newSec;
+      newSec = '0' + newSec;
     }
     if (sec > 59) {
       let min = Math.floor(result / 60).toString();
       if (+min < 10) {
-        min = "0" + min;
+        min = '0' + min;
       }
-      resultStr = min + ":" + newSec;
+      resultStr = min + ':' + newSec;
     } else {
-      resultStr = "0:" + newSec;
+      resultStr = '0:' + newSec;
     }
     return resultStr;
   }
@@ -257,5 +260,17 @@ export class VideoAlumnoComponent {
     // Cantidad de puntos a restar para ubicar la marca, los "10" son el tamaño de la marca
     const pixelsToRest = (punto * 10 / 100);
     return (punto * 854 / 100) - pixelsToRest;
+  }
+
+  delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async openFeedBack() {
+    await this.delay(1000);
+    this.videoStateHandler.modalOpened$.pipe(
+      filter(value => !value),
+      take(1))
+      .subscribe(() => this.router.navigate(['/contenido-interactivo/revision/' + this.contenidoInteractivo.id]));
   }
 }

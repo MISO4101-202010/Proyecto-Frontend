@@ -1,7 +1,7 @@
 <div style="margin: 4%;"></div>
 <ng-container *ngIf="contentsLoaded | async">
     <div style="margin-left: 13%;">
-        <youtube-player style="pointer-events: none;" [videoId]="id" [height]="480" [width]="854" (ready)="savePlayer($event)"
+        <youtube-player style="pointer-events: none;" [videoId]="videoId" [height]="480" [width]="854" (ready)="savePlayer($event)"
             (change)="onStateChange($event)" [playerVars]="playerVars"></youtube-player>
     </div>
 

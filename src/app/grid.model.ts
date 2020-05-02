@@ -1,5 +1,5 @@
-export class DynamicGrid{
-    respuesta:string;
-    esCorrecta:boolean;
-    preguntaSeleccionMultiple:number;
+export class DynamicGrid {
+  respuesta: string;
+  esCorrecta: boolean;
+  preguntaSeleccionMultiple: number;
 }
