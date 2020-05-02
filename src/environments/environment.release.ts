@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://release-front.herokuapp.com'
+  apiUrl: 'https://miso4101-release.herokuapp.com'
 };
