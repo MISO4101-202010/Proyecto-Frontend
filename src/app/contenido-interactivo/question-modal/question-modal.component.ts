@@ -55,7 +55,7 @@ export class QuestionModalComponent implements OnInit {
     this.callServiceSaveAnswer();
     if (this.typeQuestion === 'preguntaOpcionMultiple') {
       if (this.optionsArray.some(this.hasAnswer)) {
-        this.hasFeedBack = this.arrayQuestionsForMark[this.indexToShow].tieneRetroalimentacion;
+        this.hasFeedBack = this.arrayQuestionsForMark[this.indexToShow].tieneRetroalimentacion || this.data.contenidoInteractivo.tiene_retroalimentacion;
       }
     } else if (this.typeQuestion === 'preguntaAbierta') {
       this.hasFeedBack = this.questionInformation.tieneRetroalimentacion;

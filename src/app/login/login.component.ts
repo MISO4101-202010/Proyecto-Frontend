@@ -43,14 +43,16 @@ export class LoginComponent implements OnInit {
       .subscribe(
         result => {
           console.log(result);
+          if (result.isAlumno) {
+            this.router.navigate(['/cursos/misCursos']);
+          } else {
+            this.router.navigate(['/cursos']);
+          }
         },
         error => {
           console.log(error);
           Swal.fire('Oops...', 'revisa los datos ingresados', 'error');
         },
-        () => {
-          this.router.navigate(['/cursos']);
-        }
       );
   }
   // "username": "eduard",

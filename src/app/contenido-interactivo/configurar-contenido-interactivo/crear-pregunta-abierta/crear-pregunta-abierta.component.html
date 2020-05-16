@@ -1,4 +1,5 @@
-<h1 mat-dialog-title>Crear pregunta abierta {{data.marca.nombre}}</h1>
+<h1 mat-dialog-title *ngIf="!data.marca.pregunta">Crear pregunta abierta {{data.marca.nombre}}</h1>
+<h1 mat-dialog-title *ngIf="data.marca.pregunta">Actualizar pregunta abierta {{data.marca.nombre}}</h1>
 <div mat-dialog-content style="margin-bottom: 1em;">
     <form [formGroup]="questionForm" (ngSubmit)="agregarMarca()">
         <div class="row-container">
@@ -13,6 +14,16 @@
                 <input type="text" matInput placeholder="Enunciado" formControlName="enunciado" />
             </mat-form-field>
         </div>
+      <div class="row-container">
+        <mat-checkbox color="primary" formControlName="tieneRetroalimentacion" [disabled]="data.tiene_retroalimentacion">¿Tiene retroalimentación?
+        </mat-checkbox>
+      </div>
+      <div class="row-container" *ngIf="questionForm.get('tieneRetroalimentacion').value">
+        <mat-form-field appearance="outline" style="width:100%">
+          <mat-label>Escribe la retroalimentación para el estudiante</mat-label>
+          <input type="text" matInput placeholder="Retroalimentación" formControlName="retroalimentacion"/>
+        </mat-form-field>
+      </div>
         <div class="form-actions">
             <button id="cancel-button" class="mat-stroked-button" type="button" (click)="cancel()">
                 Cancelar

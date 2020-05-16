@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { ListaContenidoComponent } from './lista-contenido/lista-contenido.component';
 import { Routes, RouterModule } from '@angular/router';
@@ -21,19 +22,21 @@ import { CrearPreguntaAbiertaComponent } from './configurar-contenido-interactiv
 import { CrearPreguntaVerdaderoFalsoComponent } from './configurar-contenido-interactivo/crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
 import { DetalleContenidoInteractivoComponent } from './detalle-contenido-interactivo/detalle-contenido-interactivo.component';
 import { CrearPreguntaPausaComponent } from './configurar-contenido-interactivo/crear-pregunta-pausa/crear-pregunta-pausa.component';
+import { RevisionContentComponent } from './revision-content/revision-content.component';
 
 const routes: Routes = [
   { path: '', component: ListaContenidoComponent },
   { path: 'reporte/:id', component: ReporteContenidoComponent },
   { path: 'manejar', component: MarkersComponent},
   { path: 'configurar/:id', component: ConfigurarContenidoInteractivoComponent},
-  { path: 'detalle/:id', component: DetalleContenidoInteractivoComponent}
+  { path: 'detalle/:id', component: DetalleContenidoInteractivoComponent},
+  { path: 'revision/:id', component: RevisionContentComponent}
 ];
 
 @NgModule({
   declarations: [ListaContenidoComponent, AddContenidoACursoComponent, ReporteContenidoComponent,
     MarkersComponent, ManyAnswersComponent, DetalleContenidoInteractivoComponent, ConfigurarContenidoInteractivoComponent,
-    CrearSeleccionMultipleComponent, CrearPreguntaAbiertaComponent, CrearPreguntaVerdaderoFalsoComponent, CrearPreguntaPausaComponent
+    CrearSeleccionMultipleComponent, CrearPreguntaAbiertaComponent, CrearPreguntaVerdaderoFalsoComponent, CrearPreguntaPausaComponent, RevisionContentComponent
 
   ],
   imports: [
@@ -44,7 +47,8 @@ const routes: Routes = [
     RichTextEditorAllModule,
     FormsModule,
     MatDialogModule,
-    YoutubePlayerModule
+    YoutubePlayerModule,
+    DragDropModule
   ],
   exports: [RouterModule],
   entryComponents: [
