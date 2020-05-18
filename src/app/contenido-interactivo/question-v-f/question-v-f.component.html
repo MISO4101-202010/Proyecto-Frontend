@@ -10,27 +10,31 @@
           <mat-radio-button class="falso" value="falso">Falso</mat-radio-button>
         </mat-radio-group>
       </div>
-      <div *ngIf="yaRespondio && (infoPregunta.tieneRetroalimentacion || hasFeedBackContent)" id="respuesta" class="columna-flex">
-        <h4 class="negrilla">Respuesta Correcta</h4>
-        <p>{{respuesta}}</p>
-      </div>
     </div>
-    <div *ngIf="yaRespondio && (infoPregunta.tieneRetroalimentacion || hasFeedBackContent)" class="columna-flex">
-      <h3 class="subrayar">Retroalimentación:</h3>
-      <label>{{infoPregunta.retroalimentacion}}</label>
+  </div>
+  <div *ngIf="showResults()" class="columna-flex">
+    <h4 class="subrayar">La respuesta correcta es:</h4>
+    <div class="left-div">
+    <label>{{respuesta}}</label>
     </div>
-    <div class="form-actions">
-      <button *ngIf="canJump && !yaRespondio" class="mat-flat-button mat-primary" type="button"
-              (click)="saltar()">
-        Saltar
-      </button>
-      <button *ngIf="!yaRespondio" class="mat-flat-button mat-primary" type="button" (click)="responderPregunta()">
-        Enviar
-        respuesta
-      </button>
-      <button *ngIf="yaRespondio" class="mat-flat-button mat-primary" type="button" (click)="saltar()">
-        Continuar
-      </button>
+    <div class="right-div">
+    <label>Calificación obtenida: {{answer.qualification}}</label>
     </div>
+  </div>
+  <div *ngIf="showResults()" class="columna-flex">
+    <h4 class="subrayar">Retroalimentación:</h4>
+    <label>{{infoPregunta.retroalimentacion}}</label>
+  </div>
+  <div class="form-actions">
+    <button *ngIf="canJump && !yaRespondio" class="mat-flat-button mat-primary" type="button"
+            (click)="saltar()">
+      Saltar
+    </button>
+    <button *ngIf="!yaRespondio" class="mat-flat-button mat-primary" type="button" (click)="responderPregunta()">
+      Enviar respuesta
+    </button>
+    <button *ngIf="yaRespondio" class="mat-flat-button mat-primary" type="button" (click)="saltar()">
+      Continuar
+    </button>
   </div>
 </div>

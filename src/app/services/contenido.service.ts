@@ -93,6 +93,7 @@ export class ContenidoService {
     console.log('Añadiendo tipo pausa', marca);
     return this.httpClient.put(this.createPauseMark, marca);
   }
+
   saveInteractiveContent(contenidoId: number, name: string, canJump: boolean, hasRetro: boolean) {
     const body = {
       nombre: name,
