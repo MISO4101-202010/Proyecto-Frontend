@@ -39,7 +39,7 @@ export class AuthService implements CanActivate {
       .pipe(
         map((response: Response) => {
           this.dataLog.userToken = response.token;
-          if (response.user.codigo_de_estudiante != undefined) {
+          if (response.user.codigo_de_estudiante !== undefined) {
             this.dataLog.isAlumno = true;
             this.dataLog.dataAlumno = response.user;
           } else {
@@ -60,7 +60,7 @@ export class AuthService implements CanActivate {
 
   public logout() {
     sessionStorage.removeItem('userConectaTe');
-    window.location.href='/login';  
+    window.location.href = '/login';
   }
 
   getDatos(): InfoLogin {
