@@ -36,3 +36,10 @@ textarea {
 mat-form-field{
     min-width: 90%;
 }
+
+.timer {
+    margin: -40px 10px 20px 0px;
+    padding-right: 15px;
+    width: 100%;
+    text-align: right;
+}
