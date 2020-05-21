@@ -26,8 +26,8 @@ export class QuestionModalComponent implements OnInit {
   hasFeedBack = false;
   arrayCorrectAnswers: Array<{ titleAnswer: string }> = new Array();
   indexToShow = 0;
-  studentId = 3;
-  idGroup = 1;
+  studentId = JSON.parse(sessionStorage.userConectaTe).dataAlumno.id;
+  idGroup = null;
   numberTry: number;
   idContent = "";
   typeQuestion = '';
@@ -170,18 +170,22 @@ export class QuestionModalComponent implements OnInit {
       answerTries => {
         this.numberTry = answerTries.body.ultimo_intento + 1;
         if (this.typeQuestion === 'preguntaOpcionMultiple') {
-          this.optionsArray.forEach(option => {
-            if (option.answerOption) {
-              const request = new AnswerQuestion(option.idOption, this.studentId, this.numberTry, this.idGroup, this.typeQuestion);
-              this.activityService.postSaveAnswerQuestion(request).subscribe(
-                data => {
-                  console.log('success save answer ', data);
-                }, error => {
-                  console.log('Error save answer-> ', error);
+          this.activityService.deletePreviousQualfication(this.idQuestion, this.studentId).subscribe(
+            () => {
+              this.optionsArray.forEach(option => {
+                if (option.answerOption) {
+                  const request = new AnswerQuestion(option.idOption, this.studentId, this.numberTry, this.idGroup, this.typeQuestion);
+                  this.activityService.postSaveAnswerQuestion(request).subscribe(
+                    data => {
+                      console.log('success save answer ', data);
+                    }, error => {
+                      console.log('Error save answer-> ', error);
+                    }
+                  );
                 }
-              );
+              });
             }
-          });
+          );
         } else if (this.typeQuestion === 'preguntaAbierta') {
           const request = {
             intento: this.numberTry,
