@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { environment } from 'src/environments/environment';
-import { Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AnswerQuestion } from 'src/app/models/mark/answerQuestion.model';
+import { forkJoin, Observable } from 'rxjs';
 import { AnswerVoF } from 'src/app/models/mark/answerVoF';
 
 @Injectable({
@@ -17,10 +15,10 @@ export class ActivitiesService {
   }
 
   getActivityById(id): Observable<any> {
-    let preguntaOpcionMultiple = this.httpService.getRequestWithoutParams(this.activitiesUrl + 'preguntaOpcionMultiple/' + id + '/').map(
+    const preguntaOpcionMultiple = this.httpService.getRequestWithoutParams(this.activitiesUrl + 'preguntaOpcionMultiple/' + id + '/').map(
       response => {
         response.body.results.forEach(o => {
-          o.type = 'preguntaOpcionMultiple'
+          o.type = 'preguntaOpcionMultiple';
         });
         return response;
       }, error => {
@@ -28,10 +26,10 @@ export class ActivitiesService {
       }
     );
 
-    let preguntaAbierta = this.httpService.getRequestWithoutParams(this.activitiesUrl + 'preguntaAbierta/' + id + '/').map(
+    const preguntaAbierta = this.httpService.getRequestWithoutParams(this.activitiesUrl + 'preguntaAbierta/' + id + '/').map(
       response => {
         response.body.results.forEach(o => {
-          o.type = 'preguntaAbierta'
+          o.type = 'preguntaAbierta';
         });
         return response;
       }, error => {
@@ -39,10 +37,10 @@ export class ActivitiesService {
       }
     );
 
-    let pausa = this.httpService.getRequestWithoutParams(this.activitiesUrl + 'pausas/' + id + '/').map(
+    const pausa = this.httpService.getRequestWithoutParams(this.activitiesUrl + 'pausas/' + id + '/').map(
       response => {
         response.body.results.forEach(o => {
-          o.type = 'pausa'
+          o.type = 'pausa';
         });
         return response;
       }, error => {
@@ -57,7 +55,7 @@ export class ActivitiesService {
     const url = this.activitiesUrl + 'pregunta_f_v/' + id;
     return this.httpService.getRequestWithoutParams(url).map(
       response => {
-        response.body.type = 'preguntaFV';
+        response.body.type = 'preguntaVoF';
         return response;
       }, error => {
         return error;
@@ -80,7 +78,7 @@ export class ActivitiesService {
   }
 
   postSaveAnswerQuestion(answer: any): Observable<any> {
-    let url = ''
+    let url = '';
     if (answer.typeQuestion === 'preguntaOpcionMultiple') {
       url = this.activitiesUrl + 'respuestaOpcionMultiple/';
     } else if (answer.typeQuestion === 'preguntaAbierta') {
