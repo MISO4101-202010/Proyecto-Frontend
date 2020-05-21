@@ -39,7 +39,7 @@ export class AuthService implements CanActivate {
       .pipe(
         map((response: Response) => {
           this.dataLog.userToken = response.token;
-          if (response.user.codigo_de_estudiante !== undefined) {
+          if (response.role === 'alumno') {
             this.dataLog.isAlumno = true;
             this.dataLog.dataAlumno = response.user;
           } else {
@@ -95,5 +95,6 @@ export class AuthService implements CanActivate {
 
 interface Response {
   token: string;
+  role: string;
   user: AlumnoLogin;
 }
