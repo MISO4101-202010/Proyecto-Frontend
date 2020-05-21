@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { environment } from 'src/environments/environment';
-import { Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AnswerQuestion } from 'src/app/models/mark/answerQuestion.model';
+import { Observable, forkJoin, of } from 'rxjs';
 import { AnswerVoF } from 'src/app/models/mark/answerVoF';
 
 @Injectable({
@@ -120,5 +118,12 @@ export class ActivitiesService {
         return error;
       }
     );
+  }
+
+  deletePreviousQualfication(idQuestion, idStudent): Observable<any> {
+    const url = `${this.activitiesUrl}calificacion/${idQuestion}/?estudiante=${idStudent}`;
+    return this.httpService.delete(url)
+      .map(() => true)
+      .catch(() => of(false));
   }
 }
