@@ -171,11 +171,12 @@ export class QuestionModalComponent implements OnInit {
         this.numberTry = answerTries.body.ultimo_intento + 1;
         if (this.typeQuestion === 'preguntaOpcionMultiple') {
           this.activityService.deletePreviousQualfication(this.idQuestion, this.studentId).subscribe(
-            () => {
-              this.optionsArray.forEach(option => {
+            async () => {
+              for (let index = 0; index < this.optionsArray.length; index++) {
+                const option = this.optionsArray[index];
                 if (option.answerOption) {
                   const request = new AnswerQuestion(option.idOption, this.studentId, this.numberTry, this.idGroup, this.typeQuestion);
-                  this.activityService.postSaveAnswerQuestion(request).subscribe(
+                  await this.activityService.postSaveAnswerQuestion(request).toPromise().then(
                     data => {
                       console.log('success save answer ', data);
                     }, error => {
@@ -183,7 +184,7 @@ export class QuestionModalComponent implements OnInit {
                     }
                   );
                 }
-              });
+              };
             }
           );
         } else if (this.typeQuestion === 'preguntaAbierta') {
