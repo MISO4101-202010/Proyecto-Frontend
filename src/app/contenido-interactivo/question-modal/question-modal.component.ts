@@ -32,6 +32,7 @@ export class QuestionModalComponent implements OnInit {
   idContent = "";
   typeQuestion = '';
   idQuestion: string;
+  qualification= 0;
 
   constructor(
     public dialogRef: MatDialogRef<QuestionModalComponent>,
@@ -166,11 +167,12 @@ export class QuestionModalComponent implements OnInit {
   }
 
   callServiceSaveAnswer() {
+    this.qualification = 0;
     this.activityService.getLastTryByQuestion(this.idQuestion, this.studentId).subscribe(
       answerTries => {
         this.numberTry = answerTries.body.ultimo_intento + 1;
         if (this.typeQuestion === 'preguntaOpcionMultiple') {
-          this.activityService.deletePreviousQualfication(this.idQuestion, this.studentId).subscribe(
+          this.activityService.deletePreviousQualification(this.idQuestion, this.studentId).subscribe(
             async () => {
               for (let index = 0; index < this.optionsArray.length; index++) {
                 const option = this.optionsArray[index];
@@ -178,6 +180,7 @@ export class QuestionModalComponent implements OnInit {
                   const request = new AnswerQuestion(option.idOption, this.studentId, this.numberTry, this.idGroup, this.typeQuestion);
                   await this.activityService.postSaveAnswerQuestion(request).toPromise().then(
                     data => {
+                      this.qualification = this.qualification < data.body.qualification ? data.body.qualification : this.qualification;
                       console.log('success save answer ', data);
                     }, error => {
                       console.log('Error save answer-> ', error);

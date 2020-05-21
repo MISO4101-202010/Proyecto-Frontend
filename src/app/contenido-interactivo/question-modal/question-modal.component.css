@@ -14,10 +14,6 @@ button {
     margin-top: 15px;
 }
 
-.display-flex {
-    display: flex;
-}
-
 .green-color {
     color: #0aa61b;
 }
@@ -35,4 +31,13 @@ textarea {
 
 mat-form-field{
     min-width: 90%;
+}
+
+.right-div {
+  margin-left: 640px;
+  text-align: right;
+}
+
+.display-ruby {
+    display: ruby;
 }

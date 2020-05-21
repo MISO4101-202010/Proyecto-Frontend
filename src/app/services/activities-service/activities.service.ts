@@ -120,7 +120,7 @@ export class ActivitiesService {
     );
   }
 
-  deletePreviousQualfication(idQuestion, idStudent): Observable<any> {
+  deletePreviousQualification(idQuestion, idStudent): Observable<any> {
     const url = `${this.activitiesUrl}calificacion/${idQuestion}/?estudiante=${idStudent}`;
     return this.httpService.delete(url)
       .map(() => true)
