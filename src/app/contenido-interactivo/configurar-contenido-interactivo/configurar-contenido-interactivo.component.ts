@@ -57,9 +57,9 @@ export class ConfigurarContenidoInteractivoComponent {
     type: 'preguntaOpcionMultiple',
     modalType: CrearSeleccionMultipleComponent
   }, {
-    text: 'Pregunta falso o verdadero',
+    text: 'Pregunta verdadero o falso',
     value: 2,
-    type: 'preguntaFV',
+    type: 'preguntaVoF',
     modalType: CrearPreguntaVerdaderoFalsoComponent
   }, {
     text: 'Pregunta tipo pausa',
