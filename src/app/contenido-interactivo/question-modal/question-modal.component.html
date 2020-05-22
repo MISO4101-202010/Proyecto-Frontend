@@ -1,11 +1,12 @@
 <div *ngIf="hasQuestionsToShow">
-  <div mat-dialog-title class="font-title">{{typeQuestion==='pausa'?questionInformation.nombre:questionInformation.enunciado}}</div>
-
+  <div mat-dialog-title class="font-title">
+    {{typeQuestion==='pausa'?questionInformation.nombre:questionInformation.enunciado}}</div>
+  <div class="timer" *ngIf="typeQuestion==='pausa'">Tiempo restante: {{time}}s</div>
   <div mat-dialog-content *ngIf="typeQuestion==='preguntaOpcionMultiple'">
     <div class="row" *ngFor="let optionAnswer of optionsArray, let i=index">
       <div class="col-3">
         <mat-checkbox class="margin-left-25" (change)="checkOptionAnswer($event.checked, optionAnswer.idOption)"
-                      [checked]="optionAnswer.answerOption" [disabled]="hasFeedBack"> {{optionAnswer.titleOption}}
+          [checked]="optionAnswer.answerOption" [disabled]="hasFeedBack"> {{optionAnswer.titleOption}}
         </mat-checkbox>
       </div>
     </div>
