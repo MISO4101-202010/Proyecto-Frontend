@@ -32,7 +32,8 @@ export class QuestionModalComponent implements OnInit {
   idContent = "";
   typeQuestion = '';
   idQuestion: string;
-  qualification= 0;
+  qualification = 0;
+  time: number;
 
   constructor(
     public dialogRef: MatDialogRef<QuestionModalComponent>,
@@ -122,7 +123,7 @@ export class QuestionModalComponent implements OnInit {
     this.optionsArray = new Array();
     arrayOptions.forEach(option => {
       this.optionsArray.push(
-        {idOption: option.id, idQuestion: idQ, answerOption: false, titleOption: option.opcion});
+        { idOption: option.id, idQuestion: idQ, answerOption: false, titleOption: option.opcion });
     });
   }
 
@@ -151,11 +152,18 @@ export class QuestionModalComponent implements OnInit {
           this.questionInformation.respuesta = '';
           this.hasFeedBack = false;
         } else if (this.typeQuestion === 'pausa') {
+          this.time = element.tiempo;
           this.idQuestion = element.id;
           this.questionInformation = element;
           this.questionInformation.respuesta = '';
           this.hasFeedBack = false;
-          this.sleep(element.tiempo * 1000).then(() => { this.continue(); });
+          let id = setInterval(() => {
+            this.time = this.time - 1;
+          }, 1000)
+          this.sleep(element.tiempo * 1000).then(() => {
+            this.continue();
+            clearInterval(id);
+          });
         }
       }
     });

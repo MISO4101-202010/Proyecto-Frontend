@@ -1,36 +1,36 @@
 .mat-dialog-content {
-    max-height: max-content;
-    overflow: initial;
+  max-height: max-content;
+  overflow: initial;
 }
 
 button {
-    background-color:#43425d;
-    color:white;
-    margin-top: auto;
-    height: 35px;
-    width: 90%;
-    border-radius: 5px;
-    border: none;
-    margin-top: 15px;
+  background-color: #43425d;
+  color: white;
+  margin-top: auto;
+  height: 35px;
+  width: 90%;
+  border-radius: 5px;
+  border: none;
+  margin-top: 15px;
 }
 
 .green-color {
-    color: #0aa61b;
+  color: #0aa61b;
 }
 
 .font-title {
-    font-size: 25px;
-    margin-bottom: 17px;
-    border-bottom: solid 1px gray;
-    color:#4d4949;
+  font-size: 25px;
+  margin-bottom: 17px;
+  border-bottom: solid 1px gray;
+  color: #4d4949;
 }
 
 textarea {
-    min-width: 90%;
+  min-width: 90%;
 }
 
-mat-form-field{
-    min-width: 90%;
+mat-form-field {
+  min-width: 90%;
 }
 
 .right-div {
@@ -39,5 +39,12 @@ mat-form-field{
 }
 
 .display-ruby {
-    display: ruby;
+  display: ruby;
+}
+
+.timer {
+  margin: -40px 10px 20px 0px;
+  padding-right: 15px;
+  width: 100%;
+  text-align: right;
 }

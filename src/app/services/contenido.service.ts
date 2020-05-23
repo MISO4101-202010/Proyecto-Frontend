@@ -14,7 +14,7 @@ export class ContenidoService {
   private contenidoInteractivoUrl = `${environment.apiUrl}/content/interactiveContentByCourse/`;
   private addPreguntaSelecconMultipleUrl = `${environment.apiUrl}/activities/generate-question-multiple-choice`;
   private addPreguntaAbiertaUrl = `${environment.apiUrl}/activities/generate-open-question`;
-  private addPreguntaFalsoVerdaderoUrl = `${environment.apiUrl}/activities/pregunta_f_v`;
+  private preguntaFalsoVerdaderoUrl = `${environment.apiUrl}/activities/pregunta_f_v`;
   private detalleUrl = `${environment.apiUrl}/content/interactivecontent/`;
   private crearContenidoInteractivo = `${environment.apiUrl}/content/cont_interactivo`;
   private crearMarca = `${environment.apiUrl}/activities/marca`;
@@ -53,7 +53,6 @@ export class ContenidoService {
       cursos: cursoIds,
       contenido: contenidoId
     };
-    console.log('bodyy', body);
     return this.httpClient.post(this.contenidoUrl, body);
   }
 
@@ -82,7 +81,7 @@ export class ContenidoService {
   }
 
   agregarMarcaVerdaderoFalso(pregunta: any): Observable<any> {
-    return this.httpClient.post(this.addPreguntaFalsoVerdaderoUrl, pregunta);
+    return this.httpClient.post(this.preguntaFalsoVerdaderoUrl, pregunta);
   }
 
   agregarMarca(marca: any): Observable<any> {
@@ -90,20 +89,20 @@ export class ContenidoService {
   }
 
   agregarMarcaPreguntaPausa(marca: any): Observable<any> {
-    console.log('Añadiendo tipo pausa', marca);
     return this.httpClient.put(this.createPauseMark, marca);
   }
 
-  saveInteractiveContent(contenidoId: number, name: string, canJump: boolean, hasRetro: boolean) {
+  saveInteractiveContent(contenidoId: number, name: string, canJump: boolean, hasRetro: boolean, esCalificable: boolean) {
     const body = {
       nombre: name,
       puedeSaltar: canJump,
-      tiene_retroalimentacion: hasRetro
+      tiene_retroalimentacion: hasRetro,
+      es_calificable: esCalificable
     };
     return this.httpClient.patch(this.detalleUrl + contenidoId, body);
   }
 
-  modificarPreguntaFV(marcaId: number, marca: any): Observable<any> {
-    return this.httpClient.patch(this.addPreguntaFalsoVerdaderoUrl + '/update/' + marcaId + '/', marca);
+  modificarPreguntaVoF(marcaId: number, marca: any): Observable<any> {
+    return this.httpClient.patch(this.preguntaFalsoVerdaderoUrl + '/update/' + marcaId + '/', marca);
   }
 }
