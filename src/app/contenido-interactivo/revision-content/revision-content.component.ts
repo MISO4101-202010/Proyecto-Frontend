@@ -79,7 +79,7 @@ export class RevisionContentComponent implements OnInit {
                 arrayCorrectAnswers: arrayCorrect,
                 type: result.type,
                 qualification: this.getQualification(result),
-                alreadyQualified: result.qualification !== undefined
+                alreadyQualified: this.isAlreadyQualified(result)
             });
           }
         }
@@ -103,7 +103,7 @@ export class RevisionContentComponent implements OnInit {
             arrayCorrectAnswers: arrayCorrect,
             type: data.body.type,
             qualification: this.getQualification(data.body),
-            alreadyQualified: data.body.qualification !== undefined
+            alreadyQualified: this.isAlreadyQualified(data.body)
           });
       this.getTotal();
       }, error => {
@@ -117,7 +117,11 @@ export class RevisionContentComponent implements OnInit {
   }
 
   getQualification(result): number {
-    return result.qualification === undefined ? 0 : result.qualification
+    return (result.qualification === undefined || result.qualification === null) ? 0 : result.qualification
+  }
+
+  isAlreadyQualified(result): boolean {
+    return result.qualification !== undefined && result.qualification !== null;
   }
 
   getTotal() {
@@ -127,7 +131,7 @@ export class RevisionContentComponent implements OnInit {
         }, 0);
 
       this.total = Math.round((allQualifications / this.dataQuestions.length) * 100) / 100;
-      this.goodAnswers = Math.round((this.total * this.dataQuestions.length) * 100) / 100;
+      this.goodAnswers = Math.round((this.total * this.dataQuestions.length/ 100) * 100) / 100;
     }
   }
 }

@@ -10,7 +10,7 @@
                 <mat-list>
                     <mat-list-item cols="2" *ngFor="let q of dataQuestions">
                         <h4 mat-line>{{q.question}}</h4>
-                        <div mat-line style=" width: 100%">
+                        <div mat-line class="qualification">
                           <div class="left-div">
                             <b>Respuesta correcta:</b>
                           </div>
@@ -18,7 +18,7 @@
                             <label>Calificación obtenida: Pendiente</label>
                           </div>
                           <div class="right-div" *ngIf="(isOpenQuestion(q.type) && q.alreadyQualified) || !isOpenQuestion(q.type)">
-                            <label>Calificación obtenida: {{ q.qualification | percent }}</label>
+                            <label>Calificación obtenida: {{ q.qualification }}</label>
                           </div>
                         </div>
                         <mat-list mat-line>
@@ -28,7 +28,7 @@
                         </mat-list>
                     </mat-list-item>
                     <div class="total">
-                      <label>Calificación total: {{ total | percent }} {{ goodAnswers }} / {{ dataQuestions.length }}</label>
+                      <label>Calificación total: {{ total }} ({{ goodAnswers }} correctas de {{ dataQuestions.length }} en total)</label>
                     </div>
                 </mat-list>
             </mat-tab>
