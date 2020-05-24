@@ -13,9 +13,21 @@
                         <p mat-line><b>Respuesta correcta:</b></p>
                         <mat-list mat-line>
                             <mat-list-item *ngFor="let option of q.arrayCorrectAnswers">
-                                <p mat-line>{{option.titleOption}}</p>
+                              <p mat-line>{{option.titleOption}}</p>
+                              <div *ngIf="isOpenQuestion(option.type) && !option.alreadyQualified">
+                                <label>Calificación obtenida: Pendiente</label>
+                              </div>
+                              <div *ngIf="(isOpenQuestion(option.type) && option.alreadyQualified) || !isOpenQuestion(option.type)">
+                                <label>Calificación obtenida: {{ option.qualification | percent }}</label>
+                              </div>
                             </mat-list-item>
-                        </mat-list>                       
+                        </mat-list>
+                    </mat-list-item>
+                    <mat-list-item>
+                      <div>
+                        <label>Calificación total: {{ total | percent }} {{ dataQuestions.length }} / {{ dataQuestions.length }}</label>
+                      </div>
+                      <!-- <input type="button" clic="actualiza" value="Hola"> -->
                     </mat-list-item>
                 </mat-list>
             </mat-tab>
