@@ -46,10 +46,6 @@ export class RevisionContentComponent implements OnInit {
         });
       }
     });
-    // TODO pendiente de refactor
-    /*setTimeout(() => {
-      this.getTotal();
-    }, 1000);*/
   }
 
   async getQuestion(idMarca) {
@@ -98,7 +94,7 @@ export class RevisionContentComponent implements OnInit {
       let arrayCorrect = []
       console.log(data.body);
 
-      arrayCorrect.push({idOption: 0, idQuestion: data.body.id, answerOption: false, titleOption: data.body.esVerdadero ? 'Verdadero' : 'Falso'});
+      arrayCorrect.push({idOption: 0, idQuestion: data.body.id, answerOption: false, titleOption: data.body.esVerdadero?'Verdadero':'Falso'});
 
       this.dataQuestions.push(
           {
