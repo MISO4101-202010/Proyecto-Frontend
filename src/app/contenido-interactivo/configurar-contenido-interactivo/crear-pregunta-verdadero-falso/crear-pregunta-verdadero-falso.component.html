@@ -4,11 +4,17 @@
     <div>
       <mat-form-field appearance="outline" style="width:100%">
         <mat-label>Nombre de la pregunta</mat-label>
-        <input type="text" matInput placeholder="Nombre" formControlName="nombre"/>
+        <input type="text" matInput placeholder="Nombre" formControlName="nombre" required />
+        <mat-error *ngIf="validationService.hasError('nombre', 'maxlength', questionForm)">
+          {{ nombreMaxLength }} caracteres máximo
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline" style="width:100%">
         <mat-label>Pregunta para responder</mat-label>
-        <input type="text" matInput placeholder="Pregunta" formControlName="pregunta"/>
+        <input type="text" matInput placeholder="Pregunta" formControlName="pregunta" required />
+        <mat-error *ngIf="validationService.hasError('pregunta', 'maxlength', questionForm)">
+          {{ preguntaMaxLength }} caracteres máximo
+        </mat-error>
       </mat-form-field>
       <div class="fila-flex">
         <div class="columna-flex">
@@ -27,10 +33,19 @@
       <mat-form-field *ngIf="questionForm.get('tieneRetroalimentacion').value" appearance="outline" style="width:100%">
         <mat-label>Escribe la retroalimentación para el estudiante</mat-label>
         <input type="text" matInput placeholder="Retroalimentación" formControlName="retroalimentacion"/>
+        <mat-error *ngIf="validationService.hasError('retroalimentacion', 'maxlength', questionForm)">
+          {{ retroalimentacionMaxLength }} caracteres máximo
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Número de intentos</mat-label>
-        <input type="number" min="1" matInput formControlName="numeroDeIntentos"/>
+        <input type="number" min="{{ numeroDeIntentosMin }}" max="{{ numeroDeIntentosMax }}" matInput formControlName="numeroDeIntentos" required />
+        <mat-error *ngIf="validationService.hasError('numeroDeIntentos', 'min', questionForm)">
+          Debe ser mayor o igual a {{ numeroDeIntentosMin }}
+        </mat-error>
+        <mat-error *ngIf="validationService.hasError('numeroDeIntentos', 'max', questionForm)">
+          Debe ser menor o igual a {{ numeroDeIntentosMax }}
+        </mat-error>
       </mat-form-field>
       <div class="form-actions">
         <button id="cancel-button" class="mat-stroked-button" type="button" (click)="cancel()">
