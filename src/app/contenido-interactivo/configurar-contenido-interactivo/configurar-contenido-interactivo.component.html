@@ -49,6 +49,7 @@
           <div class="col-md-4 col-sm-2" >
               <mat-checkbox (change)="checkCanJump($event.checked)" [checked]="this.canJump">Puede saltar</mat-checkbox>
               <mat-checkbox (change)="checkHasRetro($event.checked)" [checked]="this.hasRetro">Tiene retroalimentación</mat-checkbox>
+              <mat-checkbox (change)="checkesCalificable($event.checked)" [checked]="this.esCalificable">¿Es calificable el contenido?</mat-checkbox>
           </div>
         </div>
 

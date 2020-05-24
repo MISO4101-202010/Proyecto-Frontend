@@ -1,10 +1,10 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {PreguntaFalsoVerdadero} from '../../models/mark/questionTrueFalse';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {FormControl} from '@angular/forms';
-import {ActivitiesService} from '../../services/activities-service/activities.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { PreguntaFalsoVerdadero } from '../../models/mark/questionTrueFalse';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { FormControl } from '@angular/forms';
+import { ActivitiesService } from '../../services/activities-service/activities.service';
 import Swal from 'sweetalert2';
-import {AnswerVoF} from 'src/app/models/mark/answerVoF';
+import { AnswerVoF } from 'src/app/models/mark/answerVoF';
 
 export interface DialogData {
   marca: any;
@@ -77,5 +77,9 @@ export class QuestionVFComponent implements OnInit {
 
   saltar() {
     this.dialogRef.close();
+  }
+
+  showResults() {
+    return this.yaRespondio && (this.infoPregunta.tieneRetroalimentacion || this.hasFeedBackContent);
   }
 }
