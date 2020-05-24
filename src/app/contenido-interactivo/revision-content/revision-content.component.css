@@ -17,3 +17,18 @@ button {
 a {
   color: black;
 }
+
+.left-div {
+  height: 0px;
+  width: 50%;
+  float: left;
+}
+
+.right-div {
+  text-align: end;
+  display: block;
+}
+
+.total {
+  float: right;
+}

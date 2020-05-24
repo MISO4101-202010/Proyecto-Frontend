@@ -10,25 +10,26 @@
                 <mat-list>
                     <mat-list-item cols="2" *ngFor="let q of dataQuestions">
                         <h4 mat-line>{{q.question}}</h4>
-                        <p mat-line><b>Respuesta correcta:</b></p>
+                        <div mat-line style=" width: 100%">
+                          <div class="left-div">
+                            <b>Respuesta correcta:</b>
+                          </div>
+                          <div class="right-div" *ngIf="isOpenQuestion(q.type) && !q.alreadyQualified">
+                            <label>Calificación obtenida: Pendiente</label>
+                          </div>
+                          <div class="right-div" *ngIf="(isOpenQuestion(q.type) && q.alreadyQualified) || !isOpenQuestion(q.type)">
+                            <label>Calificación obtenida: {{ q.qualification | percent }}</label>
+                          </div>
+                        </div>
                         <mat-list mat-line>
                             <mat-list-item *ngFor="let option of q.arrayCorrectAnswers">
                               <p mat-line>{{option.titleOption}}</p>
-                              <div *ngIf="isOpenQuestion(option.type) && !option.alreadyQualified">
-                                <label>Calificación obtenida: Pendiente</label>
-                              </div>
-                              <div *ngIf="(isOpenQuestion(option.type) && option.alreadyQualified) || !isOpenQuestion(option.type)">
-                                <label>Calificación obtenida: {{ option.qualification | percent }}</label>
-                              </div>
                             </mat-list-item>
                         </mat-list>
                     </mat-list-item>
-                    <mat-list-item>
-                      <div>
-                        <label>Calificación total: {{ total | percent }} {{ dataQuestions.length }} / {{ dataQuestions.length }}</label>
-                      </div>
-                      <!-- <input type="button" clic="actualiza" value="Hola"> -->
-                    </mat-list-item>
+                    <div class="total">
+                      <label>Calificación total: {{ total | percent }} {{ goodAnswers }} / {{ dataQuestions.length }}</label>
+                    </div>
                 </mat-list>
             </mat-tab>
         </mat-tab-group>

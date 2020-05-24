@@ -16,10 +16,14 @@ export class RevisionContentComponent implements OnInit {
   dataQuestions: Array<{
     name: string;
     question: string;
-    arrayCorrectAnswers: Array<OpcionesPreguntaMultiple>
+    arrayCorrectAnswers: Array<OpcionesPreguntaMultiple>,
+    type: string,
+    qualification: number,
+    alreadyQualified: boolean
   }> = new Array();
   id: number;
   total = 0;
+  goodAnswers = 0.0;
 
   constructor(private contenidoService: ContenidoService,
      private activeRoute: ActivatedRoute,
@@ -43,14 +47,14 @@ export class RevisionContentComponent implements OnInit {
       }
     });
     // TODO pendiente de refactor
-    setTimeout(() => {
+    /*setTimeout(() => {
       this.getTotal();
-    }, 1000);
+    }, 1000);*/
   }
 
-  getQuestion(idMarca) {
+  async getQuestion(idMarca) {
     let results = []
-    this.activityService.getActivityById(idMarca).subscribe(
+    await this.activityService.getActivityById(idMarca).toPromise().then(
       data => {
         data.forEach(o => {
           results = results.concat(o.body.results)
@@ -63,23 +67,23 @@ export class RevisionContentComponent implements OnInit {
               result.opciones.forEach(option => {
                 if(option.esCorrecta === true){
                   arrayCorrect.push(
-                    {idOption: option.id, idQuestion: result.id, answerOption: false, titleOption: option.opcion,
-                      qualification: result.qualification, type: result.type});
+                    {idOption: option.id, idQuestion: result.id, answerOption: false, titleOption: option.opcion});
                   }
                 }
               );
             }else if(this.isOpenQuestion(result.type)){
               arrayCorrect.push(
-                {idOption: 0, idQuestion: result.id, answerOption: false, titleOption: 'No aplica',
-                  qualification: this.getQualification(result), alreadyQualified: result.qualification !== undefined,
-                  type: result.type});
+                {idOption: 0, idQuestion: result.id, answerOption: false, titleOption: 'No aplica'});
             }
 
             this.dataQuestions.push(
             {
                 name: result.nombre,
                 question: result.enunciado,
-                arrayCorrectAnswers: arrayCorrect
+                arrayCorrectAnswers: arrayCorrect,
+                type: result.type,
+                qualification: this.getQualification(result),
+                alreadyQualified: result.qualification !== undefined
             });
           }
         }
@@ -89,21 +93,23 @@ export class RevisionContentComponent implements OnInit {
       }
     );
 
-    this.activityService.getActivityFVById(idMarca).subscribe(
+    await this.activityService.getActivityFVById(idMarca).toPromise().then(
     data => {
       let arrayCorrect = []
       console.log(data.body);
 
-      arrayCorrect.push({idOption: 0, idQuestion: data.body.id, answerOption: false,
-        titleOption: data.body.esVerdadero ? 'Verdadero' : 'Falso',
-        qualification: data.body.qualification, type: data.body.type});
+      arrayCorrect.push({idOption: 0, idQuestion: data.body.id, answerOption: false, titleOption: data.body.esVerdadero ? 'Verdadero' : 'Falso'});
 
       this.dataQuestions.push(
           {
             name: data.body.nombre,
             question: data.body.pregunta,
-            arrayCorrectAnswers: arrayCorrect
+            arrayCorrectAnswers: arrayCorrect,
+            type: data.body.type,
+            qualification: this.getQualification(data.body),
+            alreadyQualified: data.body.qualification !== undefined
           });
+      this.getTotal();
       }, error => {
         console.log('Error getting question information -> ', error);
       }
@@ -120,15 +126,12 @@ export class RevisionContentComponent implements OnInit {
 
   getTotal() {
     if (this.dataQuestions) {
-      const allQualifications = _.reduce(this.dataQuestions, function(acumulado, dq2) {
-        return acumulado
-          +
-          _.reduce(dq2.arrayCorrectAnswers, function (acumulado, ca2) {
-            return acumulado + ca2.qualification;
-          }, 0)
-      }, 0);
+      const allQualifications = _.reduce(this.dataQuestions, function(acumulado, dq) {
+        return acumulado + dq.qualification;
+        }, 0);
 
-      this.total = allQualifications / this.dataQuestions.length;
+      this.total = Math.round((allQualifications / this.dataQuestions.length) * 100) / 100;
+      this.goodAnswers = Math.round((this.total * this.dataQuestions.length) * 100) / 100;
     }
   }
 }
