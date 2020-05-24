@@ -12,6 +12,10 @@
   justify-content: flex-end;
 }
 
+#delete-button {
+  margin-right: auto;
+}
+
 button {
   margin: 0 8px 0 8px;
 }

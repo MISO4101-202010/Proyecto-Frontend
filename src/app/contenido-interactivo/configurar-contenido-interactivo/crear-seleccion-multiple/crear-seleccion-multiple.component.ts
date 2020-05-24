@@ -4,6 +4,7 @@ import { FormArray, FormBuilder, FormGroup, Validators, FormControl, FormGroupDi
 import Swal from 'sweetalert2';
 import { ContenidoService } from 'src/app/services/contenido.service';
 import { ErrorStateMatcher } from '@angular/material/core';
+import {error} from "util";
 
 export interface DialogData {
   marca: any;
@@ -100,20 +101,38 @@ export class CrearSeleccionMultipleComponent implements OnInit {
 
   delete() {
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      title: '¿Eliminar?',
+      text: "¿Estas a punto de elminiar la marca creada, estas seguro?",
+      type:'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Si, Eliminar'
     }).then((result) => {
       if (result.value) {
-        Swal.fire(
-          'Deleted!',
-          'Your file has been deleted.',
-          'success'
-        )
+        this.contenidoService
+          .eliminarMarcaPreguntaSeleccionMultiple(this.data.marca)
+          .subscribe(
+            (result) => {
+              Swal.fire(
+                'Marca Eliminada!',
+                'Tu marca ha sido eliminada exitosamente.',
+                'success'
+              );
+              this.dialogRef.close();
+            },
+            (error) => {
+              console.error(error);
+              Swal.fire(
+                'Oops...',
+                'Ocurrió un error al tratar de eliminar la marca, por favor inténtalo de nuevo',
+                'error'
+              );
+            }
+          );
       }
+    }).catch(error => {
+      console.log(error);
     })
   }
 

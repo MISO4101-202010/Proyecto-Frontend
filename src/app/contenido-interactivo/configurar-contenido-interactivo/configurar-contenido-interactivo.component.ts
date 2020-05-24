@@ -170,7 +170,7 @@ export class ConfigurarContenidoInteractivoComponent {
     this.tiempoVideo = this.player.getDuration();
     let i = 0;
     let tamanioMarcasVacias = document.getElementById('lista-minutos').offsetWidth;
-    while (i <= this.tiempoVideo) {
+    while (i <= this.tiempoVideo && (this.marcasUbicadas.length - 1) < this.tiempoVideo) {
       const marcaIn = {
         texto: '',
         conMarca: false,
@@ -202,6 +202,14 @@ export class ConfigurarContenidoInteractivoComponent {
       return 'example-box-marca';
     } else {
       return 'example-box';
+    }
+  }
+
+  darLimites(marca) {
+    if (marca) {
+      return '.example-list';
+    } else {
+      return '';
     }
   }
 
@@ -370,6 +378,7 @@ export class ConfigurarContenidoInteractivoComponent {
   // y necesita una "pregunta"
   setPreguntaToMark(selectedMark): void {
     console.log('Editar marca:', selectedMark);
+    selectedMark.edicion = true;
     if (selectedMark.tipoActividad === 2) {
       selectedMark.pregunta = undefined;
       this.openDialog(selectedMark);
