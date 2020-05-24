@@ -335,7 +335,11 @@ export class ConfigurarContenidoInteractivoComponent {
       Swal.fire('Contenido interactivo', 'Contenido interactivo guardado con éxito', 'success');
     }, error => {
       console.error(error);
-      Swal.fire('Oops...', 'Ocurrió un error guardando el contenido interactivo, intentelo más tarde', 'error');
+      if(error.statusText === "nombreLargo"){
+        Swal.fire('Oops...', 'El nombre que usaste es muy largo para el contenido interactivo, cámbialo e inténtalo de nuevo', 'error');
+      }
+      else
+        Swal.fire('Oops...', 'Ocurrió un error guardando el contenido interactivo, intentelo más tarde', 'error');
     });
   }
 
