@@ -1,6 +1,6 @@
 <div class="container">
   <mat-form-field appearance="outline" style="width:50%">
-    <input type="text" matInput [(ngModel)]="this.name"/>
+    <input maxlength="255" type="text" matInput [(ngModel)]="this.name"/>
   </mat-form-field>
   <div *ngIf="contentsLoaded | async" class="video-container">
     <div style="width: 100%;">

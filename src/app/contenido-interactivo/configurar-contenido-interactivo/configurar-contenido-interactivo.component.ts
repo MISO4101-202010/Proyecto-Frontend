@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
-import { CrearSeleccionMultipleComponent } from './crear-seleccion-multiple/crear-seleccion-multiple.component';
-import { CrearPreguntaAbiertaComponent } from './crear-pregunta-abierta/crear-pregunta-abierta.component';
-import { CrearPreguntaVerdaderoFalsoComponent } from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
-import { MatDialog } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
-import { ContenidoService } from 'src/app/services/contenido.service';
-import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
-import { InteraccionAlumnoService } from '../../interaccion-alumno.service';
-import { ActivitiesService } from '../../services/activities-service/activities.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {Component} from '@angular/core';
+import {CrearSeleccionMultipleComponent} from './crear-seleccion-multiple/crear-seleccion-multiple.component';
+import {CrearPreguntaAbiertaComponent} from './crear-pregunta-abierta/crear-pregunta-abierta.component';
+import {CrearPreguntaVerdaderoFalsoComponent} from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
+import {MatDialog} from '@angular/material';
+import {ActivatedRoute} from '@angular/router';
+import {ContenidoService} from 'src/app/services/contenido.service';
+import {CrearPreguntaPausaComponent} from './crear-pregunta-pausa/crear-pregunta-pausa.component';
+import {InteraccionAlumnoService} from '../../interaccion-alumno.service';
+import {ActivitiesService} from '../../services/activities-service/activities.service';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import * as _ from 'underscore';
 import Swal from 'sweetalert2';
 
@@ -157,7 +157,7 @@ export class ConfigurarContenidoInteractivoComponent {
       this.canJump = contenido.puedeSaltar;
       this.hasRetro = contenido.tiene_retroalimentacion;
       this.esCalificable = contenido.es_calificable;
-      this.getContentMark();
+      this.getContentMark("");
       if (firstCall) {
         this.contentsLoaded = Promise.resolve(true);
         this.videoId = this.contenidoInteractivo.contenido.url.split('watch?v=')[1];
@@ -170,7 +170,8 @@ export class ConfigurarContenidoInteractivoComponent {
     this.tiempoVideo = this.player.getDuration();
     let i = 0;
     let tamanioMarcasVacias = document.getElementById('lista-minutos').offsetWidth;
-    while (i <= this.tiempoVideo && (this.marcasUbicadas.length - 1) < this.tiempoVideo) {
+    this.marcasUbicadas = [];
+    while (i <= this.tiempoVideo) {
       const marcaIn = {
         texto: '',
         conMarca: false,
@@ -274,7 +275,7 @@ export class ConfigurarContenidoInteractivoComponent {
     if (mark) {
       // Buscar la marca correcta en la lista "marcas"
       // tslint:disable-next-line:only-arrow-functions
-      const selectedMark = _.filter(this.marcas, function(m) {
+      const selectedMark = _.filter(this.marcas, function (m) {
         return m.marca_id === mark.idMarca;
       })[0];
       this.setPreguntaToMark(selectedMark);
@@ -316,13 +317,13 @@ export class ConfigurarContenidoInteractivoComponent {
     if (!(marca.pregunta === undefined)) {
       // Esto puede ser una pregunta abierta, pausa o selección múltiple
       // tslint:disable-next-line:only-arrow-functions
-      return _.filter(this.opcionesMarca, function(opc) {
+      return _.filter(this.opcionesMarca, function (opc) {
         return opc.type === marca.pregunta.type;
       })[0].modalType;
     } else if (!(marca.tipoActividad === undefined)) {
       // Esta es una pregunta V/F
       // tslint:disable-next-line:only-arrow-functions
-      return _.filter(this.opcionesMarca, function(opc) {
+      return _.filter(this.opcionesMarca, function (opc) {
         return opc.value === marca.tipoActividad;
       })[0].modalType;
     } else {
@@ -349,28 +350,30 @@ export class ConfigurarContenidoInteractivoComponent {
       Swal.fire('Contenido interactivo', 'Contenido interactivo guardado con éxito', 'success');
     }, error => {
       console.error(error);
-      if(error.statusText === "nombreLargo"){
+      if (error.statusText === "nombreLargo") {
         Swal.fire('Oops...', 'El nombre que usaste es muy largo para el contenido interactivo, cámbialo e inténtalo de nuevo', 'error');
-      }
-      else
+      } else
         Swal.fire('Oops...', 'Ocurrió un error guardando el contenido interactivo, intentelo más tarde', 'error');
     });
   }
 
-  getContentMark() {
+  getContentMark(res) {
     this.interaccionAlumnoService
-    .getMarcasXacontenido(this.contenidoInteractivo.id)
-    .subscribe(
-      (val: any) => {
-        this.marcas = val;
-      },
-      response => {
-        console.log('Error obteniendo las marcas', response);
-      },
-      () => {
-        console.log('Proceso de obtención de las marcas completado');
-      }
-    );
+      .getMarcasXacontenido(this.contenidoInteractivo.id)
+      .subscribe(
+        (val: any) => {
+          this.marcas = val;
+          if (res){
+            this.loadMarcas(val);
+          }
+        },
+        response => {
+          console.log('Error obteniendo las marcas', response);
+        },
+        () => {
+          console.log('Proceso de obtención de las marcas completado');
+        }
+      );
   }
 
   // Si la marca es de tipo actividad = 2, significa que es una pregunta F/V, es decir que no necesita una "pregunta",

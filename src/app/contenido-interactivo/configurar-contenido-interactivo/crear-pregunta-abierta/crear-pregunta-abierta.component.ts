@@ -61,7 +61,7 @@ export class CrearPreguntaAbiertaComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         this.contenidoService
-          .eliminarMarcaPreguntaSeleccionMultiple(this.data.marca)
+          .eliminarMarcaPregunta(this.data.marca.id)
           .subscribe(
             (result) => {
               Swal.fire(

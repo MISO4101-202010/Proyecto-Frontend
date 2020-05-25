@@ -83,7 +83,7 @@ export class CrearPreguntaVerdaderoFalsoComponent {
     }).then((result) => {
       if (result.value) {
         this.contenidoService
-          .eliminarMarcaPreguntaSeleccionMultiple(this.data.marca)
+          .eliminarMarcaPregunta(this.data.marca.id)
           .subscribe(
             (result) => {
               Swal.fire(
