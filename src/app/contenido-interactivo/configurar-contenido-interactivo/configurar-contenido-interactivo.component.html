@@ -9,7 +9,7 @@
             </youtube-player>
         </div>
 
-      <div id="lista-minutos" cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="drop($event)">
+      <div id="lista-minutos" cdkDropList cdkDropListOrientation="horizontal" class="example-list" cdkDragBoundary="lista-minutos" (cdkDropListDropped)="drop($event)">
         <div cdkDragLockAxis="x" *ngFor="let marca of marcasUbicadas;let i=index" [cdkDragDisabled]="!marca.conMarca"
              [ngStyle]="darTamanioMarca(marca)" class="{{darEstiloMarca(marca.conMarca)}}"
              (dblclick)="createOrUpdateMark(marca)" cdkDrag>
