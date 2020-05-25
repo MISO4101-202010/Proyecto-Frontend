@@ -3,6 +3,7 @@ import { ContenidoService } from 'src/app/services/contenido.service';
 import { ActivatedRoute } from '@angular/router';
 import { ActivitiesService } from "src/app/services/activities-service/activities.service";
 import { OpcionesPreguntaMultiple } from "src/app/models/mark/optionsQuestionMultiple.model";
+import * as _ from 'underscore';
 
 @Component({
   selector: 'app-revision-content',
@@ -13,11 +14,16 @@ export class RevisionContentComponent implements OnInit {
 
   data;
   dataQuestions: Array<{
-    name: string; 
-    question: string; 
-    arrayCorrectAnswers: Array<OpcionesPreguntaMultiple>
+    name: string;
+    question: string;
+    arrayCorrectAnswers: Array<OpcionesPreguntaMultiple>,
+    type: string,
+    qualification: number,
+    alreadyQualified: boolean
   }> = new Array();
   id: number;
+  total = 0;
+  goodAnswers = 0.0;
 
   constructor(private contenidoService: ContenidoService,
      private activeRoute: ActivatedRoute,
@@ -42,11 +48,11 @@ export class RevisionContentComponent implements OnInit {
     });
   }
 
-  getQuestion(idMarca) {
+  async getQuestion(idMarca) {
     let results = []
-    this.activityService.getActivityById(idMarca).subscribe(
+    await this.activityService.getActivityById(idMarca).toPromise().then(
       data => {
-        data.forEach(o => {           
+        data.forEach(o => {
           results = results.concat(o.body.results)
         });
         if(results!== undefined && results[0]!== undefined){
@@ -61,17 +67,20 @@ export class RevisionContentComponent implements OnInit {
                   }
                 }
               );
-            }else if(result.type === 'preguntaAbierta'){
+            }else if(this.isOpenQuestion(result.type)){
               arrayCorrect.push(
                 {idOption: 0, idQuestion: result.id, answerOption: false, titleOption: 'No aplica'});
             }
-            
+
             this.dataQuestions.push(
             {
-                name: result.nombre, 
+                name: result.nombre,
                 question: result.enunciado,
-                arrayCorrectAnswers: arrayCorrect
-            });             
+                arrayCorrectAnswers: arrayCorrect,
+                type: result.type,
+                qualification: this.getQualification(result),
+                alreadyQualified: this.isAlreadyQualified(result)
+            });
           }
         }
       },
@@ -80,22 +89,49 @@ export class RevisionContentComponent implements OnInit {
       }
     );
 
-    this.activityService.getActivityFVById(idMarca).subscribe(
+    await this.activityService.getActivityFVById(idMarca).toPromise().then(
     data => {
       let arrayCorrect = []
       console.log(data.body);
 
       arrayCorrect.push({idOption: 0, idQuestion: data.body.id, answerOption: false, titleOption: data.body.esVerdadero?'Verdadero':'Falso'});
-        
+
       this.dataQuestions.push(
           {
             name: data.body.nombre,
             question: data.body.pregunta,
-            arrayCorrectAnswers: arrayCorrect
+            arrayCorrectAnswers: arrayCorrect,
+            type: data.body.type,
+            qualification: this.getQualification(data.body),
+            alreadyQualified: this.isAlreadyQualified(data.body)
           });
+      this.getTotal();
       }, error => {
         console.log('Error getting question information -> ', error);
       }
     );
-  }         
+  }
+
+  isOpenQuestion(type): boolean {
+    return type === 'preguntaAbierta';
+  }
+
+  getQualification(result): number {
+    return (result.qualification === undefined || result.qualification === null) ? 0 : result.qualification
+  }
+
+  isAlreadyQualified(result): boolean {
+    return result.qualification !== undefined && result.qualification !== null;
+  }
+
+  getTotal() {
+    if (this.dataQuestions) {
+      const allQualifications = _.reduce(this.dataQuestions, function(acumulado, dq) {
+        return acumulado + dq.qualification;
+        }, 0);
+
+      this.total = Math.round((allQualifications / this.dataQuestions.length) * 100) / 100;
+      this.goodAnswers = Math.round((this.total * this.dataQuestions.length/ 100) * 100) / 100;
+    }
+  }
 }

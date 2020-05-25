@@ -32,6 +32,7 @@ export class ConfigurarContenidoInteractivoComponent {
   name = "";
   canJump;
   hasRetro;
+  esCalificable;
   marcas: any[];
   contenidoInteractivo;
   contentsLoaded: Promise<boolean>;
@@ -56,9 +57,9 @@ export class ConfigurarContenidoInteractivoComponent {
     type: 'preguntaOpcionMultiple',
     modalType: CrearSeleccionMultipleComponent
   }, {
-    text: 'Pregunta falso o verdadero',
+    text: 'Pregunta verdadero o falso',
     value: 2,
-    type: 'preguntaFV',
+    type: 'preguntaVoF',
     modalType: CrearPreguntaVerdaderoFalsoComponent
   }, {
     text: 'Pregunta tipo pausa',
@@ -155,6 +156,7 @@ export class ConfigurarContenidoInteractivoComponent {
       this.name = contenido.nombre;
       this.canJump = contenido.puedeSaltar;
       this.hasRetro = contenido.tiene_retroalimentacion;
+      this.esCalificable = contenido.es_calificable;
       this.getContentMark();
       if (firstCall) {
         this.contentsLoaded = Promise.resolve(true);
@@ -330,12 +332,20 @@ export class ConfigurarContenidoInteractivoComponent {
     this.hasRetro = value;
   }
 
+  checkesCalificable(value) {
+    this.esCalificable = value;
+  }
+
   saveContent() {
-    this.contenidoService.saveInteractiveContent(this.contenidoInteractivo.id, this.name, this.canJump, this.hasRetro).subscribe(result => {
+    this.contenidoService.saveInteractiveContent(this.contenidoInteractivo.id, this.name, this.canJump, this.hasRetro, this.esCalificable).subscribe(result => {
       Swal.fire('Contenido interactivo', 'Contenido interactivo guardado con éxito', 'success');
     }, error => {
       console.error(error);
-      Swal.fire('Oops...', 'Ocurrió un error guardando el contenido interactivo, intentelo más tarde', 'error');
+      if(error.statusText === "nombreLargo"){
+        Swal.fire('Oops...', 'El nombre que usaste es muy largo para el contenido interactivo, cámbialo e inténtalo de nuevo', 'error');
+      }
+      else
+        Swal.fire('Oops...', 'Ocurrió un error guardando el contenido interactivo, intentelo más tarde', 'error');
     });
   }
 

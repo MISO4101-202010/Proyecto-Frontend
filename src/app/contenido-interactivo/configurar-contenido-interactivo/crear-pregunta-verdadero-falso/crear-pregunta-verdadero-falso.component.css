@@ -1,9 +1,9 @@
-.container{
+.container {
   display: flex;
   flex-direction: column;
 }
 
-.falso{
+.falso {
   margin-left: 1rem;
 }
 
@@ -11,17 +11,18 @@
   display: flex;
   justify-content: flex-end;
 }
+
 button {
   margin: 0 8px 0 8px;
 }
 
-.fila-flex{
+.fila-flex {
   display: flex;
   justify-content: space-around;
   margin-bottom: 1rem;
 }
 
-.columna-flex{
+.columna-flex {
   display: flex;
   flex-direction: column;
 }
