@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { RetroalimentacionOpMul } from './video-alumno/retroalimentacion';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -17,10 +18,6 @@ export class InteraccionAlumnoService {
 
   getMarcasXacontenido(idcontenido: number) {
     return this.http.get(this.loadSendUrl + '/activities/marcas?contenido=' + idcontenido);
-  }
-
-  getPreguntaXMarca(idmarca: number) {
-    return this.http.get(this.loadSendUrl + '/activities/preguntaOpcionMultiple/' + idmarca);
   }
 
   getCalificacionXContenidoInteractivo(idContenidoInteractivo){

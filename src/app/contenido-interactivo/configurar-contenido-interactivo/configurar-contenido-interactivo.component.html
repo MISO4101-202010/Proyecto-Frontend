@@ -9,7 +9,7 @@
             </youtube-player>
         </div>
 
-      <div id="lista-minutos" cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="drop($event)">
+      <div id="lista-minutos" cdkDropList cdkDropListOrientation="horizontal" class="example-list" cdkDragBoundary="lista-minutos" (cdkDropListDropped)="drop($event)">
         <div cdkDragLockAxis="x" *ngFor="let marca of marcasUbicadas;let i=index" [cdkDragDisabled]="!marca.conMarca"
              [ngStyle]="darTamanioMarca(marca)" class="{{darEstiloMarca(marca.conMarca)}}"
              (dblclick)="createOrUpdateMark(marca)" cdkDrag>
@@ -49,6 +49,7 @@
           <div class="col-md-4 col-sm-2" >
               <mat-checkbox (change)="checkCanJump($event.checked)" [checked]="this.canJump">Puede saltar</mat-checkbox>
               <mat-checkbox (change)="checkHasRetro($event.checked)" [checked]="this.hasRetro">Tiene retroalimentación</mat-checkbox>
+              <mat-checkbox (change)="checkesCalificable($event.checked)" [checked]="this.esCalificable">¿Es calificable el contenido?</mat-checkbox>
           </div>
         </div>
 

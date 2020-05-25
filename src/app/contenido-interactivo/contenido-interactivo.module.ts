@@ -20,7 +20,8 @@ import { CrearPreguntaVerdaderoFalsoComponent } from './configurar-contenido-int
 import { DetalleContenidoInteractivoComponent } from './detalle-contenido-interactivo/detalle-contenido-interactivo.component';
 import { CrearPreguntaPausaComponent } from './configurar-contenido-interactivo/crear-pregunta-pausa/crear-pregunta-pausa.component';
 import { RevisionContentComponent } from './revision-content/revision-content.component';
-import {CalificacionContenidoInteractivoComponent} from "./calificacion-contenido-interactivo/calificacion-contenido-interactivo.component";
+import { CalificacionContenidoInteractivoComponent } from "./calificacion-contenido-interactivo/calificacion-contenido-interactivo.component";
+import { ValidationService } from '../services/validation.service';
 
 const routes: Routes = [
   { path: '', component: ListaContenidoComponent },
@@ -34,8 +35,10 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [ListaContenidoComponent, AddContenidoACursoComponent, ReporteContenidoComponent,
-    MarkersComponent, ManyAnswersComponent, DetalleContenidoInteractivoComponent, ConfigurarContenidoInteractivoComponent,
-    CrearSeleccionMultipleComponent, CrearPreguntaAbiertaComponent, CrearPreguntaVerdaderoFalsoComponent, CrearPreguntaPausaComponent, RevisionContentComponent,
+    MarkersComponent, ManyAnswersComponent, DetalleContenidoInteractivoComponent,
+    ConfigurarContenidoInteractivoComponent, CrearSeleccionMultipleComponent,
+    CrearPreguntaAbiertaComponent, CrearPreguntaVerdaderoFalsoComponent,
+    CrearPreguntaPausaComponent, RevisionContentComponent,
     CalificacionContenidoInteractivoComponent
   ],
   imports: [
@@ -59,6 +62,7 @@ const routes: Routes = [
   ],
   providers: [
     { provide: MatDialogRef, useValue: {} },
+    ValidationService
   ]
 })
 export class ContenidoInteractivoModule { }

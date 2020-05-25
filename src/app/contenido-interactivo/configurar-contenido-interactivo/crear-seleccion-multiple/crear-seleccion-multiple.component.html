@@ -6,12 +6,14 @@
             <mat-form-field appearance="outline" style="width:100%">
                 <mat-label>Nombre</mat-label>
                 <input type="text" matInput placeholder="Actividad 1" formControlName="nombre" />
+                <mat-error *ngIf="questionForm.invalid"> La pregunta debe contener entre 5 y 200 caracteres </mat-error>
             </mat-form-field>
         </div>
         <div class="row-container">
             <mat-form-field appearance="outline" style="width:100%">
                 <mat-label>Ingrese aquí la pregunta</mat-label>
-                <input type="text" matInput placeholder="Enunciado" formControlName="enunciado" />
+                <input type="text" matInput placeholder="Enunciado" formControlName="enunciado"/>
+                <mat-error *ngIf="questionForm.invalid"> El nombre debe contener entre 5 y 200 caracteres </mat-error>
             </mat-form-field>
         </div>
         <div style="margin-bottom:1em; display: flex; justify-content: space-between;">
@@ -19,12 +21,13 @@
                 <mat-checkbox color="primary" formControlName="esMultipleResp">¿Tiene múltiples respuestas?
                 </mat-checkbox>
                 <mat-checkbox color="primary" formControlName="tieneRetroalimentacion"
-                              [disabled]="data.tiene_retroalimentacion">¿Tiene retroalimentación?
+                    [disabled]="data.tiene_retroalimentacion">¿Tiene retroalimentación?
                 </mat-checkbox>
             </div>
             <mat-form-field appearance="outline" style="height:40px">
                 <mat-label>Número de intentos</mat-label>
                 <input type="number" min="1" matInput formControlName="numeroDeIntentos" />
+                <mat-error *ngIf="questionForm.invalid"> Número de intentos entre 1 y 999 </mat-error>
             </mat-form-field>
             <div style="float:right">
                 <button class="mat-flat-button mat-primary" (click)="agregarOpcion()">Agregar opción</button>

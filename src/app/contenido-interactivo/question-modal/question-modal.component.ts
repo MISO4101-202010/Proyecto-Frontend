@@ -26,12 +26,14 @@ export class QuestionModalComponent implements OnInit {
   hasFeedBack = false;
   arrayCorrectAnswers: Array<{ titleAnswer: string }> = new Array();
   indexToShow = 0;
-  studentId = 3;
-  idGroup = 1;
+  studentId = JSON.parse(sessionStorage.userConectaTe).dataAlumno.id;
+  idGroup = null;
   numberTry: number;
   idContent = "";
   typeQuestion = '';
   idQuestion: string;
+  qualification = 0;
+  time: number;
 
   constructor(
     public dialogRef: MatDialogRef<QuestionModalComponent>,
@@ -121,7 +123,7 @@ export class QuestionModalComponent implements OnInit {
     this.optionsArray = new Array();
     arrayOptions.forEach(option => {
       this.optionsArray.push(
-        {idOption: option.id, idQuestion: idQ, answerOption: false, titleOption: option.opcion});
+        { idOption: option.id, idQuestion: idQ, answerOption: false, titleOption: option.opcion });
     });
   }
 
@@ -150,11 +152,18 @@ export class QuestionModalComponent implements OnInit {
           this.questionInformation.respuesta = '';
           this.hasFeedBack = false;
         } else if (this.typeQuestion === 'pausa') {
+          this.time = element.tiempo;
           this.idQuestion = element.id;
           this.questionInformation = element;
           this.questionInformation.respuesta = '';
           this.hasFeedBack = false;
-          this.sleep(element.tiempo * 1000).then(() => { this.continue(); });
+          let id = setInterval(() => {
+            this.time = this.time - 1;
+          }, 1000)
+          this.sleep(element.tiempo * 1000).then(() => {
+            this.continue();
+            clearInterval(id);
+          });
         }
       }
     });
@@ -166,22 +175,29 @@ export class QuestionModalComponent implements OnInit {
   }
 
   callServiceSaveAnswer() {
+    this.qualification = 0;
     this.activityService.getLastTryByQuestion(this.idQuestion, this.studentId).subscribe(
       answerTries => {
         this.numberTry = answerTries.body.ultimo_intento + 1;
         if (this.typeQuestion === 'preguntaOpcionMultiple') {
-          this.optionsArray.forEach(option => {
-            if (option.answerOption) {
-              const request = new AnswerQuestion(option.idOption, this.studentId, this.numberTry, this.idGroup, this.typeQuestion);
-              this.activityService.postSaveAnswerQuestion(request).subscribe(
-                data => {
-                  console.log('success save answer ', data);
-                }, error => {
-                  console.log('Error save answer-> ', error);
+          this.activityService.deletePreviousQualification(this.idQuestion, this.studentId).subscribe(
+            async () => {
+              for (let index = 0; index < this.optionsArray.length; index++) {
+                const option = this.optionsArray[index];
+                if (option.answerOption) {
+                  const request = new AnswerQuestion(option.idOption, this.studentId, this.numberTry, this.idGroup, this.typeQuestion);
+                  await this.activityService.postSaveAnswerQuestion(request).toPromise().then(
+                    data => {
+                      this.qualification = this.qualification < data.body.qualification ? data.body.qualification : this.qualification;
+                      console.log('success save answer ', data);
+                    }, error => {
+                      console.log('Error save answer-> ', error);
+                    }
+                  );
                 }
-              );
+              };
             }
-          });
+          );
         } else if (this.typeQuestion === 'preguntaAbierta') {
           const request = {
             intento: this.numberTry,
