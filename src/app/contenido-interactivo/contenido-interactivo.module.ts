@@ -6,14 +6,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/material.module';
 import { AddContenidoACursoComponent } from './add-contenido-a-curso/add-contenido-a-curso.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { QuestionModalComponent } from './question-modal/question-modal.component';
-import { MatDialogModule, MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ReporteContenidoComponent } from './reporte-contenido/reporte-contenido.component';
 import { MarkersComponent } from './markers/markers.component';
 import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor';
 import { ManyAnswersComponent } from './many-answers/many-answers.component';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 import { ConfigurarContenidoInteractivoComponent } from './configurar-contenido-interactivo/configurar-contenido-interactivo.component';
 import { YoutubePlayerModule } from 'ng2-youtube-player';
@@ -23,6 +20,7 @@ import { CrearPreguntaVerdaderoFalsoComponent } from './configurar-contenido-int
 import { DetalleContenidoInteractivoComponent } from './detalle-contenido-interactivo/detalle-contenido-interactivo.component';
 import { CrearPreguntaPausaComponent } from './configurar-contenido-interactivo/crear-pregunta-pausa/crear-pregunta-pausa.component';
 import { RevisionContentComponent } from './revision-content/revision-content.component';
+import {CalificacionContenidoInteractivoComponent} from "./calificacion-contenido-interactivo/calificacion-contenido-interactivo.component";
 
 const routes: Routes = [
   { path: '', component: ListaContenidoComponent },
@@ -30,14 +28,15 @@ const routes: Routes = [
   { path: 'manejar', component: MarkersComponent},
   { path: 'configurar/:id', component: ConfigurarContenidoInteractivoComponent},
   { path: 'detalle/:id', component: DetalleContenidoInteractivoComponent},
-  { path: 'revision/:id', component: RevisionContentComponent}
+  { path: 'revision/:id', component: RevisionContentComponent},
+  { path: 'calificacion/:idContenidoInteractivo', component: CalificacionContenidoInteractivoComponent},
 ];
 
 @NgModule({
   declarations: [ListaContenidoComponent, AddContenidoACursoComponent, ReporteContenidoComponent,
     MarkersComponent, ManyAnswersComponent, DetalleContenidoInteractivoComponent, ConfigurarContenidoInteractivoComponent,
-    CrearSeleccionMultipleComponent, CrearPreguntaAbiertaComponent, CrearPreguntaVerdaderoFalsoComponent, CrearPreguntaPausaComponent, RevisionContentComponent
-
+    CrearSeleccionMultipleComponent, CrearPreguntaAbiertaComponent, CrearPreguntaVerdaderoFalsoComponent, CrearPreguntaPausaComponent, RevisionContentComponent,
+    CalificacionContenidoInteractivoComponent
   ],
   imports: [
     CommonModule,
