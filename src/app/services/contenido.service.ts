@@ -37,12 +37,13 @@ export class ContenidoService {
     return this.httpClient.put(this.crearMarca, body);
   }
 
-  postContenidoInteractivo(nombre: string, contenidoId: number, puedeSaltar: boolean, tieneRetroalimentacion: boolean) {
+  postContenidoInteractivo(nombre: string, contenidoId: number, puedeSaltar: boolean, tieneRetroalimentacion: boolean, esCalificable: boolean) {
     const body = {
       nombre: nombre,
       contenido: contenidoId,
       puedeSaltar: puedeSaltar,
-      tiene_retroalimentacion: tieneRetroalimentacion
+      tiene_retroalimentacion: tieneRetroalimentacion,
+      es_calificable: esCalificable
     };
     console.log('body:', body);
     return this.httpClient.post(this.crearContenidoInteractivo, body);
