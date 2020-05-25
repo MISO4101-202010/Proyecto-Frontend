@@ -5,13 +5,12 @@ import { ListaContenidoComponent } from './lista-contenido/lista-contenido.compo
 import { Routes, RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/material.module';
 import { AddContenidoACursoComponent } from './add-contenido-a-curso/add-contenido-a-curso.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ReporteContenidoComponent } from './reporte-contenido/reporte-contenido.component';
 import { MarkersComponent } from './markers/markers.component';
 import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor';
 import { ManyAnswersComponent } from './many-answers/many-answers.component';
-import { FormsModule } from '@angular/forms';
 import { ConfigurarContenidoInteractivoComponent } from './configurar-contenido-interactivo/configurar-contenido-interactivo.component';
 import { YoutubePlayerModule } from 'ng2-youtube-player';
 import { CrearSeleccionMultipleComponent } from './configurar-contenido-interactivo/crear-seleccion-multiple/crear-seleccion-multiple.component';
