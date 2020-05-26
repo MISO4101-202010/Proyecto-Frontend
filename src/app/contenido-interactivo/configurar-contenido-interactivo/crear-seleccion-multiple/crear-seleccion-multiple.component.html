@@ -48,6 +48,9 @@
             </ng-container>
         </div>
         <div class="form-actions">
+            <button id="delete-button" type="button" *ngIf="this.data.marca.edicion" mat-raised-button color="warn" (click)="delete()">
+                Eliminar
+            </button>
             <button id="cancel-button" class="mat-stroked-button" type="button" (click)="cancel()">
                 Cancelar
             </button>

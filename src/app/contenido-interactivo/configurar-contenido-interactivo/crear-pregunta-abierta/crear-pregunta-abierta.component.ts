@@ -49,6 +49,10 @@ export class CrearPreguntaAbiertaComponent implements OnInit {
     }
   }
 
+  delete() {
+    this.dialogRef.close(this.data.marca.id);
+  }
+
   cancel() {
     this.dialogRef.close();
   }

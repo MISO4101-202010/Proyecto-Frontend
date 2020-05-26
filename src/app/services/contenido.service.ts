@@ -13,6 +13,7 @@ export class ContenidoService {
   private cursosUrl = `${environment.apiUrl}/content/courses/`;
   private contenidoInteractivoUrl = `${environment.apiUrl}/content/interactiveContentByCourse/`;
   private addPreguntaSelecconMultipleUrl = `${environment.apiUrl}/activities/generate-question-multiple-choice`;
+  private deletePregunta = `${environment.apiUrl}/activities/marcas/`;
   private addPreguntaAbiertaUrl = `${environment.apiUrl}/activities/generate-open-question`;
   private preguntaFalsoVerdaderoUrl = `${environment.apiUrl}/activities/pregunta_f_v`;
   private detalleUrl = `${environment.apiUrl}/content/interactivecontent/`;
@@ -75,6 +76,10 @@ export class ContenidoService {
 
   agregarMarcaPreguntaSeleccionMultiple(marca: any): Observable<any> {
     return this.httpClient.put(this.addPreguntaSelecconMultipleUrl, marca);
+  }
+
+  eliminarMarcaPregunta(marca: any): Observable<any> {
+    return this.httpClient.delete(this.deletePregunta + marca);
   }
 
   agregarMarcaPreguntaAbierta(marca: any): Observable<any> {

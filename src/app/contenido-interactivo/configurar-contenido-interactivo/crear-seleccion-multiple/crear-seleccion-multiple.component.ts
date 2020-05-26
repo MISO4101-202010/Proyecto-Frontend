@@ -4,6 +4,7 @@ import { FormArray, FormBuilder, FormGroup, Validators, FormControl, FormGroupDi
 import Swal from 'sweetalert2';
 import { ContenidoService } from 'src/app/services/contenido.service';
 import { ErrorStateMatcher } from '@angular/material/core';
+import {error} from "util";
 
 export interface DialogData {
   marca: any;
@@ -96,6 +97,10 @@ export class CrearSeleccionMultipleComponent implements OnInit {
 
   cancel() {
     this.dialogRef.close();
+  }
+
+  delete() {
+    this.dialogRef.close(this.data.marca.id);
   }
 
   agregarOpcion() {
