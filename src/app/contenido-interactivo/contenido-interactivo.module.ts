@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { ListaContenidoComponent } from './lista-contenido/lista-contenido.component';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/material.module';
 import { AddContenidoACursoComponent } from './add-contenido-a-curso/add-contenido-a-curso.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,6 +19,7 @@ import { CrearPreguntaVerdaderoFalsoComponent } from './configurar-contenido-int
 import { DetalleContenidoInteractivoComponent } from './detalle-contenido-interactivo/detalle-contenido-interactivo.component';
 import { CrearPreguntaPausaComponent } from './configurar-contenido-interactivo/crear-pregunta-pausa/crear-pregunta-pausa.component';
 import { RevisionContentComponent } from './revision-content/revision-content.component';
+import { CalificacionContenidoInteractivoComponent } from "./calificacion-contenido-interactivo/calificacion-contenido-interactivo.component";
 import { ValidationService } from '../services/validation.service';
 
 const routes: Routes = [
@@ -27,7 +28,8 @@ const routes: Routes = [
   { path: 'manejar', component: MarkersComponent},
   { path: 'configurar/:id', component: ConfigurarContenidoInteractivoComponent},
   { path: 'detalle/:id', component: DetalleContenidoInteractivoComponent},
-  { path: 'revision/:id', component: RevisionContentComponent}
+  { path: 'revision/:id', component: RevisionContentComponent},
+  { path: 'calificacion/:idContenidoInteractivo', component: CalificacionContenidoInteractivoComponent},
 ];
 
 @NgModule({
@@ -35,7 +37,8 @@ const routes: Routes = [
     MarkersComponent, ManyAnswersComponent, DetalleContenidoInteractivoComponent,
     ConfigurarContenidoInteractivoComponent, CrearSeleccionMultipleComponent,
     CrearPreguntaAbiertaComponent, CrearPreguntaVerdaderoFalsoComponent,
-    CrearPreguntaPausaComponent, RevisionContentComponent
+    CrearPreguntaPausaComponent, RevisionContentComponent,
+    CalificacionContenidoInteractivoComponent
   ],
   imports: [
     CommonModule,

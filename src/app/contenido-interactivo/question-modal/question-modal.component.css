@@ -16,6 +16,7 @@ button {
 
 .green-color {
   color: #0aa61b;
+  height: 0px;
 }
 
 .font-title {
@@ -34,12 +35,13 @@ mat-form-field {
 }
 
 .right-div {
-  margin-left: 640px;
+  margin-left: 422px;
   text-align: right;
 }
 
 .display-ruby {
   display: ruby;
+  width: 254px;
 }
 
 .timer {
