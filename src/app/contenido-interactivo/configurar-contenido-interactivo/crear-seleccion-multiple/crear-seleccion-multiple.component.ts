@@ -100,40 +100,7 @@ export class CrearSeleccionMultipleComponent implements OnInit {
   }
 
   delete() {
-    Swal.fire({
-      title: '¿Eliminar?',
-      text: "¿Estas a punto de elminiar la marca creada, estas seguro?",
-      type:'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Si, Eliminar'
-    }).then((result) => {
-      if (result.value) {
-        this.contenidoService
-          .eliminarMarcaPregunta(this.data.marca.id)
-          .subscribe(
-            (result) => {
-              Swal.fire(
-                'Marca Eliminada!',
-                'Tu marca ha sido eliminada exitosamente.',
-                'success'
-              );
-              this.dialogRef.close();
-            },
-            (error) => {
-              console.error(error);
-              Swal.fire(
-                'Oops...',
-                'Ocurrió un error al tratar de eliminar la marca, por favor inténtalo de nuevo',
-                'error'
-              );
-            }
-          );
-      }
-    }).catch(error => {
-      console.log(error);
-    })
+    this.dialogRef.close(this.data.marca.id);
   }
 
   agregarOpcion() {

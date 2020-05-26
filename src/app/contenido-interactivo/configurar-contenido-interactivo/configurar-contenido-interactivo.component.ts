@@ -40,6 +40,7 @@ export class ConfigurarContenidoInteractivoComponent {
   tiempoVideo = 0;
   marcasUbicadas = [];
   tamanioMarca = 0;
+  deleteMarca: any;
 
   constructor(public dialog: MatDialog,
               private activatedRoute: ActivatedRoute,
@@ -298,16 +299,20 @@ export class ConfigurarContenidoInteractivoComponent {
 
   openDialog(marca): void {
     const modalType = this.getModalType(marca);
+    this.deleteMarca = this.deleteMark;
     const dialogRef = this.dialog.open(modalType, {
       width: '70%',
       data: {
         marca,
-        tiene_retroalimentacion: this.contenidoInteractivo.tiene_retroalimentacion
+        tiene_retroalimentacion: this.contenidoInteractivo.tiene_retroalimentacion,
       }
     });
 
     dialogRef.afterClosed().subscribe(res => {
       this.getContentInteractiveDetail(this.contenidoInteractivo.id, true);
+      if (res){
+        this.deleteMark(res);
+      }
     });
   }
 
@@ -400,5 +405,42 @@ export class ConfigurarContenidoInteractivoComponent {
         }
       );
     }
+  }
+
+  deleteMark(dataMarkId){
+    Swal.fire({
+      title: '¿Eliminar?',
+      text: "¿Estas a punto de elminiar la marca creada, estas seguro?",
+      type:'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Si, Eliminar'
+    }).then((result) => {
+      if (result.value) {
+        this.contenidoService
+          .eliminarMarcaPregunta(dataMarkId)
+          .subscribe(
+            (result) => {
+              Swal.fire(
+                'Marca Eliminada!',
+                'Tu marca ha sido eliminada exitosamente.',
+                'success'
+              );
+              this.getContentInteractiveDetail(this.contenidoInteractivo.id, true);
+            },
+            (error) => {
+              console.error(error);
+              Swal.fire(
+                'Oops...',
+                'Ocurrió un error al tratar de eliminar la marca, por favor inténtalo de nuevo',
+                'error'
+              );
+            }
+          );
+      }
+    }).catch(error => {
+      console.log(error);
+    })
   }
 }
