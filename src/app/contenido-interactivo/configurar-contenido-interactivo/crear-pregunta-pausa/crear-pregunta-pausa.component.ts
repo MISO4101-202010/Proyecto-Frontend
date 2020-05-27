@@ -45,6 +45,10 @@ export class CrearPreguntaPausaComponent implements OnInit {
     }
   }
 
+  delete() {
+    this.dialogRef.close(this.data.marca.id);
+  }
+
   cancel() {
     this.dialogRef.close();
   }

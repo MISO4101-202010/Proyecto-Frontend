@@ -8,7 +8,6 @@ import { environment } from 'src/environments/environment';
 })
 export class InteraccionAlumnoService {
   loadSendUrl = `${ environment.apiUrl }`;
-  private retroalimentacionMul: RetroalimentacionOpMul;
 
   constructor(private http: HttpClient) {
   }
@@ -19,5 +18,10 @@ export class InteraccionAlumnoService {
 
   getMarcasXacontenido(idcontenido: number) {
     return this.http.get(this.loadSendUrl + '/activities/marcas?contenido=' + idcontenido);
+  }
+
+  getCalificacionXContenidoInteractivo(idContenidoInteractivo){
+    const idEstudiante = JSON.parse(sessionStorage.userConectaTe).dataProfesor.id;
+    return this.http.get(this.loadSendUrl + `/activities/calificaciones_reporte?estudiante=${idEstudiante}&contenidoInt=${idContenidoInteractivo}`);
   }
 }

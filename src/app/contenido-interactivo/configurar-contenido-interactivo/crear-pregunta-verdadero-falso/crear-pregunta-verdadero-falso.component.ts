@@ -71,6 +71,10 @@ export class CrearPreguntaVerdaderoFalsoComponent {
     }
   }
 
+  delete() {
+    this.dialogRef.close(this.data.marca.id);
+  }
+
   cancel() {
     this.dialogRef.close();
   }
