@@ -193,7 +193,7 @@ export class QuestionModalComponent implements OnInit {
                   const request = new AnswerQuestion(option.idOption, this.studentId, this.numberTry, this.idGroup, this.typeQuestion);
                   await this.activityService.postSaveAnswerQuestion(request).toPromise().then(
                     data => {
-                      this.getQualification(data)
+                      this.getQualification(data);
                       console.log('success save answer ', data);
                     }, error => {
                       console.log('Error save answer-> ', error);
