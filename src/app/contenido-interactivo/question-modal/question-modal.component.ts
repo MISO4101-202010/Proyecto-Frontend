@@ -174,6 +174,11 @@ export class QuestionModalComponent implements OnInit {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  private getQualification(data){
+    this.qualification = this.qualification < data.body.qualification ? data.body.qualification : this.qualification;
+    this.qualification = Math.round(this.qualification * 100) / 100;
+  }
+
   callServiceSaveAnswer() {
     this.qualification = 0;
     this.activityService.getLastTryByQuestion(this.idQuestion, this.studentId).subscribe(
@@ -188,7 +193,7 @@ export class QuestionModalComponent implements OnInit {
                   const request = new AnswerQuestion(option.idOption, this.studentId, this.numberTry, this.idGroup, this.typeQuestion);
                   await this.activityService.postSaveAnswerQuestion(request).toPromise().then(
                     data => {
-                      this.qualification = this.qualification < data.body.qualification ? data.body.qualification : this.qualification;
+                      this.getQualification(data);
                       console.log('success save answer ', data);
                     }, error => {
                       console.log('Error save answer-> ', error);
