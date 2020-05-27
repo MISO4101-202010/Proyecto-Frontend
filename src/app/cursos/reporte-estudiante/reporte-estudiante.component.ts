@@ -35,7 +35,6 @@ export class ReporteEstudianteComponent implements OnInit {
     this.idCurso = parseInt(this.activatedRoute.snapshot.paramMap.get('id'));
     this.cursoService.getCursos().subscribe((cursos: any[]) => {
       let curso = cursos.find((c)=> c.id == this.idCurso);
-      console.log('curso',curso)
       this.nombreCurso = curso.nombre;
     });
     this.cursoService.getQualificationByCourse(this.idEstudiante,this.idCurso)
@@ -45,10 +44,10 @@ export class ReporteEstudianteComponent implements OnInit {
                                                 contenido: el.contenidoNombre,
                                                 calificacion: (el.preguntasCalificadas == 0 && 
                                                                el.calificacionTotal == 0 && 
-                                                               el.respuestas.length >0 ) ? "Pendiente de Calificar": 
-                                                               (el.preguntasCalificadas == 0)?"Pendiente de Presentar":
-                                                                                            'Calificación: ' + parseFloat(el.calificacionTotal).toFixed(2) + "/" + 5,
-                                                detalle: "Ver calificación detallada",
+                                                               el.respuestas.length >0 ) ? 'Pendiente de Calificar': 
+                                                               (el.preguntasCalificadas == 0)?'Pendiente de Presentar':
+                                                                                            'Calificación: ' + parseFloat(el.calificacionTotal).toFixed(2) + '/' + 5,
+                                                detalle: 'Ver calificación detallada',
                                                 id: el.contenidoInt
 
                                             }
