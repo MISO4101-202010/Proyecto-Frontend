@@ -22,7 +22,7 @@ const routes: Routes = [
       {
         path: 'contenido-interactivo',
         loadChildren: './contenido-interactivo/contenido-interactivo.module#ContenidoInteractivoModule',
-        canActivate: [AuthGuard],
+      //  canActivate: [AuthGuard],
         data: { preload: true }
       },
       {
