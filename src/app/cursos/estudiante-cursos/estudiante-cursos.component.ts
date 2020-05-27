@@ -21,7 +21,7 @@ export class EstudianteCursosComponent implements OnInit {
 
   ngOnInit() {
     this.cursoService.getCursosEstudiante().subscribe(cursos => {
-      console.log('data', cursos);
+
       this.cursos = cursos;
       for (let i in this.cursos) {
         this.cursos[i].currentIndex = 0;
