@@ -24,8 +24,6 @@ export class CrearPreguntaVerdaderoFalsoComponent {
   nombreMaxLength = 30;
   preguntaMaxLength = 200;
   retroalimentacionMaxLength = 200;
-  numeroDeIntentosMin = 1;
-  numeroDeIntentosMax = 100;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData,
               private formBuilder: FormBuilder,
@@ -43,7 +41,6 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       pregunta: ['', [Validators.required, Validators.maxLength(this.preguntaMaxLength)]],
       tieneRetroalimentacion: [false, [Validators.required]],
       retroalimentacion: ['', [Validators.maxLength(this.retroalimentacionMaxLength)]],
-      numeroDeIntentos: ['', [Validators.required, Validators.min(this.numeroDeIntentosMin), Validators.max(this.numeroDeIntentosMax)]]
     });
   }
 
@@ -58,7 +55,6 @@ export class CrearPreguntaVerdaderoFalsoComponent {
           this.questionForm.get('nombre').setValue(preguntaVF.body.nombre);
           this.respuestaControl.setValue(preguntaVF.body.esVerdadero ? 'verdadero' : 'falso');
           this.questionForm.get('tieneRetroalimentacion').setValue(preguntaVF.body.tieneRetroalimentacion);
-          this.questionForm.get('numeroDeIntentos').setValue(preguntaVF.body.numeroDeIntentos);
           this.questionForm.get('retroalimentacion').setValue(preguntaVF.body.retroalimentacion);
         }, error => {
           console.error('Ocurrió un error al obtener la pregunta', error);
@@ -121,7 +117,6 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       const marcaAEditar = {
         pregunta: this.questionForm.get('pregunta').value,
         nombre: this.questionForm.get('nombre').value,
-        numeroDeIntentos: this.questionForm.get('numeroDeIntentos').value,
         esVerdadero: this.respuestaControl.value === 'verdadero',
         tieneRetroalimentacion: this.questionForm.get('tieneRetroalimentacion').value,
         retroalimentacion: this.questionForm.get('retroalimentacion').value
