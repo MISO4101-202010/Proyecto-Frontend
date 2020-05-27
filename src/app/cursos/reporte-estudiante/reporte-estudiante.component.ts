@@ -43,8 +43,11 @@ export class ReporteEstudianteComponent implements OnInit {
       let data = contenidos.map(el=> {
                                       return {
                                                 contenido: el.contenidoNombre,
-                                                calificacion: (el.preguntasCalificadas == 0) ? "pendiente por presentar":
-                                                                                            'Calificación: ' + el.calificacionTotal + "/" + 5,
+                                                calificacion: (el.preguntasCalificadas == 0 && 
+                                                               el.calificacionTotal == 0 && 
+                                                               el.respuestas.length >0 ) ? "Pendiente de Calificar": 
+                                                               (el.preguntasCalificadas == 0)?"Pendiente de Presentar":
+                                                                                            'Calificación: ' + parseFloat(el.calificacionTotal).toFixed(2) + "/" + 5,
                                                 detalle: "Ver calificación detallada",
                                                 id: el.contenidoInt
 
@@ -54,7 +57,7 @@ export class ReporteEstudianteComponent implements OnInit {
       this.dataSource.data=[];
       data.forEach((el)=>this.dataSource.data.push(el));
       this.dataSource.paginator = this.paginator;
-    });
-    
+    }); 
   }
+
 }

@@ -55,3 +55,9 @@
   .example-element-description-attribution {
     opacity: 0.5;
   }
+
+  .disabled{
+    color: gray;
+    cursor: default;
+    pointer-events: none;
+  }
