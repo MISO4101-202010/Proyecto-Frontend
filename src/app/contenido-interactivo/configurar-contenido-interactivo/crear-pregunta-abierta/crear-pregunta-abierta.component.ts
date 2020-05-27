@@ -37,8 +37,8 @@ export class CrearPreguntaAbiertaComponent implements OnInit {
       abierta_id: [this.data.marca.pregunta ? this.data.marca.pregunta.id : ''],
       enunciado: [this.data.marca.pregunta ? this.data.marca.pregunta.enunciado : '', [Validators.required]],
       nombre: [this.data.marca.pregunta ? this.data.marca.pregunta.nombre : '', [Validators.required]],
-      tieneRetroalimentacion: [this.data.marca.tieneRetroalimentacion ? this.data.marca.pregunta.tieneRetroalimentacion : false],
-      retroalimentacion: [this.data.marca.retroalimentacion ? this.data.marca.pregunta.retroalimentacion : ''],
+      tieneRetroalimentacion: [this.data.marca.pregunta ? this.data.marca.pregunta.tieneRetroalimentacion : false],
+      retroalimentacion: [this.data.marca.pregunta ? this.data.marca.pregunta.retroalimentacion : ''],
     });
     if(this.data.tiene_retroalimentacion){
       this.questionForm.get('tieneRetroalimentacion').setValue(true);
