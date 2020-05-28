@@ -54,15 +54,16 @@ export class QuestionModalComponent implements OnInit {
   }
 
   saveAnswer() {
-    this.callServiceSaveAnswer();
     if (this.typeQuestion === 'preguntaOpcionMultiple') {
       if (this.optionsArray.some(this.hasAnswer)) {
         this.hasFeedBack = this.arrayQuestionsForMark[this.indexToShow].tieneRetroalimentacion || this.data.contenidoInteractivo.tiene_retroalimentacion;
+      }else {
+        return;
       }
     } else if (this.typeQuestion === 'preguntaAbierta') {
       this.hasFeedBack = this.questionInformation.tieneRetroalimentacion;
     }
-
+    this.callServiceSaveAnswer();
     if (!this.hasFeedBack) {
       this.continue();
     }
@@ -194,13 +195,14 @@ export class QuestionModalComponent implements OnInit {
                   await this.activityService.postSaveAnswerQuestion(request).toPromise().then(
                     data => {
                       this.getQualification(data);
+                      this.canJump = true;
                       console.log('success save answer ', data);
                     }, error => {
                       console.log('Error save answer-> ', error);
                     }
                   );
                 }
-              };
+              }
             }
           );
         } else if (this.typeQuestion === 'preguntaAbierta') {
