@@ -34,14 +34,19 @@ export class CrearPreguntaPausaComponent implements OnInit {
       pausa_id: [data.marca.pregunta ? data.marca.pregunta.id : ''],
       nombre: [data.marca.pregunta ? data.marca.nombre : '', [Validators.required]],
       tiempo: [data.marca.pregunta ? data.marca.pregunta.tiempo : '',
-        [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
-      enunciado: [data.marca.pregunta ? data.marca.pregunta.enunciado : '', [Validators.required]]
+      [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
+      enunciado: [data.marca.pregunta ? data.marca.pregunta.enunciado : '', [Validators.required]],
+      numeroDeIntentos: 1
     });
     if (!data.marca.pregunta) {
       this.questionForm.get('nombre').setValidators(null);
       this.questionForm.removeControl('marca_id');
       this.questionForm.removeControl('pausa_id');
     }
+  }
+
+  delete() {
+    this.dialogRef.close(this.data.marca.id);
   }
 
   cancel() {
@@ -58,7 +63,7 @@ export class CrearPreguntaPausaComponent implements OnInit {
         texto = 'Actualizar Marca';
         texto2 = 'Marca actualizada correctamente';
         texto3 = 'actualizando';
-      } else{
+      } else {
         texto = 'Agregar Marca';
         texto2 = 'Marca agregada correctamente';
         texto3 = 'agregando';

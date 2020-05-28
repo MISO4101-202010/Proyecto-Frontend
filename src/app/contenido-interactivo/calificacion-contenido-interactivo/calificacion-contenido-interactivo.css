@@ -1,0 +1,19 @@
+#respuestasDiv {
+  margin-top: 20px;
+}
+
+#respuestasDiv > p {
+  text-align: right;
+}
+
+#calificationesTable {
+  margin-top: 20px;
+}
+
+.repuestaCorrecta {
+  color: limegreen;
+}
+
+.repuestaIncorrecta {
+  color: red;
+}

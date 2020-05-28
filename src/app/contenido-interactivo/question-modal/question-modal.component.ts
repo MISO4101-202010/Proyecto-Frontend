@@ -32,7 +32,8 @@ export class QuestionModalComponent implements OnInit {
   idContent = "";
   typeQuestion = '';
   idQuestion: string;
-  qualification= 0;
+  qualification = 0;
+  time: number;
 
   constructor(
     public dialogRef: MatDialogRef<QuestionModalComponent>,
@@ -122,7 +123,7 @@ export class QuestionModalComponent implements OnInit {
     this.optionsArray = new Array();
     arrayOptions.forEach(option => {
       this.optionsArray.push(
-        {idOption: option.id, idQuestion: idQ, answerOption: false, titleOption: option.opcion});
+        { idOption: option.id, idQuestion: idQ, answerOption: false, titleOption: option.opcion });
     });
   }
 
@@ -151,11 +152,18 @@ export class QuestionModalComponent implements OnInit {
           this.questionInformation.respuesta = '';
           this.hasFeedBack = false;
         } else if (this.typeQuestion === 'pausa') {
+          this.time = element.tiempo;
           this.idQuestion = element.id;
           this.questionInformation = element;
           this.questionInformation.respuesta = '';
           this.hasFeedBack = false;
-          this.sleep(element.tiempo * 1000).then(() => { this.continue(); });
+          let id = setInterval(() => {
+            this.time = this.time - 1;
+          }, 1000)
+          this.sleep(element.tiempo * 1000).then(() => {
+            this.continue();
+            clearInterval(id);
+          });
         }
       }
     });
@@ -164,6 +172,11 @@ export class QuestionModalComponent implements OnInit {
 
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private getQualification(data){
+    this.qualification = this.qualification < data.body.qualification ? data.body.qualification : this.qualification;
+    this.qualification = Math.round(this.qualification * 100) / 100;
   }
 
   callServiceSaveAnswer() {
@@ -180,7 +193,7 @@ export class QuestionModalComponent implements OnInit {
                   const request = new AnswerQuestion(option.idOption, this.studentId, this.numberTry, this.idGroup, this.typeQuestion);
                   await this.activityService.postSaveAnswerQuestion(request).toPromise().then(
                     data => {
-                      this.qualification = this.qualification < data.body.qualification ? data.body.qualification : this.qualification;
+                      this.getQualification(data);
                       console.log('success save answer ', data);
                     }, error => {
                       console.log('Error save answer-> ', error);

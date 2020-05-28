@@ -48,6 +48,11 @@ input[type="range"] {
 }
 
 /*Drag and drop*/
+
+.largo-marcas {
+  width: 854px;
+}
+
 .example-list {
   width: 1000px;
   max-width: 100%;

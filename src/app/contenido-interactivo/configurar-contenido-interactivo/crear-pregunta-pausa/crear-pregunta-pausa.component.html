@@ -1,17 +1,12 @@
-<h1 mat-dialog-title>Crear pregunta tipo pausa {{data.marca.nombre}}</h1>
+<h1 mat-dialog-title *ngIf="!data.marca.pregunta">Crear pregunta tipo pausa {{data.marca.nombre}}</h1>
+<h1 mat-dialog-title *ngIf="data.marca.pregunta">Actualizar pregunta tipo pausa {{data.marca.nombre}}</h1>
 <div mat-dialog-content style="margin-bottom: 1em;">
     <form [formGroup]="questionForm" (ngSubmit)="agregarMarca()">
         <div class="row-container" *ngIf="data.marca.pregunta">
           <mat-form-field appearance="outline" style="width:100%">
             <mat-label>Nombre</mat-label>
-              <input type="text" matInput matInput placeholder="Nombre" formControlName="nombre" />
+              <input type="text" matInput matInput placeholder="Nombre" formControlName="nombre" maxlength="30"/>
           </mat-form-field>
-        </div>
-        <div class="row-container">
-            <mat-form-field appearance="outline" style="width:100%">
-                <mat-label>Nombre de la pregunta</mat-label>
-                <input type="text" matInput placeholder="Nombre" formControlName="nombre" maxlength="30"/>
-            </mat-form-field>
         </div>
         <div class="row-container">
             <mat-form-field appearance="outline" style="width:100%">
@@ -26,7 +21,10 @@
             </mat-form-field>
         </div>
         <div class="form-actions">
-            <button id="cancel-button" class="mat-stroked-button" type="button" (click)="cancel()">
+          <button id="delete-button" type="button" *ngIf="this.data.marca.edicion" mat-raised-button color="warn" (click)="delete()">
+            Eliminar
+          </button>
+          <button id="cancel-button" class="mat-stroked-button" type="button" (click)="cancel()">
                 Cancelar
             </button>
             <button class="mat-flat-button mat-primary" type="submit">Guardar</button>

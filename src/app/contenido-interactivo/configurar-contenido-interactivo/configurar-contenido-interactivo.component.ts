@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
-import { CrearSeleccionMultipleComponent } from './crear-seleccion-multiple/crear-seleccion-multiple.component';
-import { CrearPreguntaAbiertaComponent } from './crear-pregunta-abierta/crear-pregunta-abierta.component';
-import { CrearPreguntaVerdaderoFalsoComponent } from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
-import { MatDialog } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
-import { ContenidoService } from 'src/app/services/contenido.service';
-import { CrearPreguntaPausaComponent } from './crear-pregunta-pausa/crear-pregunta-pausa.component';
-import { InteraccionAlumnoService } from '../../interaccion-alumno.service';
-import { ActivitiesService } from '../../services/activities-service/activities.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {Component} from '@angular/core';
+import {CrearSeleccionMultipleComponent} from './crear-seleccion-multiple/crear-seleccion-multiple.component';
+import {CrearPreguntaAbiertaComponent} from './crear-pregunta-abierta/crear-pregunta-abierta.component';
+import {CrearPreguntaVerdaderoFalsoComponent} from './crear-pregunta-verdadero-falso/crear-pregunta-verdadero-falso.component';
+import {MatDialog} from '@angular/material';
+import {ActivatedRoute} from '@angular/router';
+import {ContenidoService} from 'src/app/services/contenido.service';
+import {CrearPreguntaPausaComponent} from './crear-pregunta-pausa/crear-pregunta-pausa.component';
+import {InteraccionAlumnoService} from '../../interaccion-alumno.service';
+import {ActivitiesService} from '../../services/activities-service/activities.service';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import * as _ from 'underscore';
 import Swal from 'sweetalert2';
 
@@ -32,6 +32,7 @@ export class ConfigurarContenidoInteractivoComponent {
   name = "";
   canJump;
   hasRetro;
+  esCalificable;
   marcas: any[];
   contenidoInteractivo;
   contentsLoaded: Promise<boolean>;
@@ -39,6 +40,7 @@ export class ConfigurarContenidoInteractivoComponent {
   tiempoVideo = 0;
   marcasUbicadas = [];
   tamanioMarca = 0;
+  deleteMarca: any;
 
   constructor(public dialog: MatDialog,
               private activatedRoute: ActivatedRoute,
@@ -56,9 +58,9 @@ export class ConfigurarContenidoInteractivoComponent {
     type: 'preguntaOpcionMultiple',
     modalType: CrearSeleccionMultipleComponent
   }, {
-    text: 'Pregunta falso o verdadero',
+    text: 'Pregunta verdadero o falso',
     value: 2,
-    type: 'preguntaFV',
+    type: 'preguntaVoF',
     modalType: CrearPreguntaVerdaderoFalsoComponent
   }, {
     text: 'Pregunta tipo pausa',
@@ -155,7 +157,8 @@ export class ConfigurarContenidoInteractivoComponent {
       this.name = contenido.nombre;
       this.canJump = contenido.puedeSaltar;
       this.hasRetro = contenido.tiene_retroalimentacion;
-      this.getContentMark();
+      this.esCalificable = contenido.es_calificable;
+      this.getContentMark("");
       if (firstCall) {
         this.contentsLoaded = Promise.resolve(true);
         this.videoId = this.contenidoInteractivo.contenido.url.split('watch?v=')[1];
@@ -168,6 +171,7 @@ export class ConfigurarContenidoInteractivoComponent {
     this.tiempoVideo = this.player.getDuration();
     let i = 0;
     let tamanioMarcasVacias = document.getElementById('lista-minutos').offsetWidth;
+    this.marcasUbicadas = [];
     while (i <= this.tiempoVideo) {
       const marcaIn = {
         texto: '',
@@ -200,6 +204,14 @@ export class ConfigurarContenidoInteractivoComponent {
       return 'example-box-marca';
     } else {
       return 'example-box';
+    }
+  }
+
+  darLimites(marca) {
+    if (marca) {
+      return '.example-list';
+    } else {
+      return '';
     }
   }
 
@@ -264,7 +276,7 @@ export class ConfigurarContenidoInteractivoComponent {
     if (mark) {
       // Buscar la marca correcta en la lista "marcas"
       // tslint:disable-next-line:only-arrow-functions
-      const selectedMark = _.filter(this.marcas, function(m) {
+      const selectedMark = _.filter(this.marcas, function (m) {
         return m.marca_id === mark.idMarca;
       })[0];
       this.setPreguntaToMark(selectedMark);
@@ -287,16 +299,20 @@ export class ConfigurarContenidoInteractivoComponent {
 
   openDialog(marca): void {
     const modalType = this.getModalType(marca);
+    this.deleteMarca = this.deleteMark;
     const dialogRef = this.dialog.open(modalType, {
       width: '70%',
       data: {
         marca,
-        tiene_retroalimentacion: this.contenidoInteractivo.tiene_retroalimentacion
+        tiene_retroalimentacion: this.contenidoInteractivo.tiene_retroalimentacion,
       }
     });
 
     dialogRef.afterClosed().subscribe(res => {
       this.getContentInteractiveDetail(this.contenidoInteractivo.id, true);
+      if (res){
+        this.deleteMark(res);
+      }
     });
   }
 
@@ -306,13 +322,13 @@ export class ConfigurarContenidoInteractivoComponent {
     if (!(marca.pregunta === undefined)) {
       // Esto puede ser una pregunta abierta, pausa o selección múltiple
       // tslint:disable-next-line:only-arrow-functions
-      return _.filter(this.opcionesMarca, function(opc) {
+      return _.filter(this.opcionesMarca, function (opc) {
         return opc.type === marca.pregunta.type;
       })[0].modalType;
     } else if (!(marca.tipoActividad === undefined)) {
       // Esta es una pregunta V/F
       // tslint:disable-next-line:only-arrow-functions
-      return _.filter(this.opcionesMarca, function(opc) {
+      return _.filter(this.opcionesMarca, function (opc) {
         return opc.value === marca.tipoActividad;
       })[0].modalType;
     } else {
@@ -330,29 +346,39 @@ export class ConfigurarContenidoInteractivoComponent {
     this.hasRetro = value;
   }
 
+  checkesCalificable(value) {
+    this.esCalificable = value;
+  }
+
   saveContent() {
-    this.contenidoService.saveInteractiveContent(this.contenidoInteractivo.id, this.name, this.canJump, this.hasRetro).subscribe(result => {
+    this.contenidoService.saveInteractiveContent(this.contenidoInteractivo.id, this.name, this.canJump, this.hasRetro, this.esCalificable).subscribe(result => {
       Swal.fire('Contenido interactivo', 'Contenido interactivo guardado con éxito', 'success');
     }, error => {
       console.error(error);
-      Swal.fire('Oops...', 'Ocurrió un error guardando el contenido interactivo, intentelo más tarde', 'error');
+      if (error.statusText === "nombreLargo") {
+        Swal.fire('Oops...', 'El nombre que usaste es muy largo para el contenido interactivo, cámbialo e inténtalo de nuevo', 'error');
+      } else
+        Swal.fire('Oops...', 'Ocurrió un error guardando el contenido interactivo, intentelo más tarde', 'error');
     });
   }
 
-  getContentMark() {
+  getContentMark(res) {
     this.interaccionAlumnoService
-    .getMarcasXacontenido(this.contenidoInteractivo.id)
-    .subscribe(
-      (val: any) => {
-        this.marcas = val;
-      },
-      response => {
-        console.log('Error obteniendo las marcas', response);
-      },
-      () => {
-        console.log('Proceso de obtención de las marcas completado');
-      }
-    );
+      .getMarcasXacontenido(this.contenidoInteractivo.id)
+      .subscribe(
+        (val: any) => {
+          this.marcas = val;
+          if (res){
+            this.loadMarcas(val);
+          }
+        },
+        response => {
+          console.log('Error obteniendo las marcas', response);
+        },
+        () => {
+          console.log('Proceso de obtención de las marcas completado');
+        }
+      );
   }
 
   // Si la marca es de tipo actividad = 2, significa que es una pregunta F/V, es decir que no necesita una "pregunta",
@@ -360,6 +386,7 @@ export class ConfigurarContenidoInteractivoComponent {
   // y necesita una "pregunta"
   setPreguntaToMark(selectedMark): void {
     console.log('Editar marca:', selectedMark);
+    selectedMark.edicion = true;
     if (selectedMark.tipoActividad === 2) {
       selectedMark.pregunta = undefined;
       this.openDialog(selectedMark);
@@ -378,5 +405,42 @@ export class ConfigurarContenidoInteractivoComponent {
         }
       );
     }
+  }
+
+  deleteMark(dataMarkId){
+    Swal.fire({
+      title: '¿Eliminar?',
+      text: "¿Estas a punto de elminiar la marca creada, estas seguro?",
+      type:'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Si, Eliminar'
+    }).then((result) => {
+      if (result.value) {
+        this.contenidoService
+          .eliminarMarcaPregunta(dataMarkId)
+          .subscribe(
+            (result) => {
+              Swal.fire(
+                'Marca Eliminada!',
+                'Tu marca ha sido eliminada exitosamente.',
+                'success'
+              );
+              this.getContentInteractiveDetail(this.contenidoInteractivo.id, true);
+            },
+            (error) => {
+              console.error(error);
+              Swal.fire(
+                'Oops...',
+                'Ocurrió un error al tratar de eliminar la marca, por favor inténtalo de nuevo',
+                'error'
+              );
+            }
+          );
+      }
+    }).catch(error => {
+      console.log(error);
+    })
   }
 }
