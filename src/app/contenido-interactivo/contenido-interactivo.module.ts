@@ -21,12 +21,13 @@ import { CrearPreguntaPausaComponent } from './configurar-contenido-interactivo/
 import { RevisionContentComponent } from './revision-content/revision-content.component';
 import { CalificacionContenidoInteractivoComponent } from "./calificacion-contenido-interactivo/calificacion-contenido-interactivo.component";
 import { ValidationService } from '../services/validation.service';
+import { AuthGuard } from '../helpers/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: ListaContenidoComponent },
-  { path: 'reporte/:id', component: ReporteContenidoComponent },
-  { path: 'manejar', component: MarkersComponent},
-  { path: 'configurar/:id', component: ConfigurarContenidoInteractivoComponent},
+  { path: '', component: ListaContenidoComponent, canActivate:[AuthGuard] },
+  { path: 'reporte/:id', component: ReporteContenidoComponent, canActivate:[AuthGuard] },
+  { path: 'manejar', component: MarkersComponent , canActivate:[AuthGuard]},
+  { path: 'configurar/:id', component: ConfigurarContenidoInteractivoComponent, canActivate:[AuthGuard]},
   { path: 'detalle/:id', component: DetalleContenidoInteractivoComponent},
   { path: 'revision/:id', component: RevisionContentComponent},
   { path: 'calificacion/:idContenidoInteractivo', component: CalificacionContenidoInteractivoComponent},
