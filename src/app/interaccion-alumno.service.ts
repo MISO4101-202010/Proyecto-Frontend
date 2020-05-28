@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RetroalimentacionOpMul } from './video-alumno/retroalimentacion';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -21,7 +20,7 @@ export class InteraccionAlumnoService {
   }
 
   getCalificacionXContenidoInteractivo(idContenidoInteractivo){
-    const idEstudiante = JSON.parse(sessionStorage.userConectaTe).dataProfesor.id;
+    const idEstudiante = JSON.parse(sessionStorage.userConectaTe).dataAlumno.id;
     return this.http.get(this.loadSendUrl + `/activities/calificaciones_reporte?estudiante=${idEstudiante}&contenidoInt=${idContenidoInteractivo}`);
   }
 }
