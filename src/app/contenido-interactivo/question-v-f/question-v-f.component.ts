@@ -57,7 +57,7 @@ export class QuestionVFComponent implements OnInit {
     if (this.respuestaControl.value !== null) {
       const idEstudiante = JSON.parse(sessionStorage.userConectaTe).dataAlumno.id;
       const respuestaCorrecta = (this.respuestaControl.value === 'verdadero');
-      this.answer = new AnswerVoF(String(this.infoPregunta.id), respuestaCorrecta, String(idEstudiante), 0);
+      this.answer = new AnswerVoF(String(this.infoPregunta.id), respuestaCorrecta, String(idEstudiante), 0, 0);
       console.log('Respuesta: ', this.answer);
       this.activityService.postFVAnswer(this.answer).subscribe(
         data => {
