@@ -30,7 +30,7 @@ export class CrearPreguntaVerdaderoFalsoComponent {
               public dialogRef: MatDialogRef<CrearPreguntaVerdaderoFalsoComponent>,
               private contenidoService: ContenidoService,
               private activityService: ActivitiesService,
-              private validationService: ValidationService) {
+              public validationService: ValidationService) {
     this.initializeForm();
     this.getQuestion();
   }
