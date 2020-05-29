@@ -4,7 +4,7 @@
     <h1>{{nombreCurso}}</h1>
     <ng-container *ngIf=dataSource >
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
-            
+
             <ng-container matColumnDef="contenido">
                 <th mat-header-cell *matHeaderCellDef> Contenido </th>
                 <td mat-cell *matCellDef="let element"> {{element['contenido']}} </td>
@@ -17,8 +17,8 @@
 
             <ng-container matColumnDef="detalle">
                 <th mat-header-cell *matHeaderCellDef> Detalle </th>
-                <td mat-cell *matCellDef="let element"  > 
-                    <a [routerLink]="['/contenido-interactivo/reporte/' + element.id]" [ngClass]="{'disabled': element['calificacion'] == 'Pendiente de Presentar'}">{{element['detalle']}}</a>
+                <td mat-cell *matCellDef="let element"  >
+                    <a [routerLink]="['/contenido-interactivo/calificacion/' + element.id]" [ngClass]="{'disabled': element['calificacion'] == 'Pendiente de Presentar'}">{{element['detalle']}}</a>
                 </td>
             </ng-container>
 
