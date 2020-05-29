@@ -410,6 +410,7 @@ export class ConfigurarContenidoInteractivoComponent {
               this.getContentInteractiveDetail(this.contenidoInteractivo.id, true);
             },
             (error) => {
+
               if (error.status===406){
                 Swal.fire(
                   'Oops...',
