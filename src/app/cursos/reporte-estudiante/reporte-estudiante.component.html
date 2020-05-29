@@ -19,7 +19,6 @@
                 <th mat-header-cell *matHeaderCellDef> Detalle </th>
                 <td mat-cell *matCellDef="let element"  >
                     <a [routerLink]="['/contenido-interactivo/calificacion/' + element.id]" [ngClass]="{'disabled': element['calificacion'] == 'Pendiente de Presentar'}">{{element['detalle']}}</a>
-                  <!-- a [routerLink]="['/contenido-interactivo/reporte/' + element.id]" [ngClass]="{'disabled': element['calificacion'] == 'Pendiente de Presentar'}"-->
                 </td>
             </ng-container>
 
