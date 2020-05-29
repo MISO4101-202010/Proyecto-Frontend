@@ -410,12 +410,21 @@ export class ConfigurarContenidoInteractivoComponent {
               this.getContentInteractiveDetail(this.contenidoInteractivo.id, true);
             },
             (error) => {
-              console.error(error);
-              Swal.fire(
-                'Oops...',
-                'Ocurrió un error al tratar de eliminar la marca, por favor inténtalo de nuevo',
-                'error'
-              );
+              if (error.status===406){
+                Swal.fire(
+                  'Oops...',
+                  'Parece que la marca ya tiene respuestas de estudiantes y no puedes borrarla',
+                  'error'
+                );
+              }
+              else{
+                console.error(error);
+                Swal.fire(
+                  'Oops...',
+                  'Ocurrió un error al tratar de eliminar la marca, por favor inténtalo de nuevo',
+                  'error'
+                );
+              }
             }
           );
       }
