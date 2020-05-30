@@ -3,7 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ContenidoService } from 'src/app/services/contenido.service';
-import { ActivitiesService } from "../../../services/activities-service/activities.service";
+import { ActivitiesService } from '../../../services/activities-service/activities.service';
+import { ValidationService } from '../../../services/validation.service';
 
 export interface DialogData {
   marca: any;
@@ -19,25 +20,28 @@ export class CrearPreguntaVerdaderoFalsoComponent {
 
   questionForm: FormGroup;
   respuestaControl = new FormControl('verdadero');
-  retroalimentacionControl = new FormControl('no');
   title: string;
+  nombreMaxLength = 30;
+  preguntaMaxLength = 200;
+  retroalimentacionMaxLength = 200;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData,
               private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<CrearPreguntaVerdaderoFalsoComponent>,
               private contenidoService: ContenidoService,
-              private activityService: ActivitiesService) {
+              private activityService: ActivitiesService,
+              public validationService: ValidationService) {
     this.initializeForm();
     this.getQuestion();
   }
 
   initializeForm() {
     this.questionForm = this.formBuilder.group({
-      pregunta: ['', [Validators.required]],
-      nombre: ['', [Validators.required]],
-      tieneRetroalimentacion:[false || this.data.tiene_retroalimentacion],
-      retroalimentacion: [''],
-      numeroDeIntentos: ['', [Validators.required]]
+      nombre: ['', [Validators.required, Validators.maxLength(this.nombreMaxLength)]],
+      pregunta: ['', [Validators.required, Validators.maxLength(this.preguntaMaxLength)]],
+      tieneRetroalimentacion: [false, [Validators.required]],
+      retroalimentacion: ['', [Validators.maxLength(this.retroalimentacionMaxLength)]],
+
     });
   }
 
@@ -51,9 +55,8 @@ export class CrearPreguntaVerdaderoFalsoComponent {
           this.questionForm.get('pregunta').setValue(preguntaVF.body.pregunta);
           this.questionForm.get('nombre').setValue(preguntaVF.body.nombre);
           this.respuestaControl.setValue(preguntaVF.body.esVerdadero ? 'verdadero' : 'falso');
-          this.retroalimentacionControl.setValue(preguntaVF.body.tieneRetroalimentacion ? 'si' : 'no');
-          this.questionForm.get('numeroDeIntentos').setValue(preguntaVF.body.numeroDeIntentos);
-          this.questionForm.get('retroalimentacion').setValue((preguntaVF.body.retroalimentacion || this.data.tiene_retroalimentacion));
+          this.questionForm.get('tieneRetroalimentacion').setValue(preguntaVF.body.tieneRetroalimentacion);
+          this.questionForm.get('retroalimentacion').setValue(preguntaVF.body.retroalimentacion);
         }, error => {
           console.error('Ocurrió un error al obtener la pregunta', error);
           Swal.fire('Oops...', 'Ocurrió un error al obtener la pregunta, por favor inténtalo de nuevo', 'error');
@@ -65,29 +68,17 @@ export class CrearPreguntaVerdaderoFalsoComponent {
     }
   }
 
+  delete() {
+    this.dialogRef.close(this.data.marca.id);
+  }
+
   cancel() {
     this.dialogRef.close();
   }
 
   checkValidators() {
-    if (this.questionForm.get('nombre').value === '') {
-      Swal.fire('Oops...', 'El nombre no puede ser vacío', 'error');
-      return true;
-    }
-    if (this.questionForm.get('pregunta').value === '') {
-      Swal.fire('Oops...', 'La pregunta no puede ser vacía', 'error');
-      return true;
-    }
-    if (this.retroalimentacionControl.value === 'si' && this.questionForm.get('retroalimentacion').value === '') {
-      Swal.fire('Oops...', 'La retroalimentación no puede ser vacía si se escogió retroalimentación', 'error');
-      return true;
-    }
-    if (this.questionForm.get('numeroDeIntentos').value < 0) {
-      Swal.fire('Oops...', 'La pregunta no puede tener intentos negativos', 'error');
-      return true;
-    }
-    if (this.questionForm.get('numeroDeIntentos').value === 0) {
-      Swal.fire('Oops...', 'La pregunta no puede tener 0 intentos', 'error');
+    if (this.questionForm.get('tieneRetroalimentacion').value && this.questionForm.get('retroalimentacion').value.trim() === '') {
+      Swal.fire('Oops...', 'La retroalimentación no puede ser vacía si se escogió retroalimentación', 'warning');
       return true;
     }
     return false;
@@ -98,15 +89,18 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       this.data.marca.punto = Math.round(this.data.marca.punto);
       const infoMarca = this.data.marca;
       infoMarca.contenido = infoMarca.contenido_id;
-      const respuestaCorrecta = (this.respuestaControl.value === 'verdadero');
-      const tieneRetro = (this.retroalimentacionControl.value === 'si');
-      this.questionForm.value.esVerdadero = respuestaCorrecta;
-      this.questionForm.value.tieneRetroalimentacion = tieneRetro;
+      this.questionForm.value.esVerdadero = this.respuestaControl.value === 'verdadero';
+      this.questionForm.value.tieneRetroalimentacion = this.questionForm.get('tieneRetroalimentacion').value;
       this.questionForm.value.tipoActividad = 2;
+      if (!this.questionForm.get('tieneRetroalimentacion').value) {
+        this.questionForm.value.retroalimentacion = '';
+      }
+
       this.contenidoService.agregarMarca(infoMarca).subscribe(result1 => {
         this.questionForm.value.marca = result1.id;
+        this.questionForm.value.numeroDeIntentos = 30;
         this.contenidoService.agregarMarcaVerdaderoFalso(this.questionForm.value).subscribe(result2 => {
-          Swal.fire('Pregunta Agregada', 'Pregunta agregada correctamente', 'success');
+          Swal.fire('Pregunta agregada', 'Pregunta agregada correctamente', 'success');
           this.dialogRef.close();
         }, error => {
           console.error(error);
@@ -118,24 +112,19 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       });
     }
     if (this.questionForm.valid && !this.checkValidators() && this.data.marca.marca_id) {
-      let booleanEsRespuestaVerdadero = false;
-      let booleanTieneRetroalimentacion = false;
-      if (this.respuestaControl.value === 'verdadero') {
-        booleanEsRespuestaVerdadero = true;
+      if (!this.questionForm.get('tieneRetroalimentacion').value) {
+        this.questionForm.get('retroalimentacion').setValue('');
       }
-      if (this.retroalimentacionControl.value === 'si') {
-        booleanTieneRetroalimentacion = true;
-      }
+
       const marcaAEditar = {
         pregunta: this.questionForm.get('pregunta').value,
         nombre: this.questionForm.get('nombre').value,
-        numeroDeIntentos: this.questionForm.get('numeroDeIntentos').value,
-        esVerdadero: booleanEsRespuestaVerdadero,
-        tieneRetroalimentacion: booleanTieneRetroalimentacion,
+        esVerdadero: this.respuestaControl.value === 'verdadero',
+        tieneRetroalimentacion: this.questionForm.get('tieneRetroalimentacion').value,
         retroalimentacion: this.questionForm.get('retroalimentacion').value
       };
-      this.contenidoService.modificarPreguntaFV(this.data.marca.marca_id, marcaAEditar).subscribe(response => {
-        Swal.fire('Pregunta Modificada', 'Pregunta modificada correctamente', 'success');
+      this.contenidoService.modificarPreguntaVoF(this.data.marca.id, marcaAEditar).subscribe(response => {
+        Swal.fire('Pregunta modificada', 'Pregunta modificada correctamente', 'success');
         this.dialogRef.close();
       }, error => {
         console.error(error);

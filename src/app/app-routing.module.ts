@@ -5,7 +5,6 @@ import { RegisterComponent } from './login/register.component';
 import { NopagefoundComponent } from './shared/nopagefound/nopagefound.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { AuthService } from './services/usuario/auth.service';
-import {VideoModalComponent} from './video-modal/video-modal.component';
 import { AuthGuard } from './helpers/auth.guard';
 
 const routes: Routes = [
@@ -22,7 +21,6 @@ const routes: Routes = [
       {
         path: 'contenido-interactivo',
         loadChildren: './contenido-interactivo/contenido-interactivo.module#ContenidoInteractivoModule',
-        canActivate: [AuthGuard],
         data: { preload: true }
       },
       {

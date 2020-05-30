@@ -1,23 +1,25 @@
 <div class="container">
-    <mat-form-field appearance="outline" style="width:50%">
-      <input type="text" matInput [(ngModel)]= "this.name"/>
-    </mat-form-field>
-    <div *ngIf="contentsLoaded | async" class="video-container">
-        <div style="width: 100%;">
-            <youtube-player style="pointer-events: none;" id="ytplayer" [videoId]="videoId" height="480" width="854" (ready)="savePlayer($event)"
-                (change)="onStateChange($event)" [playerVars]="playerVars">
-            </youtube-player>
-        </div>
-
-      <div id="lista-minutos" cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="drop($event)">
-        <div cdkDragLockAxis="x" *ngFor="let marca of marcasUbicadas;let i=index" [cdkDragDisabled]="!marca.conMarca"
-             [ngStyle]="darTamanioMarca(marca)" class="{{darEstiloMarca(marca.conMarca)}}"
-             (dblclick)="createOrUpdateMark(marca)" cdkDrag>
-          {{marca.texto}}
-          <h1 *cdkDragPreview>Minuto: {{toMin(marca.segundo)}}</h1>
-        </div>
+  <mat-form-field appearance="outline" style="width:50%">
+    <input maxlength="255" type="text" matInput [(ngModel)]="this.name"/>
+  </mat-form-field>
+  <div *ngIf="contentsLoaded | async" class="video-container">
+    <div style="width: 100%;">
+      <youtube-player style="pointer-events: none;" id="ytplayer" [videoId]="videoId" height="480" width="854"
+                      (ready)="savePlayer($event)"
+                      (change)="onStateChange($event)" [playerVars]="playerVars">
+      </youtube-player>
+    </div>
+    <div id="lista-minutos" cdkDropList cdkDropListOrientation="horizontal" class="example-list"
+         (cdkDropListDropped)="drop($event)">
+      <div cdkDragLockAxis="x" *ngFor="let marca of marcasUbicadas;let i=index"
+           [cdkDragDisabled]="!marca.conMarca"
+           [ngStyle]="darTamanioMarca(marca)" class="{{darEstiloMarca(marca.conMarca)}}"
+           (dblclick)="createOrUpdateMark(marca)" cdkDrag>
+        {{marca.texto}}
+        <h1 *cdkDragPreview>Minuto: {{toMin(marca.segundo)}}</h1>
       </div>
-        <div class="bar-container">
+    </div>
+    <div class="bar-container">
       <input type="range" id="progressBar" step="0.1" (ngModelChange)='handleTouchProgressBar($event)'
              [ngModel]="progressBarValue">
 
@@ -30,35 +32,39 @@
       </button>
       {{ getCurrentTime()}}/{{getTotalTime()}}
 
-        </div>
-
-        <div class="row">
-
-          <div class="col-md-8 col-sm-6" >
-            <mat-form-field style="width:60%">
-              <mat-label>Seleccione un tipo de marca</mat-label>
-              <mat-select [(value)]="tipoMarcaSeleccionada" enabled>
-                <mat-option *ngFor="let marca of opcionesMarca" [value]="marca">{{ marca.text }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <span></span>
-            <button mat-flat-button color="primary" (click)="createOrUpdateMark(undefined)">
-              Añadir marca
-            </button>
-          </div>
-          <div class="col-md-4 col-sm-2" >
-              <mat-checkbox (change)="checkCanJump($event.checked)" [checked]="this.canJump">Puede saltar</mat-checkbox>
-              <mat-checkbox (change)="checkHasRetro($event.checked)" [checked]="this.hasRetro">Tiene retroalimentación</mat-checkbox>
-          </div>
-        </div>
-
-        <div>
-            <div style = "padding-top:5%">
-                <button style="float: right;" mat-flat-button color="primary"
-                    [routerLink]="['/contenido-interactivo/detalle/' + contenidoInteractivo.id]" (click)="saveContent()">
-                    Terminar configuración
-                </button>
-            </div>
-        </div>
     </div>
+
+    <div class="row">
+
+      <div class="col-md-8 col-sm-6">
+        <mat-form-field style="width:60%">
+          <mat-label>Seleccione un tipo de marca</mat-label>
+          <mat-select [(value)]="tipoMarcaSeleccionada" enabled>
+            <mat-option *ngFor="let marca of opcionesMarca" [value]="marca">{{ marca.text }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <span></span>
+        <button mat-flat-button color="primary" (click)="createOrUpdateMark(undefined)">
+          Añadir marca
+        </button>
+      </div>
+      <div class="col-md-4 col-sm-2">
+        <mat-checkbox (change)="checkCanJump($event.checked)" [checked]="this.canJump">Puede saltar</mat-checkbox>
+        <mat-checkbox (change)="checkHasRetro($event.checked)" [checked]="this.hasRetro">Tiene retroalimentación
+        </mat-checkbox>
+        <mat-checkbox (change)="checkesCalificable($event.checked)" [checked]="this.esCalificable">¿Es calificable el
+          contenido?
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <div>
+      <div style="padding-top:5%">
+        <button style="float: right;" mat-flat-button color="primary"
+                [routerLink]="['/contenido-interactivo/detalle/' + contenidoInteractivo.id]" (click)="saveContent()">
+          Terminar configuración
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

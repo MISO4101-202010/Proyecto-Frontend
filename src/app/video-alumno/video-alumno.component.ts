@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
-import { InteraccionAlumnoService } from '../interaccion-alumno.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { LoadVideoService } from '../services/contenidoInter/load-video.service';
-import { MatDialog } from '@angular/material/dialog';
-import { QuestionModalComponent } from 'src/app/contenido-interactivo/question-modal/question-modal.component';
-import { ContenidoService } from '../services/contenido.service';
-import { QuestionVFComponent } from '../contenido-interactivo/question-v-f/question-v-f.component';
+import {Component} from '@angular/core';
+import {InteraccionAlumnoService} from '../interaccion-alumno.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {LoadVideoService} from '../services/contenidoInter/load-video.service';
+import {MatDialog} from '@angular/material/dialog';
+import {QuestionModalComponent} from 'src/app/contenido-interactivo/question-modal/question-modal.component';
+import {ContenidoService} from '../services/contenido.service';
+import {QuestionVFComponent} from '../contenido-interactivo/question-v-f/question-v-f.component';
 import Swal from 'sweetalert2';
-import { VideoStateHandler } from './video-state-handler.service';
-import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
-import { interval, Observable } from 'rxjs';
+import {VideoStateHandler} from './video-state-handler.service';
+import {distinctUntilChanged, filter, take, takeUntil} from 'rxjs/operators';
+import {interval, Observable} from 'rxjs';
 
 @Component({
   selector: 'app-video-alumno',
@@ -22,7 +22,6 @@ export class VideoAlumnoComponent {
   marcas: any[];
   public progressBarValue = 0;
   playing = false;
-  alreadyStart = false;
   playerVars = {
     // Oculta la barra de reproducción (0)
     controls: 0,
@@ -51,7 +50,6 @@ export class VideoAlumnoComponent {
   }
 
   loadData() {
-    console.log('POST call successful value returned in body on init');
     const idPregunta = 1;
     this.interaccionAlumnoService.getRetroOpMultiple(idPregunta).subscribe((data: any[]) => {
       console.log(data);
@@ -59,25 +57,19 @@ export class VideoAlumnoComponent {
     this.activatedRoute.params.subscribe(params => {
       this.getContentInteractiveDetail(params.id ? params.id : '');
     });
+
   }
 
   async savePlayer(player) {
-    this.videoStateHandler.reset();
     this.player = player;
+    this.videoStateHandler.reset();
     this.getContentMark().subscribe(
       (val: any) => {
         this.marcas = val;
         this.loadMarcas(this.contenidoInteractivo.marcas);
-
+        this.initVideoStateHandler();
         this.videoStateHandler.handleVideoState();
-        this.videoStateHandler.isFinished$.pipe(
-          takeUntil(this.videoStateHandler.reset$),
-          distinctUntilChanged()
-        ).subscribe(finished => {
-          if (finished) {
-            this.openFeedBack();
-          }
-        });
+        this.listenToEndOfVideo();
       },
       response => {
         console.log('POST call in error', response);
@@ -89,35 +81,30 @@ export class VideoAlumnoComponent {
   }
 
   open(marca: any) {
-    // Acá debería ir un switch que tire un dialogo distinto dependiendo del tipo de pregunta
-    if (marca.numIntentos > 0) {
-      let dialogRef;
-      if (marca.tipoActividad === 2) {
-        dialogRef = this.dialog.open(QuestionVFComponent, {
-          width: '70%',
-          data: {
-            marca,
-            contenidoInteractivo: this.contenidoInteractivo
-          }
-        });
-      } else {
-        dialogRef = this.dialog.open(QuestionModalComponent, {
-          width: '70%',
-          data: {
-            idActivity: '1',
-            idMarca: marca.marca_id,
-            contenidoInteractivo: this.contenidoInteractivo
-          }
-        });
-      }
-
-      dialogRef.afterClosed().subscribe(result => {
-        this.player.playVideo();
-        this.videoStateHandler.modalOpened$.next(false);
+    let dialogRef;
+    if (marca.tipoActividad === 2) {
+      dialogRef = this.dialog.open(QuestionVFComponent, {
+        width: '70%',
+        data: {
+          marca,
+          contenidoInteractivo: this.contenidoInteractivo
+        }
       });
     } else {
-      this.videoStateHandler.modalOpened$.next(false);
+      dialogRef = this.dialog.open(QuestionModalComponent, {
+        width: '70%',
+        data: {
+          idActivity: '1',
+          idMarca: marca.marca_id,
+          contenidoInteractivo: this.contenidoInteractivo
+        }
+      });
     }
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.player.playVideo();
+      this.videoStateHandler.modalOpened$.next(false);
+    });
   }
 
   getContentMark() {
@@ -176,14 +163,6 @@ export class VideoAlumnoComponent {
   }
 
   play(): void {
-    if (!this.alreadyStart) {
-      this.videoStateHandler.init(this.marcas, this.player);
-      this.videoStateHandler.mustOpenMark$.pipe(takeUntil(this.videoStateHandler.reset$))
-        .subscribe(mark => {
-          this.open(mark);
-        });
-      this.alreadyStart = true;
-    }
     if (!this.playing) {
       this.playing = true;
       this.player.playVideo();
@@ -272,5 +251,24 @@ export class VideoAlumnoComponent {
       filter(value => !value),
       take(1))
       .subscribe(() => this.router.navigate(['/contenido-interactivo/revision/' + this.contenidoInteractivo.id]));
+  }
+
+  initVideoStateHandler() {
+    this.videoStateHandler.init(this.marcas, this.player);
+    return this.videoStateHandler.mustOpenMark$.pipe(takeUntil(this.videoStateHandler.reset$))
+      .subscribe(mark => {
+        this.open(mark);
+      });
+  }
+
+  listenToEndOfVideo() {
+    return this.videoStateHandler.isFinished$.pipe(
+      takeUntil(this.videoStateHandler.reset$),
+      distinctUntilChanged()
+    ).subscribe(finished => {
+      if (finished) {
+        return this.openFeedBack();
+      }
+    });
   }
 }

@@ -1,10 +1,10 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {PreguntaFalsoVerdadero} from '../../models/mark/questionTrueFalse';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {FormControl} from '@angular/forms';
-import {ActivitiesService} from '../../services/activities-service/activities.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { PreguntaFalsoVerdadero } from '../../models/mark/questionTrueFalse';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { FormControl } from '@angular/forms';
+import { ActivitiesService } from '../../services/activities-service/activities.service';
 import Swal from 'sweetalert2';
-import {AnswerVoF} from 'src/app/models/mark/answerVoF';
+import { AnswerVoF } from 'src/app/models/mark/answerVoF';
 
 export interface DialogData {
   marca: any;
@@ -55,9 +55,9 @@ export class QuestionVFComponent implements OnInit {
 
   responderPregunta() {
     if (this.respuestaControl.value !== null) {
-      const idEstudiante = JSON.parse(sessionStorage.userConectaTe).dataProfesor.id;
+      const idEstudiante = JSON.parse(sessionStorage.userConectaTe).dataAlumno.id;
       const respuestaCorrecta = (this.respuestaControl.value === 'verdadero');
-      this.answer = new AnswerVoF(String(this.infoPregunta.id), respuestaCorrecta, String(idEstudiante), 0);
+      this.answer = new AnswerVoF(String(this.infoPregunta.id), respuestaCorrecta, String(idEstudiante), 0, 0);
       console.log('Respuesta: ', this.answer);
       this.activityService.postFVAnswer(this.answer).subscribe(
         data => {
@@ -77,5 +77,9 @@ export class QuestionVFComponent implements OnInit {
 
   saltar() {
     this.dialogRef.close();
+  }
+
+  showResults() {
+    return this.yaRespondio && (this.infoPregunta.tieneRetroalimentacion || this.hasFeedBackContent);
   }
 }
