@@ -2,7 +2,7 @@
 <div mat-dialog-content>
   <label>Nombre:</label>
   <mat-form-field>
-    <input matInput required #nom />
+    <input matInput required #nombre />
   </mat-form-field>
   <div class="">
     <h6 mat-dialog-subtitle> <b>Video Asociado:</b> {{data.video}} </h6>
@@ -18,5 +18,5 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()" style="margin-left: 50px;">No Asociar</button>
-  <button mat-button (click)="crearContenido(nom, data.id, puedeSaltar.checked, tieneRetroalimentacion.checked, esCalificable.checked)" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="crearContenidoInteractivo(nombre, data.id, puedeSaltar.checked, tieneRetroalimentacion.checked, esCalificable.checked)" cdkFocusInitial>Ok</button>
 </div>

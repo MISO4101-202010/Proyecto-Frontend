@@ -37,16 +37,6 @@
           {{ retroalimentacionMaxLength }} caracteres máximo
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Número de intentos</mat-label>
-        <input type="number" min="{{ numeroDeIntentosMin }}" max="{{ numeroDeIntentosMax }}" matInput formControlName="numeroDeIntentos" required />
-        <mat-error *ngIf="validationService.hasError('numeroDeIntentos', 'min', questionForm)">
-          Debe ser mayor o igual a {{ numeroDeIntentosMin }}
-        </mat-error>
-        <mat-error *ngIf="validationService.hasError('numeroDeIntentos', 'max', questionForm)">
-          Debe ser menor o igual a {{ numeroDeIntentosMax }}
-        </mat-error>
-      </mat-form-field>
       <div class="form-actions">
         <button id="delete-button" type="button" *ngIf="this.data.marca.edicion" mat-raised-button color="warn" (click)="delete()">
           Eliminar

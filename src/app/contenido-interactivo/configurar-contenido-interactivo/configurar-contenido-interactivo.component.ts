@@ -33,14 +33,12 @@ export class ConfigurarContenidoInteractivoComponent {
   canJump;
   hasRetro;
   esCalificable;
-  marcas: any[];
   contenidoInteractivo;
+  marcas: any[];
   contentsLoaded: Promise<boolean>;
-  marcasPorcentaje;
-  tiempoVideo = 0;
-  marcasUbicadas = [];
-  tamanioMarca = 0;
-  deleteMarca: any;
+  tiempoVideo;
+  marcasUbicadas;
+  tamanioMarca;
 
   constructor(public dialog: MatDialog,
               private activatedRoute: ActivatedRoute,
@@ -48,6 +46,9 @@ export class ConfigurarContenidoInteractivoComponent {
               private interaccionAlumnoService: InteraccionAlumnoService,
               private activityService: ActivitiesService) {
     this.loadData();
+    this.tiempoVideo = 0;
+    this.marcasUbicadas = [];
+    this.tamanioMarca = 0;
   }
 
   // Este arreglo necesita un refactor porque no necesita 'value' y 'type' al tiempo, solo uno de los dos es
@@ -167,7 +168,6 @@ export class ConfigurarContenidoInteractivoComponent {
   }
 
   loadMarcas(marcas) {
-    this.marcasPorcentaje = [];
     this.tiempoVideo = this.player.getDuration();
     let i = 0;
     let tamanioMarcasVacias = document.getElementById('lista-minutos').offsetWidth;
@@ -193,8 +193,6 @@ export class ConfigurarContenidoInteractivoComponent {
       };
       tamanioMarcasVacias = tamanioMarcasVacias - 10;
       this.marcasUbicadas[marca.punto] = conMarca;
-      const marcaP = this.calcPercentage(+marca.punto);
-      this.marcasPorcentaje.push(marcaP);
     }
     this.tamanioMarca = tamanioMarcasVacias / (this.player.getDuration() * 2);
   }
@@ -207,33 +205,16 @@ export class ConfigurarContenidoInteractivoComponent {
     }
   }
 
-  darLimites(marca) {
-    if (marca) {
-      return '.example-list';
-    } else {
-      return '';
-    }
-  }
-
   darTamanioMarca(marca) {
     let tamanio;
     if (marca !== undefined) {
       if (marca.conMarca) {
         tamanio = '0 5px';
-        return {padding: tamanio};
       } else {
         tamanio = '0 ' + this.tamanioMarca + 'px';
-        return {padding: tamanio};
       }
+      return {padding: tamanio};
     }
-  }
-
-  calcPercentage(segundo: number) {
-    let percentage = 0;
-    if (this.player) {
-      percentage = (segundo * 100) / this.player.getDuration();
-    }
-    return percentage;
   }
 
   getCurrentTime(): string {
@@ -299,7 +280,6 @@ export class ConfigurarContenidoInteractivoComponent {
 
   openDialog(marca): void {
     const modalType = this.getModalType(marca);
-    this.deleteMarca = this.deleteMark;
     const dialogRef = this.dialog.open(modalType, {
       width: '70%',
       data: {
@@ -430,12 +410,22 @@ export class ConfigurarContenidoInteractivoComponent {
               this.getContentInteractiveDetail(this.contenidoInteractivo.id, true);
             },
             (error) => {
-              console.error(error);
-              Swal.fire(
-                'Oops...',
-                'Ocurrió un error al tratar de eliminar la marca, por favor inténtalo de nuevo',
-                'error'
-              );
+
+              if (error.status===406){
+                Swal.fire(
+                  'Oops...',
+                  'Parece que la marca ya tiene respuestas de estudiantes y no puedes borrarla',
+                  'error'
+                );
+              }
+              else{
+                console.error(error);
+                Swal.fire(
+                  'Oops...',
+                  'Ocurrió un error al tratar de eliminar la marca, por favor inténtalo de nuevo',
+                  'error'
+                );
+              }
             }
           );
       }
