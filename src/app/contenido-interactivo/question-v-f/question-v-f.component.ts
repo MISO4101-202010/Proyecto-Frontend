@@ -21,6 +21,7 @@ export class QuestionVFComponent implements OnInit {
   answer: AnswerVoF;
   hayPregunta = false;
   yaRespondio = false;
+  hasQualifications = false;
   respuesta = '';
   respuestaControl = new FormControl();
   respuestaCorrecta = new FormControl();
@@ -46,6 +47,7 @@ export class QuestionVFComponent implements OnInit {
         this.respuesta = correcta;
         this.hayPregunta = true;
         this.canJump = this.data.contenidoInteractivo.puedeSaltar;
+        this.hasQualifications = this.data.contenidoInteractivo.es_calificable;
         this.hasFeedBackContent = this.data.contenidoInteractivo.tiene_retroalimentacion;
       }, error => {
         console.log('Error getting question information -> ', error);
