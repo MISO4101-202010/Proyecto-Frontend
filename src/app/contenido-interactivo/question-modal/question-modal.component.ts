@@ -178,8 +178,7 @@ export class QuestionModalComponent implements OnInit {
   }
 
   private getQualification(data){
-    this.qualification = this.qualification < data.body.qualification ? data.body.qualification : this.qualification;
-    this.qualification = Math.round(this.qualification * 100) / 100;
+    this.qualification = Math.round(data.body.qualification * 100) / 100;
   }
 
   callServiceSaveAnswer() {
