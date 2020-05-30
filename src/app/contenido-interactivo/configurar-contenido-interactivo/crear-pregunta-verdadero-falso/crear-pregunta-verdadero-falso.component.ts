@@ -41,6 +41,7 @@ export class CrearPreguntaVerdaderoFalsoComponent {
       pregunta: ['', [Validators.required, Validators.maxLength(this.preguntaMaxLength)]],
       tieneRetroalimentacion: [false, [Validators.required]],
       retroalimentacion: ['', [Validators.maxLength(this.retroalimentacionMaxLength)]],
+
     });
   }
 
@@ -97,6 +98,7 @@ export class CrearPreguntaVerdaderoFalsoComponent {
 
       this.contenidoService.agregarMarca(infoMarca).subscribe(result1 => {
         this.questionForm.value.marca = result1.id;
+        this.questionForm.value.numeroDeIntentos = 30;
         this.contenidoService.agregarMarcaVerdaderoFalso(this.questionForm.value).subscribe(result2 => {
           Swal.fire('Pregunta agregada', 'Pregunta agregada correctamente', 'success');
           this.dialogRef.close();
