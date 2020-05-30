@@ -24,6 +24,7 @@ export class QuestionModalComponent implements OnInit {
     titleOption: string;
   }> = new Array();
   hasFeedBack = false;
+  hasQualifications = false;
   arrayCorrectAnswers: Array<{ titleAnswer: string }> = new Array();
   indexToShow = 0;
   studentId = JSON.parse(sessionStorage.userConectaTe).dataAlumno.id;
@@ -50,6 +51,7 @@ export class QuestionModalComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       this.idContent = params["id"] ? params["id"] : "";
       this.canJump = this.data.contenidoInteractivo.puedeSaltar;
+      this.hasQualifications = this.data.contenidoInteractivo.es_calificable;
     });
   }
 
@@ -57,7 +59,7 @@ export class QuestionModalComponent implements OnInit {
     if (this.typeQuestion === 'preguntaOpcionMultiple') {
       if (this.optionsArray.some(this.hasAnswer)) {
         this.hasFeedBack = this.arrayQuestionsForMark[this.indexToShow].tieneRetroalimentacion || this.data.contenidoInteractivo.tiene_retroalimentacion;
-      }else {
+      } else {
         return;
       }
     } else if (this.typeQuestion === 'preguntaAbierta') {

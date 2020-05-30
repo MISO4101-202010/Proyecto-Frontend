@@ -41,7 +41,7 @@ export class VideoStateHandler {
   }
 
   isFinished(){
-    return  Math.round(this.player.getDuration()) === this.currentVideoTime;
+    return Math.round(this.player.getDuration()) === this.currentVideoTime;
   }
 
   open(marca: any) {
