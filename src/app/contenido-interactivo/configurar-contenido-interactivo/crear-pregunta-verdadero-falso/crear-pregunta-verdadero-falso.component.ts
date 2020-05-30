@@ -24,6 +24,7 @@ export class CrearPreguntaVerdaderoFalsoComponent {
   nombreMaxLength = 30;
   preguntaMaxLength = 200;
   retroalimentacionMaxLength = 200;
+  checkeado = true;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData,
               private formBuilder: FormBuilder,
@@ -39,9 +40,8 @@ export class CrearPreguntaVerdaderoFalsoComponent {
     this.questionForm = this.formBuilder.group({
       nombre: ['', [Validators.required, Validators.maxLength(this.nombreMaxLength)]],
       pregunta: ['', [Validators.required, Validators.maxLength(this.preguntaMaxLength)]],
-      tieneRetroalimentacion: [false, [Validators.required]],
+      tieneRetroalimentacion: [this.data.tiene_retroalimentacion, [Validators.required]],
       retroalimentacion: ['', [Validators.maxLength(this.retroalimentacionMaxLength)]],
-
     });
   }
 
