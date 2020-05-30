@@ -266,7 +266,7 @@ export class VideoAlumnoComponent {
       takeUntil(this.videoStateHandler.reset$),
       distinctUntilChanged()
     ).subscribe(finished => {
-      if (finished) {
+      if (finished && this.contenidoInteractivo.es_calificable) {
         return this.openFeedBack();
       }
     });

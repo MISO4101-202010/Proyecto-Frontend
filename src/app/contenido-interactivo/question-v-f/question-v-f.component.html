@@ -18,7 +18,9 @@
     <label>{{respuesta}}</label>
     </div>
     <div class="right-div">
-    <label>Calificación obtenida: {{ answer.qualification }}</label>
+      <div *ngIf="hasQualifications" >
+        <label>Calificación obtenida: {{ answer.qualification }}</label>
+      </div>
     </div>
   </div>
   <div *ngIf="showResults()" class="columna-flex">

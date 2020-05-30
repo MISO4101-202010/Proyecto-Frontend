@@ -13,13 +13,15 @@
     <div *ngIf="hasFeedBack">
       <div class="font-title">Las respuestas correctas son:</div>
       <div class="row">
-        <div class="col-2 green-color">
+        <div class="col-6 green-color">
           <div *ngFor="let option of arrayCorrectAnswers, let i=index">
-            <i class="material-icons"> check_circle_outline</i>{{option.titleAnswer}}
+            <i class="material-icons">check_circle_outline</i>{{option.titleAnswer}}
           </div>
         </div>
-        <div class="col-2 right-div">
-          <label class="display-ruby">Calificación obtenida: {{ this.qualification }}</label>
+        <div class="col-6 right-div">
+          <div *ngIf="hasQualifications">
+            <label class="display-ruby">Calificación obtenida: {{ this.qualification }}</label>
+          </div>
         </div>
       </div>
     </div>

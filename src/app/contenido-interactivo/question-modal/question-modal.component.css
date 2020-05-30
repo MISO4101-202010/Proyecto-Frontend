@@ -16,7 +16,6 @@ button {
 
 .green-color {
   color: #0aa61b;
-  height: 0px;
 }
 
 .font-title {
@@ -35,7 +34,6 @@ mat-form-field {
 }
 
 .right-div {
-  margin-left: 422px;
   text-align: right;
 }
 
