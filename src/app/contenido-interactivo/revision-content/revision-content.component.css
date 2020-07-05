@@ -1,17 +1,38 @@
 .detail-card {
-    max-width: 100%;
-    margin:1em;
-  }
-    
-  button {
-    background-color: #225c32;
-    color: white;
-    margin-top: auto;
-  }
-  .details{
-    margin-top:2em;
-    margin-bottom:2em;
-  }
-  a {
-    color: black;
-  }
+  max-width: 100%;
+  margin: 1em;
+}
+
+button {
+  background-color: #225c32;
+  color: white;
+  margin-top: auto;
+}
+
+.details {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+a {
+  color: black;
+}
+
+.left-div {
+  height: 0px;
+  width: 50%;
+  float: left;
+}
+
+.right-div {
+  text-align: end;
+  display: block;
+}
+
+.total {
+  float: right;
+}
+
+.qualification {
+  width: 100%;
+}

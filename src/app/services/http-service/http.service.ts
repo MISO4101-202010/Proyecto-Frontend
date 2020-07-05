@@ -39,6 +39,13 @@ export class HttpService {
     });
   }
 
+  delete(url): Observable<any> {
+    return this.http.delete(url, {
+      headers: this.getHeaders('application/json', 'delete'),
+      observe: 'response'
+    });
+  }
+
   getRequestWithParams(url, data): Observable<any> {
     return this.http.get(url + '?' + this.listParams(data),
     {

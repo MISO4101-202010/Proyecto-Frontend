@@ -75,13 +75,11 @@ export class ModalAsociarContenidoInt {
     this.dialogRef.close();
   }
 
-  crearContenido(nombre, id, puedeSaltar, tieneRetroalimentacion) {
-    console.error('84', nombre.value, id);
+  crearContenidoInteractivo(nombre, idVideo, puedeSaltar, tieneRetroalimentacion, esCalificable) {
     if (!nombre.value || nombre.value === '') {
       Swal.fire('Oops...', 'Por favor ingresa un nombre', 'error');
     } else {
-      this._contenidoService.postContenidoInteractivo(nombre.value, id, puedeSaltar, tieneRetroalimentacion).subscribe(result => {
-        // tslint:disable-next-line: no-string-literal
+      this._contenidoService.postContenidoInteractivo(nombre.value, idVideo, puedeSaltar, tieneRetroalimentacion, esCalificable).subscribe(result => {
         this.onNoClick();
         this.router.navigate(['contenido-interactivo/configurar/', result['id']]);
       });

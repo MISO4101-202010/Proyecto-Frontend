@@ -1,0 +1,62 @@
+<mat-card class="detail-card">
+  <mat-card-header>
+    <mat-card-title>Calificaciones </mat-card-title>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <mat-table
+      id="calificationesTable"
+      [dataSource]="respuestas.calificaciones"
+      class="mat-elevation-z8"
+      *ngIf="respuestas"
+    >
+      <!-- Position Column -->
+      <ng-container matColumnDef="nombrePregunta">
+        <mat-header-cell *matHeaderCellDef> Pregunta</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.nombrePregunta }}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="respuestasPregunta">
+        <mat-header-cell *matHeaderCellDef> Respuesta </mat-header-cell>
+        <mat-cell
+          *matCellDef="let element"
+          [ngClass]="{
+            repuestaCorrecta: element.calificacion > 0,
+            repuestaIncorrecta: element.calificacion == 0
+          }"
+        >
+          {{ element.respuestasPregunta }}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="calificacion">
+        <mat-header-cell *matHeaderCellDef> Calificación </mat-header-cell>
+        <mat-cell
+          *matCellDef="let element"
+          [ngClass]="{
+            repuestaCorrecta: element.calificacion > 0,
+            repuestaIncorrecta: element.calificacion == 0
+          }"
+        >
+          {{ element.calificacion }}
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+    <div id="respuestasDiv" *ngIf="respuestas">
+      <p class="repuestaCorrecta">
+        Total respuestas correctas: {{ respuestas.respuestasCorrectas }}
+      </p>
+      <p class="repuestaIncorrecta">
+        Total respuestas incorrectas: {{ respuestas.respuestasIncorrectas }}
+      </p>
+      <p>Calificación total: {{ respuestas.calificacionTotal }}</p>
+    </div>
+  </mat-card-content>
+</mat-card>

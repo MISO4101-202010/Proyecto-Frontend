@@ -16,6 +16,7 @@ button {
 .columna-flex {
   display: flex;
   flex-direction: column;
+  margin-bottom: 1rem;
 }
 
 .falso {
@@ -27,18 +28,10 @@ button {
   color: #4d4949;
 }
 
-#respuesta {
-  margin-left: 2rem;
-  border: solid 1px gray;
-  color: #4d4949;
-  border-radius: 1rem;
-  padding: 1rem 1rem 0;
-}
-
 #pregunta {
   justify-content: center;
 }
 
-.negrilla{
-  font-weight: bold;
+.right-div {
+  text-align: right;
 }

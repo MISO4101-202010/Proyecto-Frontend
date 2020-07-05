@@ -45,9 +45,9 @@ export class LoadVideoService {
       })
     };
     console.log(JSON.stringify(loadVideo));
-    // console.log(this._authService.getDatos().token);
+
     console.log(httpOptions.headers);
-    // this.httpOptions.headers.set("Authorization", this._authService.getDatos().token);
+
 
     return this.http.post(this.loadSendUrl, JSON.stringify(loadVideo), httpOptions)
       .pipe(
